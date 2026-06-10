@@ -1,0 +1,55 @@
+@using SmartFoods.Web.Models.DTOs.Dashboard
+@using SmartFoods.Web.Services.Dashboard
+
+@inject IDashboardService DashboardService
+
+<h3>Recently Added</h3>
+
+@if (IsLoading)
+{
+    <p>Loading activity logs...</p>
+}
+else if (Model is not null)
+{
+    @if (Model.IsEmptyHistory)
+    {
+        <div style="border: 1px dashed #ccc; padding: 15px; margin-bottom: 20px;">
+            <p><strong>No recent activity logged.</strong></p>
+            <p>Your recently entered grocery checklist items will compile here so you never accidentally duplicate data entry inputs.</p>
+        </div>
+    }
+    else
+    {
+        <div style="border: 1px solid #aaa; padding: 15px; margin-bottom: 20px; max-width: 400px;">
+            <ul style="list-style-type: none; padding-left: 0; margin: 0;">
+                @foreach (var item in Model.RecentItems)
+                {
+                    <li style="margin-bottom: 8px; display: flex; align-items: center;">
+                        <span style="color: green; margin-right: 8px; font-weight: bold;">✓</span>
+                        <span>
+                            <strong>@item.Name</strong> (@item.Quantity @item.Unit) 
+                            <span style="color: #777; font-size: 12px; margin-left: 5px;">
+                                - @item.AddedAt.ToLocalTime().ToString("g")
+                            </span>
+                        </span>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public Guid UserId { get; set; }
+
+    private RecentActivityDto? Model;
+    private bool IsLoading = true;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        IsLoading = true;
+        Model = await DashboardService.GetRecentActivityAsync(UserId);
+        IsLoading = false;
+    }
+}

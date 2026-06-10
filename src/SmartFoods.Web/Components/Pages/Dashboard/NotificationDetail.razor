@@ -1,0 +1,63 @@
+@* Components/Pages/Dashboard/NotificationDetail.razor *@
+@page "/notifications/{Id:guid}"
+@rendermode InteractiveServer
+
+@using SmartFoods.Web.Data
+@using Microsoft.EntityFrameworkCore
+@using SmartFoods.Web.Models.Pantry
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
+
+@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+
+<PageTitle>View Notification Message</PageTitle>
+
+<div style="margin-bottom: 20px;">
+    <a href="/dashboard/notifications" style="text-decoration: none; font-weight: bold; color: #007bff;">← Back to Notifications Feed</a>
+</div>
+
+@if (IsLoading)
+{
+    <p>Retrieving secure message payload...</p>
+}
+else if (LogItem is null)
+{
+    <div style="border: 1px solid #b22222; background-color: #fff5f5; padding: 15px; color: #b22222;">
+        <p><strong>Message Not Found.</strong></p>
+        <p>The notification reference could not be located in your archive logs database.</p>
+    </div>
+}
+else
+{
+    <div style="border: 1px solid #aaa; background: #fff; padding: 25px; border-radius: 6px; max-width: 650px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+        <div style="border-bottom: 1px solid #eee; padding-bottom: 15px; margin-bottom: 20px;">
+            <span style="font-size: 13px; color: #777;">Sent on @LogItem.SentAt.ToLocalTime().ToString("f")</span>
+            <h2 style="margin: 8px 0 0 0; font-size: 22px; color: #222;">@LogItem.Title</h2>
+        </div>
+
+        <div style="line-height: 1.6; color: #444; font-size: 15px;">
+            @((MarkupString)LogItem.MessageBody)
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private NotificationLog? LogItem;
+    private bool IsLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var dbContext = await DbContextFactory.CreateDbContextAsync();
+
+        // Securely fetch single message trace item
+        LogItem = await dbContext.NotificationLogs
+            .AsNoTracking()
+            .FirstOrDefaultAsync(n => n.Id == Id);
+
+        IsLoading = false;
+    }
+}

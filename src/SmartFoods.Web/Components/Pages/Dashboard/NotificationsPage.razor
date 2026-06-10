@@ -1,0 +1,48 @@
+@* Components/Pages/Dashboard/NotificationsPage.razor *@
+@page "/dashboard/notifications"
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@using SmartFoods.Web.Models.Identity
+
+@attribute [Authorize]
+
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Pantry Alerts & Notifications</PageTitle>
+
+<div style="margin-bottom: 20px;">
+    <a href="/dashboard" style="text-decoration: none; font-weight: bold; color: #007bff;">← Back to Dashboard Overview</a>
+</div>
+
+@if (IsLoading)
+{
+    <p>Verifying configuration profile...</p>
+}
+else
+{
+    @* Rendering our isolated panel component here keeps the database call decoupled *@
+    <NotificationsPanel UserId="@CurrentUserId" />
+}
+
+@code {
+    private Guid CurrentUserId;
+    private bool IsLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await UserManager.GetUserAsync(authState.User);
+
+        if (user is null)
+        {
+            return;
+        }
+
+        CurrentUserId = user.Id;
+        IsLoading = false;
+    }
+}

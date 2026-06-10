@@ -1,0 +1,64 @@
+@using SmartFoods.Web.Models.DTOs.Dashboard
+@using SmartFoods.Web.Services.Dashboard
+
+@inject IDashboardService DashboardService
+
+<h3>Attention Required</h3>
+
+@if (IsLoading)
+{
+    <p>Checking expiry timelines...</p>
+}
+else if (Model is not null)
+{
+    @if (Model.HasNoUrgentItems)
+    {
+        <div style="border: 1px dashed #ccc; padding: 15px; margin-bottom: 20px; color: green;">
+            <p><strong>All clear!</strong></p>
+            <p>No food items are expiring within the next 7 days. Your pantry is looking stable.</p>
+        </div>
+    }
+    else
+    {
+        <div style="border: 1px solid #b22222; padding: 15px; margin-bottom: 20px; background-color: #fff5f5;">
+            <p style="color: #b22222; font-weight: bold; margin-top: 0;">Items Expiring Soon</p>
+            <ul style="list-style-type: none; padding-left: 0; margin-bottom: 0;">
+                @foreach (var item in Model.UrgentItems)
+                {
+                    <li style="margin-bottom: 8px; display: flex; justify-content: space-between; max-width: 400px; border-bottom: 1px dotted #ccc;">
+                        <span><strong>@item.Name</strong> (@item.Quantity @item.Unit)</span>
+                        <span style="color: #b22222; font-weight: bold;">
+                            @if (item.DaysRemaining == 0)
+                            {
+                                <span>Expires today!</span>
+                            }
+                            else if (item.DaysRemaining == 1)
+                            {
+                                <span>1 day left</span>
+                            }
+                            else
+                            {
+                                <span>@item.DaysRemaining days left</span>
+                            }
+                        </span>
+                    </li>
+                }
+            </ul>
+        </div>
+    }
+}
+
+@code {
+    [Parameter]
+    public Guid UserId { get; set; }
+
+    private AttentionRequiredDto? Model;
+    private bool IsLoading = true;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        IsLoading = true;
+        Model = await DashboardService.GetAttentionRequiredAsync(UserId);
+        IsLoading = false;
+    }
+}

@@ -1,0 +1,1135 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+_Imports.razor
+appsettings.Development.json
+appsettings.json
+Components/_Imports.razor
+Components/App.razor
+Components/Layout/MainLayout.razor
+Components/Pages/Auth/Login.razor
+Components/Pages/Auth/Logout.razor
+Components/Pages/Auth/Register.razor
+Components/Pages/Dashboard/Dashboard.razor
+Components/Pages/Dashboard/QuickAddPanel.razor
+Components/Pages/Dashboard/WelcomePanel.razor
+Components/Pages/Index.razor
+Data/ApplicationDbContext.cs
+Models/Base/BaseEntity.cs
+Models/DTOs/Dashboard/CreateFoodItemDto.cs
+Models/DTOs/Dashboard/WelcomePanelDto.cs
+Models/DTOs/LoginDto.cs
+Models/DTOs/RegisterDto.cs
+Models/Identity/ApplicationUser.cs
+Models/Pantry/FoodItem.cs
+Models/Pantry/Pantry.cs
+Program.cs
+Services/Authentication/AuthService.cs
+Services/Dashboard/DashboardService.cs
+Services/Dashboard/IDashboardService.cs
+Services/Interfaces/IAuthService.cs
+SmartFoods.Web.csproj
+wwwroot/app.css
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="_Imports.razor">
+@* src/SmartFoods.Web/_Imports.razor *@
+@using System.Net.Http
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.JSInterop
+@using SmartFoods.Web
+</file>
+
+<file path="appsettings.Development.json">
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  }
+}
+</file>
+
+<file path="appsettings.json">
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Host=aws-0-eu-west-1.pooler.supabase.com;Port=5432;Database=postgres;Username=postgres.ncrwzmtjqymdzciuroxs;Password=EmpireTang1$$"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*"
+}
+</file>
+
+<file path="Components/_Imports.razor">
+@using System.Globalization
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using SmartFoods.Web.Components
+@using SmartFoods.Web.Components.Layout
+</file>
+
+<file path="Components/App.razor">
+<Router AppAssembly="@typeof(App).Assembly">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+
+    <NotFound>
+        <h1>Page not found</h1>
+        <p>Sorry, that page doesn't exist.</p>
+    </NotFound>
+</Router>
+</file>
+
+<file path="Components/Layout/MainLayout.razor">
+@inherits LayoutComponentBase
+
+<div class="page">
+    <main>
+        @Body
+    </main>
+</div>
+</file>
+
+<file path="Components/Pages/Auth/Login.razor">
+@* src/SmartFoods.Web/Components/Pages/Auth/Login.razor *@
+@page "/login"
+
+@using SmartFoods.Web.Models.DTOs
+@using SmartFoods.Web.Services.Interfaces
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+<h3>Login</h3>
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <p style="color:red">@ErrorMessage</p>
+}
+
+<EditForm Model="Model" OnValidSubmit="ExecuteLogin" FormName="LoginForm" method="post">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Email</label>
+        <InputText @bind-Value="Model.Email" type="email" />
+    </div>
+
+    <div>
+        <label>Password</label>
+        <InputText type="password" @bind-Value="Model.Password" />
+    </div>
+
+    <button type="submit">
+        Login
+    </button>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private LoginDto Model { get; set; } = new();
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
+    private string? ErrorMessage;
+
+    private async Task ExecuteLogin()
+    {
+        var success = await AuthService.LoginAsync(Model);
+
+        if (success)
+        {
+            Navigation.NavigateTo(
+                string.IsNullOrWhiteSpace(ReturnUrl)
+                    ? "/dashboard"
+                    : ReturnUrl,
+                forceLoad: true);
+
+            return;
+        }
+
+        ErrorMessage = "Invalid email or password.";
+    }
+}
+</file>
+
+<file path="Components/Pages/Auth/Logout.razor">
+@page "/logout"
+
+@using SmartFoods.Web.Services.Interfaces
+
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+<h3>Logging out...</h3>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthService.LogoutAsync();
+
+        Navigation.NavigateTo("/", forceLoad: true);
+    }
+}
+</file>
+
+<file path="Components/Pages/Auth/Register.razor">
+@* src/SmartFoods.Web/Components/Pages/Auth/Register.razor *@
+@page "/register"
+
+@using SmartFoods.Web.Models.DTOs
+@using SmartFoods.Web.Services.Interfaces
+
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+<h3>Register</h3>
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <p style="color:red">@ErrorMessage</p>
+}
+
+<EditForm Model="Model" OnValidSubmit="ExecuteRegister" FormName="RegisterForm" method="post">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Name</label>
+        <InputText @bind-Value="Model.Name" />
+    </div>
+
+    <div>
+        <label>Email</label>
+        <InputText @bind-Value="Model.Email" type="email" />
+    </div>
+
+    <div>
+        <label>Password</label>
+        <InputText type="password" @bind-Value="Model.Password" />
+    </div>
+
+    <div>
+        <label>Confirm Password</label>
+        <InputText type="password" @bind-Value="Model.ConfirmPassword" />
+    </div>
+
+    <button type="submit">
+        Register
+    </button>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm]
+    private RegisterDto Model { get; set; } = new();
+
+    private string? ErrorMessage;
+
+    private async Task ExecuteRegister()
+    {
+        var result = await AuthService.RegisterAsync(Model);
+
+        if (result.Success)
+        {
+            Navigation.NavigateTo("/login", forceLoad: true);
+            return;
+        }
+
+        ErrorMessage = string.Join(", ", result.Errors);
+    }
+}
+</file>
+
+<file path="Components/Pages/Dashboard/Dashboard.razor">
+@page "/dashboard"
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@using SmartFoods.Web.Models.Identity
+
+@attribute [Authorize]
+
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Dashboard</PageTitle>
+
+@if (IsLoading)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <WelcomePanel @key="_welcomePanelVersion" UserId="@CurrentUserId" />
+
+    <QuickAddPanel UserId="@CurrentUserId" OnItemAdded="HandleItemAdded" />
+}
+
+@code {
+
+    private Guid CurrentUserId;
+
+    private bool IsLoading = true;
+
+    private int _welcomePanelVersion;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState =
+            await AuthenticationStateProvider
+                .GetAuthenticationStateAsync();
+
+        var user =
+            await UserManager.GetUserAsync(
+                authState.User);
+
+        if (user is null)
+        {
+            return;
+        }
+
+        CurrentUserId = user.Id;
+
+        IsLoading = false;
+    }
+
+    private Task HandleItemAdded()
+    {
+        _welcomePanelVersion++;
+
+        return Task.CompletedTask;
+    }
+}
+</file>
+
+<file path="Components/Pages/Dashboard/QuickAddPanel.razor">
+@using SmartFoods.Web.Models.DTOs.Dashboard
+@using SmartFoods.Web.Services.Dashboard
+
+@inject IDashboardService DashboardService
+
+<h2>Quick Add Food Item</h2>
+
+@if (!string.IsNullOrWhiteSpace(SuccessMessage))
+{
+    <p>@SuccessMessage</p>
+}
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <p>@ErrorMessage</p>
+}
+
+<EditForm
+    Model="Model"
+    OnValidSubmit="HandleSubmit">
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Name</label>
+        <InputText @bind-Value="Model.Name" />
+    </div>
+
+    <div>
+        <label>Quantity</label>
+        <InputNumber @bind-Value="Model.Quantity" />
+    </div>
+
+    <div>
+        <label>Unit</label>
+
+        <InputSelect @bind-Value="Model.Unit">
+            <option value="">Select Unit</option>
+            <option>Kg</option>
+            <option>Grams</option>
+            <option>Litres</option>
+            <option>Millilitres</option>
+            <option>Pieces</option>
+            <option>Packets</option>
+        </InputSelect>
+    </div>
+
+    <div>
+        <label>Category</label>
+
+        <InputSelect @bind-Value="Model.Category">
+            <option value="">Select Category</option>
+            <option>Dairy</option>
+            <option>Vegetables</option>
+            <option>Fruit</option>
+            <option>Meat</option>
+            <option>Grains</option>
+            <option>Beverages</option>
+            <option>Other</option>
+        </InputSelect>
+    </div>
+
+    <div>
+        <label>Expiry Date</label>
+
+        <InputDate @bind-Value="Model.ExpiryDate" />
+    </div>
+
+    <button type="submit" disabled="@IsSubmitting">
+        @if (IsSubmitting)
+        {
+            <span>Adding...</span>
+        }
+        else
+        {
+            <span>Add Item</span>
+        }
+    </button>
+
+</EditForm>
+
+@code {
+
+    [Parameter]
+    public Guid UserId { get; set; }
+
+    [Parameter]
+    public EventCallback OnItemAdded { get; set; }
+
+    private CreateFoodItemDto Model = new();
+
+    private string? SuccessMessage;
+
+    private string? ErrorMessage;
+
+    private bool IsSubmitting;
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            IsSubmitting = true;
+
+            await DashboardService
+                .AddFoodItemAsync(
+                    UserId,
+                    Model);
+
+            SuccessMessage =
+                $"{Model.Name} added successfully.";
+
+            ErrorMessage = null;
+
+            Model = new CreateFoodItemDto();
+
+            await OnItemAdded.InvokeAsync();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+            SuccessMessage = null;
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
+    }
+}
+</file>
+
+<file path="Components/Pages/Dashboard/WelcomePanel.razor">
+@using SmartFoods.Web.Models.DTOs.Dashboard
+@using SmartFoods.Web.Services.Dashboard
+
+@inject IDashboardService DashboardService
+
+@if (IsLoading)
+{
+    <p>Loading...</p>
+}
+else if (Model is not null)
+{
+    <div>
+        <h1>
+            Welcome back, @Model.UserName!
+        </h1>
+
+        @if (Model.IsEmptyPantry)
+        {
+            <p>
+                Your pantry is ready.
+            </p>
+
+            <p>
+                Start by adding a few food items
+                to begin tracking your pantry.
+            </p>
+        }
+        else
+        {
+            <p>
+                You currently have
+                <strong>@Model.TotalFoodItems</strong>
+                food items across
+                <strong>@Model.TotalCategories</strong>
+                categories.
+            </p>
+
+            <p>
+                <strong>
+                    @Model.ItemsNeedingAttention
+                </strong>
+                items need attention this week.
+            </p>
+        }
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public Guid UserId { get; set; }
+
+    private WelcomePanelDto? Model;
+
+    private bool IsLoading = true;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Model =
+            await DashboardService
+                .GetWelcomePanelAsync(UserId);
+
+        IsLoading = false;
+    }
+}
+</file>
+
+<file path="Components/Pages/Index.razor">
+@page "/"
+
+<PageTitle>Home - SmartFoods</PageTitle>
+
+<div class="container mt-5">
+    <h1>Welcome to SmartFoods</h1>
+    <p>Manage your pantry and track your food items efficiently.</p>
+    
+    <div class="mt-4">
+        <a href="/login" class="btn btn-primary me-2">Login</a>
+        <a href="/register" class="btn btn-secondary">Register</a>
+    </div>
+</div>
+</file>
+
+<file path="Data/ApplicationDbContext.cs">
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using SmartFoods.Web.Models.Identity;
+using SmartFoods.Web.Models.Pantry;
+
+namespace SmartFoods.Web.Data;
+
+public class ApplicationDbContext
+    : IdentityDbContext<ApplicationUser, Microsoft.AspNetCore.Identity.IdentityRole<Guid>, Guid>
+{
+    public ApplicationDbContext(
+        DbContextOptions<ApplicationDbContext> options)
+        : base(options)
+    {
+    }
+
+    public DbSet<Pantry> Pantries => Set<Pantry>();
+
+    public DbSet<FoodItem> FoodItems => Set<FoodItem>();
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.Entity<ApplicationUser>()
+            .HasOne(u => u.Pantry)
+            .WithOne(p => p.User)
+            .HasForeignKey<Pantry>(p => p.UserId);
+
+        builder.Entity<Pantry>()
+            .HasMany(p => p.FoodItems)
+            .WithOne(f => f.Pantry)
+            .HasForeignKey(f => f.PantryId);
+    }
+}
+</file>
+
+<file path="Models/Base/BaseEntity.cs">
+namespace SmartFoods.Web.Models.Base;
+
+public abstract class BaseEntity
+{
+    public Guid Id { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+}
+</file>
+
+<file path="Models/DTOs/Dashboard/CreateFoodItemDto.cs">
+using System.ComponentModel.DataAnnotations;
+
+namespace SmartFoods.Web.Models.DTOs.Dashboard;
+
+public class CreateFoodItemDto
+{
+    [Required]
+    public string Name { get; set; } = string.Empty;
+
+    [Range(0.01, double.MaxValue)]
+    public decimal Quantity { get; set; }
+
+    [Required]
+    public string Unit { get; set; } = string.Empty;
+
+    [Required]
+    public string Category { get; set; } = string.Empty;
+
+    [Required]
+    public DateOnly ExpiryDate { get; set; }
+}
+</file>
+
+<file path="Models/DTOs/Dashboard/WelcomePanelDto.cs">
+namespace SmartFoods.Web.Models.DTOs.Dashboard;
+
+public class WelcomePanelDto
+{
+    public string UserName { get; set; } = string.Empty;
+
+    public int TotalFoodItems { get; set; }
+
+    public int TotalCategories { get; set; }
+
+    public int ItemsNeedingAttention { get; set; }
+
+    public bool IsEmptyPantry => TotalFoodItems == 0;
+}
+</file>
+
+<file path="Models/DTOs/LoginDto.cs">
+// src/SmartFoods.Web/Models/DTOs/LoginDto.cs
+using System.ComponentModel.DataAnnotations;
+
+namespace SmartFoods.Web.Models.DTOs;
+
+public class LoginDto
+{
+    [Required(ErrorMessage = "Email is required.")]
+    [EmailAddress(ErrorMessage = "Invalid email address.")]
+    public string Email { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Password is required.")]
+    public string Password { get; set; } = string.Empty;
+}
+</file>
+
+<file path="Models/DTOs/RegisterDto.cs">
+using System.ComponentModel.DataAnnotations;
+
+namespace SmartFoods.Web.Models.DTOs;
+
+public class RegisterDto
+{
+    [Required]
+    public string Name { get; set; } = string.Empty;
+
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; } = string.Empty;
+
+    [Required]
+    [MinLength(8)]
+    public string Password { get; set; } = string.Empty;
+
+    [Required]
+    [Compare(nameof(Password))]
+    public string ConfirmPassword { get; set; } = string.Empty;
+}
+</file>
+
+<file path="Models/Identity/ApplicationUser.cs">
+using Microsoft.AspNetCore.Identity;
+
+namespace SmartFoods.Web.Models.Identity;
+
+public class ApplicationUser : IdentityUser<Guid>
+{
+    public string Name { get; set; } = string.Empty;
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    public Pantry.Pantry? Pantry { get; set; }
+}
+</file>
+
+<file path="Models/Pantry/FoodItem.cs">
+using SmartFoods.Web.Models.Base;
+
+namespace SmartFoods.Web.Models.Pantry;
+
+public class FoodItem : BaseEntity
+{
+    public string Name { get; set; } = string.Empty;
+
+    public decimal Quantity { get; set; }
+
+    public string Unit { get; set; } = string.Empty;
+
+    public string Category { get; set; } = string.Empty;
+
+    public DateOnly ExpiryDate { get; set; }
+
+    public Guid PantryId { get; set; }
+
+    public Pantry Pantry { get; set; } = null!;
+}
+</file>
+
+<file path="Models/Pantry/Pantry.cs">
+using SmartFoods.Web.Models.Base;
+using SmartFoods.Web.Models.Identity;
+
+namespace SmartFoods.Web.Models.Pantry;
+
+public class Pantry : BaseEntity
+{
+    public string Name { get; set; } = "Main Pantry";
+
+    public Guid UserId { get; set; }
+
+    public ApplicationUser User { get; set; } = null!;
+
+    public ICollection<FoodItem> FoodItems { get; set; }
+        = new List<FoodItem>();
+}
+</file>
+
+<file path="Program.cs">
+// src/SmartFoods.Web/Program.cs
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using SmartFoods.Web.Components;
+using SmartFoods.Web.Data;
+using SmartFoods.Web.Models.Identity;
+using SmartFoods.Web.Services.Interfaces;
+using SmartFoods.Web.Services.Authentication;
+using SmartFoods.Web.Services.Dashboard;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
+// Add Authentication/Authorization Core Utilities
+builder.Services.AddCascadingAuthenticationState();
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+// Add DbContext
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+// Add Identity with explicit generic type configurations matching ApplicationDbContext
+builder.Services
+    .AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+    {
+        options.Password.RequiredLength = 8;
+        options.Password.RequireDigit = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+    })
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/login";
+    options.AccessDeniedPath = "/access-denied"; // Optional: For unauthorized roles
+});
+
+builder.Services.AddAuthorization();
+builder.Services.AddHttpContextAccessor();
+
+// Dashboard services
+
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error", createScopeForErrors: true);
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseAntiforgery();
+
+app.MapRazorComponents<SmartFoods.Web.Components.App>()
+    .AddInteractiveServerRenderMode();
+
+app.Run();
+</file>
+
+<file path="Services/Authentication/AuthService.cs">
+using Microsoft.AspNetCore.Identity;
+using SmartFoods.Web.Data;
+using SmartFoods.Web.Models.DTOs;
+using SmartFoods.Web.Models.Identity;
+using SmartFoods.Web.Models.Pantry;
+using SmartFoods.Web.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
+namespace SmartFoods.Web.Services.Authentication;
+
+public class AuthService : IAuthService
+{
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly ApplicationDbContext _dbContext;
+
+    public AuthService(
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
+        ApplicationDbContext dbContext)
+    {
+        _userManager = userManager;
+        _signInManager = signInManager;
+        _dbContext = dbContext;
+    }
+
+    public async Task<(bool Success, IEnumerable<string> Errors)>
+        RegisterAsync(RegisterDto model)
+    {
+        if (model.Password != model.ConfirmPassword)
+        {
+            return (
+                false,
+                new[] { "Passwords do not match." }
+            );
+        }
+
+        await using var transaction =
+            await _dbContext.Database.BeginTransactionAsync();
+
+        try
+        {
+            var user = new ApplicationUser
+            {
+                Name = model.Name,
+                UserName = model.Email,
+                Email = model.Email
+            };
+
+            var result = await _userManager.CreateAsync(
+                user,
+                model.Password);
+
+            if (!result.Succeeded)
+            {
+                return (
+                    false,
+                    result.Errors.Select(e => e.Description)
+                );
+            }
+
+            var pantry = new Pantry
+            {
+                Name = "Main Pantry",
+                UserId = user.Id
+            };
+
+            _dbContext.Pantries.Add(pantry);
+
+            await _dbContext.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+
+            return (
+                true,
+                Enumerable.Empty<string>()
+            );
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+
+            return (
+                false,
+                new[] { ex.Message }
+            );
+        }
+    }
+
+    public async Task<bool> LoginAsync(LoginDto model)
+    {
+        var result =
+            await _signInManager.PasswordSignInAsync(
+                model.Email,
+                model.Password,
+                isPersistent: false,
+                lockoutOnFailure: false);
+
+        return result.Succeeded;
+    }
+
+    public async Task LogoutAsync()
+    {
+        await _signInManager.SignOutAsync();
+    }
+}
+</file>
+
+<file path="Services/Dashboard/DashboardService.cs">
+using Microsoft.EntityFrameworkCore;
+using SmartFoods.Web.Data;
+using SmartFoods.Web.Models.DTOs.Dashboard;
+using SmartFoods.Web.Models.Pantry;
+
+namespace SmartFoods.Web.Services.Dashboard;
+
+public class DashboardService : IDashboardService
+{
+    private readonly ApplicationDbContext _dbContext;
+
+    public DashboardService(
+        ApplicationDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+
+    public async Task<WelcomePanelDto>
+        GetWelcomePanelAsync(Guid userId)
+    {
+        var user =
+            await _dbContext.Users
+                .AsNoTracking()
+                .Include(u => u.Pantry)
+                .ThenInclude(p => p!.FoodItems)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user is null)
+        {
+            throw new Exception("User not found.");
+        }
+
+        var pantry = user.Pantry;
+
+        var foodItems =
+            pantry?.FoodItems
+            ?? Enumerable.Empty<Models.Pantry.FoodItem>();
+
+        var today =
+            DateOnly.FromDateTime(DateTime.UtcNow);
+
+        var sevenDaysFromNow =
+            today.AddDays(7);
+
+        return new WelcomePanelDto
+        {
+            UserName = user.Name,
+
+            TotalFoodItems =
+                foodItems.Count(),
+
+            TotalCategories =
+                foodItems
+                    .Where(f =>
+                        !string.IsNullOrWhiteSpace(
+                            f.Category))
+                    .Select(f => f.Category)
+                    .Distinct()
+                    .Count(),
+
+            ItemsNeedingAttention =
+                foodItems.Count(f =>
+                    f.ExpiryDate >= today &&
+                    f.ExpiryDate <= sevenDaysFromNow)
+        };
+    }
+
+    public async Task AddFoodItemAsync(
+        Guid userId,
+        CreateFoodItemDto model)
+    {
+        var pantry =
+            await _dbContext.Pantries
+                .FirstOrDefaultAsync(
+                    p => p.UserId == userId);
+
+        if (pantry is null)
+        {
+            pantry = new Pantry
+            {
+                Name = "Main Pantry",
+                UserId = userId
+            };
+
+            _dbContext.Pantries.Add(pantry);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        var foodItem =
+            new Models.Pantry.FoodItem
+            {
+                Name = model.Name,
+                Quantity = model.Quantity,
+                Unit = model.Unit,
+                Category = model.Category,
+                ExpiryDate = model.ExpiryDate,
+                PantryId = pantry.Id
+            };
+
+        _dbContext.FoodItems.Add(foodItem);
+
+        await _dbContext.SaveChangesAsync();
+    }
+}
+</file>
+
+<file path="Services/Dashboard/IDashboardService.cs">
+using SmartFoods.Web.Models.DTOs.Dashboard;
+
+namespace SmartFoods.Web.Services.Dashboard;
+
+public interface IDashboardService
+{
+    Task<WelcomePanelDto>
+        GetWelcomePanelAsync(Guid userId);
+
+    Task AddFoodItemAsync(
+        Guid userId,
+        CreateFoodItemDto model);
+}
+</file>
+
+<file path="Services/Interfaces/IAuthService.cs">
+using SmartFoods.Web.Models.DTOs;
+
+namespace SmartFoods.Web.Services.Interfaces;
+
+public interface IAuthService
+{
+    Task<(bool Success, IEnumerable<string> Errors)>
+        RegisterAsync(RegisterDto model);
+
+    Task<bool>
+        LoginAsync(LoginDto model);
+
+    Task LogoutAsync();
+}
+</file>
+
+<file path="SmartFoods.Web.csproj">
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" />
+  </ItemGroup>
+
+</Project>
+</file>
+
+<file path="wwwroot/app.css">
+/* Basic styles for SmartFoods app */
+html, body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+}
+</file>
+
+</files>

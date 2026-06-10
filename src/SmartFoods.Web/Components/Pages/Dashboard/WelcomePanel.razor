@@ -1,0 +1,65 @@
+@using SmartFoods.Web.Models.DTOs.Dashboard
+@using SmartFoods.Web.Services.Dashboard
+
+@inject IDashboardService DashboardService
+
+@if (IsLoading)
+{
+    <p>Loading...</p>
+}
+else if (Model is not null)
+{
+    <div>
+        <h1>
+            Welcome back, @Model.UserName!
+        </h1>
+
+        @if (Model.IsEmptyPantry)
+        {
+            <p>
+                Your pantry is ready.
+            </p>
+
+            <p>
+                Start by adding a few food items
+                to begin tracking your pantry.
+            </p>
+        }
+        else
+        {
+            <p>
+                You currently have
+                <strong>@Model.TotalFoodItems</strong>
+                food items across
+                <strong>@Model.TotalCategories</strong>
+                categories.
+            </p>
+
+            <p>
+                <strong>
+                    @Model.ItemsNeedingAttention
+                </strong>
+                items need attention this week.
+            </p>
+        }
+    </div>
+}
+
+@code {
+
+    [Parameter]
+    public Guid UserId { get; set; }
+
+    private WelcomePanelDto? Model;
+
+    private bool IsLoading = true;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Model =
+            await DashboardService
+                .GetWelcomePanelAsync(UserId);
+
+        IsLoading = false;
+    }
+}

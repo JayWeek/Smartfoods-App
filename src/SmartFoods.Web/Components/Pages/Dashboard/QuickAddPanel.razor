@@ -1,0 +1,126 @@
+@* Components/Pages/Dashboard/QuickAddPanel.razor *@
+@using SmartFoods.Web.Models.DTOs.Dashboard
+@using SmartFoods.Web.Services.Dashboard
+
+@inject IDashboardService DashboardService
+
+<h2>Quick Add Food Item</h2>
+
+@if (!string.IsNullOrWhiteSpace(SuccessMessage))
+{
+    <p>@SuccessMessage</p>
+}
+
+@if (!string.IsNullOrWhiteSpace(ErrorMessage))
+{
+    <p>@ErrorMessage</p>
+}
+
+@* ADDED FormName="QuickAddFoodForm" below *@
+<EditForm
+    Model="Model"
+    FormName="QuickAddFoodForm"
+    OnValidSubmit="HandleSubmit">
+
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div>
+        <label>Name</label>
+        <InputText @bind-Value="Model.Name" />
+    </div>
+
+    <div>
+        <label>Quantity</label>
+        <InputNumber @bind-Value="Model.Quantity" />
+    </div>
+
+    <div>
+        <label>Unit</label>
+
+        <InputSelect @bind-Value="Model.Unit">
+            <option value="">Select Unit</option>
+            <option>Kg</option>
+            <option>Grams</option>
+            <option>Litres</option>
+            <option>Millilitres</option>
+            <option>Pieces</option>
+            <option>Packets</option>
+        </InputSelect>
+    </div>
+
+    <div>
+        <label>Category</label>
+
+        <InputSelect @bind-Value="Model.Category">
+            <option value="">Select Category</option>
+            <option>Dairy</option>
+            <option>Vegetables</option>
+            <option>Fruit</option>
+            <option>Meat</option>
+            <option>Grains</option>
+            <option>Beverages</option>
+            <option>Other</option>
+        </InputSelect>
+    </div>
+
+    <div>
+        <label>Expiry Date</label>
+
+        <InputDate @bind-Value="Model.ExpiryDate" />
+    </div>
+
+    <button type="submit" disabled="@IsSubmitting">
+        @if (IsSubmitting)
+        {
+            <span>Adding...</span>
+        }
+        else
+        {
+            <span>Add Item</span>
+        }
+    </button>
+
+</EditForm>
+
+@code {
+    [Parameter]
+    public Guid UserId { get; set; }
+
+    [Parameter]
+    public EventCallback OnItemAdded { get; set; }
+
+    // Decorated with SupplyParameterFromForm to match Blazor form model handling pattern
+    [SupplyParameterFromForm(FormName = "QuickAddFoodForm")]
+    private CreateFoodItemDto Model { get; set; } = new();
+
+    private string? SuccessMessage;
+    private string? ErrorMessage;
+    private bool IsSubmitting;
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            IsSubmitting = true;
+
+            await DashboardService.AddFoodItemAsync(UserId, Model);
+
+            SuccessMessage = $"{Model.Name} added successfully.";
+            ErrorMessage = null;
+
+            Model = new CreateFoodItemDto();
+
+            await OnItemAdded.InvokeAsync();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+            SuccessMessage = null;
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
+    }
+}
