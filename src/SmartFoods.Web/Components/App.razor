@@ -1,10 +1,30 @@
-<Router AppAssembly="@typeof(App).Assembly">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-    </Found>
+@* Components/App.razor *@
+<!DOCTYPE html>
+<html lang="en" style="height: 100vh; max-height: 100vh; overflow: hidden;">
 
-    <NotFound>
-        <h1>Page not found</h1>
-        <p>Sorry, that page doesn't exist.</p>
-    </NotFound>
-</Router>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <base href="/" />
+    <link rel="stylesheet" href="app.css" />
+    <HeadOutlet @rendermode="InteractiveServer" />
+</head>
+
+<body style="height: 100vh; max-height: 100vh; overflow: hidden; margin: 0; padding: 0;">
+    <Router AppAssembly="@typeof(App).Assembly">
+        <Found Context="routeData">
+            <RouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)" />
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            <PageTitle>Not found</PageTitle>
+            <LayoutView Layout="@typeof(Layout.MainLayout)">
+                <p role="alert">Sorry, there's nothing at this address.</p>
+            </LayoutView>
+        </NotFound>
+    </Router>
+
+    <script _framework="blazor.web.js"></script>
+</body>
+
+</html>

@@ -1,7 +1,77 @@
+@* Components/Layout/MainLayout.razor *@
 @inherits LayoutComponentBase
+@inject NavigationManager Navigation
 
-<div class="page">
-    <main>
+@* Force-lock the root screen containers to absolute static heights to kill double scrollbars *@
+<div class="sf-layout-wrapper" style="height: 100vh; max-height: 100vh; overflow: hidden; position: relative;">
+    
+    <!-- Mobile Header Top-Bar Utilities -->
+    <header class="sf-mobile-top-bar">
+        <a href="/dashboard" class="sf-sidebar-logo" style="margin-bottom: 0;">
+            <div class="sf-logo-icon">SF</div>
+            <div class="sf-logo-text">
+                SmartFoods
+                <span>Pantry Tracker</span>
+            </div>
+        </a>
+        <button class="sf-hamburger-button @(IsMobileNavOpen ? "open" : "")" @onclick="ToggleMobileNav" aria-label="Toggle Navigation Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </header>
+
+    <!-- Left Sidebar Engine (Frozen Solid) -->
+    <aside class="sf-left-sidebar @(IsMobileNavOpen ? "mobile-open" : "")">
+        <a href="/dashboard" class="sf-sidebar-logo" @onclick="CloseMobileNav">
+            <div class="sf-logo-icon">SF</div>
+            <div class="sf-logo-text">
+                SmartFoods
+                <span>Pantry Tracker</span>
+            </div>
+        </a>
+
+        <nav class="sf-navigation-stack">
+            <a href="/dashboard" class="sf-nav-item @(IsActivePage("/dashboard") ? "active" : "")" @onclick="CloseMobileNav">
+                @if (IsActivePage("/dashboard"))
+                {
+                    <div class="sf-nav-dot"></div>
+                }
+                <span>Overview Dashboard</span>
+            </a>
+
+            <a href="/dashboard/notifications" class="sf-nav-item @(IsActivePage("/dashboard/notifications") ? "active" : "")" @onclick="CloseMobileNav">
+                @if (IsActivePage("/dashboard/notifications"))
+                {
+                    <div class="sf-nav-dot"></div>
+                }
+                <span>Notification Logs</span>
+            </a>
+        </nav>
+
+        <div class="sf-sidebar-footer-group">
+            <a href="/logout" class="sf-nav-item" style="color: #c62828;">
+                <span>Sign Out Account</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Right Content Area (The ONLY layout element that will scroll) -->
+    <main class="sf-right-content-pane" style="height: 100vh; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 5rem;">
         @Body
     </main>
 </div>
+
+@code {
+    private bool IsMobileNavOpen;
+
+    private void ToggleMobileNav() => IsMobileNavOpen = !IsMobileNavOpen;
+    private void CloseMobileNav() => IsMobileNavOpen = false;
+
+    private bool IsActivePage(string path)
+    {
+        var relativeUrl = Navigation.ToBaseRelativePath(Navigation.Uri);
+        var currentPath = "/" + relativeUrl.Split('?')[0].TrimEnd('/');
+        return currentPath.Equals(path, StringComparison.OrdinalIgnoreCase);
+    }
+}

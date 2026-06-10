@@ -1,56 +1,51 @@
+@* Components/Pages/Dashboard/SmartSuggestionsPanel.razor *@
 @using SmartFoods.Web.Models.DTOs.Dashboard
 @using SmartFoods.Web.Services.Dashboard
 
 @inject IDashboardService DashboardService
 
-<h3>Smart Meal Suggestions</h3>
+<div class="sf-premium-card">
+    <h3 class="sf-card-header-title">Intelligent Kitchen Blueprint Ideas</h3>
+    <p class="sf-card-header-subtitle">Automated suggestions crossing your current expiring supplies against verified third-party API recipe matrix options.</p>
 
-@if (IsLoading)
-{
-    <p>Generating matching recipe recommendations...</p>
-}
-else if (Model is not null)
-{
-    @if (Model.IsEmptyState)
+    @if (IsLoading)
     {
-        <div style="border: 1px dashed #ccc; padding: 15px; margin-bottom: 20px;">
-            <p><strong>No suggestions yet.</strong></p>
-            <p>Once you add tracking items that are nearing their expiration deadlines, our integration engine will automatically surface meal inspirations utilizing those specific food supplies.</p>
-        </div>
+        <div class="sf-empty-state-notice">Querying third party API recipe networks...</div>
     }
-    else
+    else if (Model is not null)
     {
-        <div style="border: 1px solid #aaa; padding: 15px; margin-bottom: 20px; background-color: #fafafa;">
-            <p style="margin-top: 0; color: #555;">Based on items in your pantry needing attention soonest, consider trying these recipes:</p>
-            
-            <div style="display: flex; gap: 20px; flex-wrap: wrap;">
+        @if (Model.IsEmptyState)
+        {
+            <div class="sf-empty-state-notice">
+                No active blueprint options found within the current expiring tracking bounds.
+            </div>
+        }
+        else
+        {
+            <div class="sf-meals-recipe-grid">
                 @foreach (var rec in Model.Suggestions)
                 {
-                    <div style="border: 1px solid #ccc; background: #fff; padding: 10px; width: 220px; border-radius: 4px; display: flex; flex-direction: column; justify-content: space-between;">
-                        <div>
-                            @if (!string.IsNullOrWhiteSpace(rec.ImageUrl))
-                            {
-                                <img src="@rec.ImageUrl" alt="@rec.Title" style="width: 100%; height: 120px; object-fit: cover; border-radius: 2px; margin-bottom: 8px;" />
-                            }
-                            <h4 style="margin: 0 0 6px 0; font-size: 16px;">@rec.Title</h4>
-                            <p style="margin: 0 0 10px 0; font-size: 12px; color: #b22222; font-weight: bold;">
-                                💡 Uses your expiring <u>@rec.TargetIngredient</u>
-                            </p>
+                    <div class="sf-meal-recipe-card">
+                        @if (!string.IsNullOrWhiteSpace(rec.ImageUrl))
+                        {
+                            <img src="@rec.ImageUrl" alt="@rec.Title" loading="lazy" />
+                        }
+                        <div class="sf-meal-recipe-details">
+                            <h4>@rec.Title</h4>
+                            <p>💡 Uses expiring: @rec.TargetIngredient</p>
+                            <a href="@rec.SourceUrl" target="_blank" rel="noopener" class="sf-recipe-link-anchor">
+                                View Blueprint
+                            </a>
                         </div>
-                        <a href="@rec.SourceUrl" target="_blank" style="display: inline-block; padding: 6px; background-color: #007bff; color: white; text-align: center; text-decoration: none; border-radius: 3px; font-size: 13px; font-weight: bold;">
-                            View Recipe
-                        </a>
                     </div>
                 }
             </div>
-        </div>
+        }
     }
-}
+</div>
 
 @code {
-    [Parameter]
-    public Guid UserId { get; set; }
-
+    [Parameter] public Guid UserId { get; set; }
     private SmartSuggestionsDto? Model;
     private bool IsLoading = true;
 

@@ -1,49 +1,47 @@
+@* Components/Pages/Dashboard/CategoryChartPanel.razor *@
 @using SmartFoods.Web.Models.DTOs.Dashboard
 @using SmartFoods.Web.Services.Dashboard
 
 @inject IDashboardService DashboardService
 
-<h3>Food Categories Distribution</h3>
+<div class="sf-premium-card">
+    <h3 class="sf-card-header-title">Inventory Category Volume Distribution</h3>
+    <p class="sf-card-header-subtitle">Proportional volume calculation showing the structural alignment of stock elements across item profiles.</p>
 
-@if (IsLoading)
-{
-    <p>Calculating category volumes...</p>
-}
-else if (Model is not null)
-{
-    @if (Model.IsEmptyPantry)
+    @if (IsLoading)
     {
-        <div style="border: 1px dashed #ccc; padding: 15px; margin-bottom: 20px;">
-            <p><strong>No category distribution available.</strong></p>
-            <p>Distribution metrics (e.g., Dairy, Vegetables, Meat) will appear here as a breakdown chart once items populate your pantry profile.</p>
-        </div>
+        <div class="sf-empty-state-notice">Computing volume balances...</div>
     }
-    else
+    else if (Model is not null)
     {
-        <div style="border: 1px solid #aaa; padding: 15px; margin-bottom: 20px; max-width: 500px;">
-            <p style="margin-top: 0; color: #555;">Distribution of pantry items by category.</p>
-            
-            @foreach (var cat in Model.Categories)
-            {
-                <div style="margin-bottom: 12px;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
-                        <span><strong>@cat.CategoryName</strong> (@cat.ItemCount items)</span>
-                        <span>@cat.Percentage%</span>
+        @if (Model.IsEmptyPantry)
+        {
+            <div class="sf-empty-state-notice">
+                No categorical breakdown logs available.
+            </div>
+        }
+        else
+        {
+            <div class="sf-category-chart-row-container">
+                @foreach (var cat in Model.Categories)
+                {
+                    <div>
+                        <div class="sf-chart-row-header">
+                            <span style="color: var(--sf-purple-dark);">@cat.CategoryName <span style="font-weight: 500; font-size: 0.8rem; color: var(--sf-text-muted);">(@cat.ItemCount items)</span></span>
+                            <span style="color: var(--sf-purple-primary);">@cat.Percentage%</span>
+                        </div>
+                        <div class="sf-chart-bar-rail" style="margin-top: 0.35rem;">
+                            <div class="sf-chart-bar-fill" style="width: @(cat.Percentage)%;"></div>
+                        </div>
                     </div>
-                    <!-- Proportional bar rendering -->
-                    <div style="background-color: #eee; width: 100%; height: 14px; border-radius: 3px; overflow: hidden;">
-                        <div style="background-color: #4682b4; width: @(cat.Percentage)%; height: 100%;"></div>
-                    </div>
-                </div>
-            }
-        </div>
+                }
+            </div>
+        }
     }
-}
+</div>
 
 @code {
-    [Parameter]
-    public Guid UserId { get; set; }
-
+    [Parameter] public Guid UserId { get; set; }
     private CategoryChartDto? Model;
     private bool IsLoading = true;
 

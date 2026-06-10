@@ -109,7 +109,6 @@ C:\Users\geral\OneDrive\Dokument\BYU Folder\BYU_Programming\NET-Dev\Smartfoods2.
 C:\Users\geral\OneDrive\Dokument\BYU Folder\BYU_Programming\NET-Dev\Smartfoods2.0\src\SmartFoods.Web\obj\Debug\net9.0\rjsmcshtml.dswa.cache.json
 C:\Users\geral\OneDrive\Dokument\BYU Folder\BYU_Programming\NET-Dev\Smartfoods2.0\src\SmartFoods.Web\obj\Debug\net9.0\scopedcss\bundle\SmartFoods.Web.styles.css
 C:\Users\geral\OneDrive\Dokument\BYU Folder\BYU_Programming\NET-Dev\Smartfoods2.0\src\SmartFoods.Web\obj\Debug\net9.0\compressed\unlu0xluo6-{0}-eu7w3d5g1a-eu7w3d5g1a.gz
-C:\Users\geral\OneDrive\Dokument\BYU Folder\BYU_Programming\NET-Dev\Smartfoods2.0\src\SmartFoods.Web\obj\Debug\net9.0\compressed\x46631kctu-{0}-5ikwf454r2-5ikwf454r2.gz
 C:\Users\geral\OneDrive\Dokument\BYU Folder\BYU_Programming\NET-Dev\Smartfoods2.0\src\SmartFoods.Web\obj\Debug\net9.0\compressed\3gin1ph7ub-{0}-25o87uqmvr-25o87uqmvr.gz
 C:\Users\geral\OneDrive\Dokument\BYU Folder\BYU_Programming\NET-Dev\Smartfoods2.0\src\SmartFoods.Web\obj\Debug\net9.0\compressed\jpp7cyxo8z-{0}-l7w2gebx5i-l7w2gebx5i.gz
 C:\Users\geral\OneDrive\Dokument\BYU Folder\BYU_Programming\NET-Dev\Smartfoods2.0\src\SmartFoods.Web\obj\Debug\net9.0\staticwebassets.build.json
@@ -155,3 +154,5 @@ C:\Users\geral\OneDrive\Dokument\BYU Folder\BYU_Programming\NET-Dev\Smartfoods2.
 C:\Users\geral\OneDrive\Dokument\BYU Folder\BYU_Programming\NET-Dev\Smartfoods2.0\src\SmartFoods.Web\bin\Debug\net9.0\tr-TR\Hangfire.Core.resources.dll
 C:\Users\geral\OneDrive\Dokument\BYU Folder\BYU_Programming\NET-Dev\Smartfoods2.0\src\SmartFoods.Web\bin\Debug\net9.0\zh-TW\Hangfire.Core.resources.dll
 C:\Users\geral\OneDrive\Dokument\BYU Folder\BYU_Programming\NET-Dev\Smartfoods2.0\src\SmartFoods.Web\bin\Debug\net9.0\zh\Hangfire.Core.resources.dll
+C:\Users\geral\OneDrive\Dokument\BYU Folder\BYU_Programming\NET-Dev\Smartfoods2.0\src\SmartFoods.Web\obj\Debug\net9.0\SmartFoods.Web.sourcelink.json
+C:\Users\geral\OneDrive\Dokument\BYU Folder\BYU_Programming\NET-Dev\Smartfoods2.0\src\SmartFoods.Web\obj\Debug\net9.0\compressed\x46631kctu-{0}-jijgoaq6n5-jijgoaq6n5.gz

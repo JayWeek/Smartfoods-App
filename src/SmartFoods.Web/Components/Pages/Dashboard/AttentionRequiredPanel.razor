@@ -1,57 +1,49 @@
+@* Components/Pages/Dashboard/AttentionRequiredPanel.razor *@
 @using SmartFoods.Web.Models.DTOs.Dashboard
 @using SmartFoods.Web.Services.Dashboard
 
 @inject IDashboardService DashboardService
 
-<h3>Attention Required</h3>
+<div class="sf-premium-card" style="border-color: rgba(198, 40, 40, 0.12);">
+    <h3 class="sf-card-header-title" style="color: #4a148c;">Attention Required</h3>
+    <p class="sf-card-header-subtitle">Critical stock units fast approaching validation expiration timeline deadlines.</p>
 
-@if (IsLoading)
-{
-    <p>Checking expiry timelines...</p>
-}
-else if (Model is not null)
-{
-    @if (Model.HasNoUrgentItems)
+    @if (IsLoading)
     {
-        <div style="border: 1px dashed #ccc; padding: 15px; margin-bottom: 20px; color: green;">
-            <p><strong>All clear!</strong></p>
-            <p>No food items are expiring within the next 7 days. Your pantry is looking stable.</p>
-        </div>
+        <div class="sf-empty-state-notice">Analyzing expiry logs...</div>
     }
-    else
+    else if (Model is not null)
     {
-        <div style="border: 1px solid #b22222; padding: 15px; margin-bottom: 20px; background-color: #fff5f5;">
-            <p style="color: #b22222; font-weight: bold; margin-top: 0;">Items Expiring Soon</p>
-            <ul style="list-style-type: none; padding-left: 0; margin-bottom: 0;">
+        @if (Model.HasNoUrgentItems)
+        {
+            <div class="sf-alert-banner success-mode">
+                <strong>✓ All Clear</strong> All stock items reflect safe shelf lifetimes exceeding 7 days.
+            </div>
+        }
+        else
+        {
+            <div class="sf-list-group-wrapper">
                 @foreach (var item in Model.UrgentItems)
                 {
-                    <li style="margin-bottom: 8px; display: flex; justify-content: space-between; max-width: 400px; border-bottom: 1px dotted #ccc;">
-                        <span><strong>@item.Name</strong> (@item.Quantity @item.Unit)</span>
-                        <span style="color: #b22222; font-weight: bold;">
-                            @if (item.DaysRemaining == 0)
-                            {
-                                <span>Expires today!</span>
-                            }
-                            else if (item.DaysRemaining == 1)
-                            {
-                                <span>1 day left</span>
-                            }
-                            else
-                            {
-                                <span>@item.DaysRemaining days left</span>
-                            }
+                    <div class="sf-list-entry-item">
+                        <div>
+                            <div class="sf-list-entry-title-text">@item.Name</div>
+                            <div class="sf-list-entry-meta-text">Current Supply balance: @item.Quantity @item.Unit</div>
+                        </div>
+                        <span class="sf-pill-badge danger-theme">
+                            @if (item.DaysRemaining == 0) { <span>Expires today!</span> }
+                            else if (item.DaysRemaining == 1) { <span>1 day left</span> }
+                            else { <span>@item.DaysRemaining days remaining</span> }
                         </span>
-                    </li>
+                    </div>
                 }
-            </ul>
-        </div>
+            </div>
+        }
     }
-}
+</div>
 
 @code {
-    [Parameter]
-    public Guid UserId { get; set; }
-
+    [Parameter] public Guid UserId { get; set; }
     private AttentionRequiredDto? Model;
     private bool IsLoading = true;
 

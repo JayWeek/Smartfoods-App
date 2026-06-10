@@ -1,48 +1,43 @@
+@* Components/Pages/Dashboard/RecentActivityPanel.razor *@
 @using SmartFoods.Web.Models.DTOs.Dashboard
 @using SmartFoods.Web.Services.Dashboard
 
 @inject IDashboardService DashboardService
 
-<h3>Recently Added</h3>
+<div class="sf-premium-card">
+    <h3 class="sf-card-header-title">Recently Added</h3>
+    <p class="sf-card-header-subtitle">Chronological record tracing the latest 5 entries recorded to inventory storage files.</p>
 
-@if (IsLoading)
-{
-    <p>Loading activity logs...</p>
-}
-else if (Model is not null)
-{
-    @if (Model.IsEmptyHistory)
+    @if (IsLoading)
     {
-        <div style="border: 1px dashed #ccc; padding: 15px; margin-bottom: 20px;">
-            <p><strong>No recent activity logged.</strong></p>
-            <p>Your recently entered grocery checklist items will compile here so you never accidentally duplicate data entry inputs.</p>
-        </div>
+        <div class="sf-empty-state-notice">Fetching ledger entry points...</div>
     }
-    else
+    else if (Model is not null)
     {
-        <div style="border: 1px solid #aaa; padding: 15px; margin-bottom: 20px; max-width: 400px;">
-            <ul style="list-style-type: none; padding-left: 0; margin: 0;">
+        @if (Model.IsEmptyHistory)
+        {
+            <div class="sf-empty-state-notice">No entry actions registered inside this tracking circuit.</div>
+        }
+        else
+        {
+            <div class="sf-list-group-wrapper">
                 @foreach (var item in Model.RecentItems)
                 {
-                    <li style="margin-bottom: 8px; display: flex; align-items: center;">
-                        <span style="color: green; margin-right: 8px; font-weight: bold;">✓</span>
-                        <span>
-                            <strong>@item.Name</strong> (@item.Quantity @item.Unit) 
-                            <span style="color: #777; font-size: 12px; margin-left: 5px;">
-                                - @item.AddedAt.ToLocalTime().ToString("g")
-                            </span>
-                        </span>
-                    </li>
+                    <div class="sf-list-entry-item">
+                        <div>
+                            <div class="sf-list-entry-title-text">@item.Name</div>
+                            <div class="sf-list-entry-meta-text">Added @item.AddedAt.ToLocalTime().ToString("g")</div>
+                        </div>
+                        <span class="sf-pill-badge">@item.Quantity @item.Unit</span>
+                    </div>
                 }
-            </ul>
-        </div>
+            </div>
+        }
     }
-}
+</div>
 
 @code {
-    [Parameter]
-    public Guid UserId { get; set; }
-
+    [Parameter] public Guid UserId { get; set; }
     private RecentActivityDto? Model;
     private bool IsLoading = true;
 

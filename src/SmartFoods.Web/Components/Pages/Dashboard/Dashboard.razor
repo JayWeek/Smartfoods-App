@@ -1,3 +1,4 @@
+@* Components/Pages/Dashboard/Dashboard.razor *@
 @page "/dashboard"
 @rendermode InteractiveServer
 
@@ -11,36 +12,29 @@
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<PageTitle>Dashboard</PageTitle>
+<PageTitle>Dashboard - SmartFoods</PageTitle>
 
 @if (IsLoading)
 {
-    <p>Loading...</p>
+    <DashboardSkeleton />
 }
 else
 {
-    @* Wrapping siblings in a single keyed container forces a safe cascade update *@
-    <div @key="_dashboardVersion">
-        @* Feature 1: Welcome Panel *@
-        <WelcomePanel UserId="@CurrentUserId" />
+    <div class="sf-dashboard-grid-layout" @key="_dashboardVersion">
+        <!-- Left Dashboard Stack: Hero Welcome Banner, Summaries, and suggestions -->
+        <div class="sf-dashboard-column-stack">
+            <WelcomePanel UserId="@CurrentUserId" />
+            <PantrySummaryPanel UserId="@CurrentUserId" />
+            <CategoryChartPanel UserId="@CurrentUserId" />
+            <SmartSuggestionsPanel UserId="@CurrentUserId" />
+        </div>
 
-        @* Feature 2: Quick Add Area *@
-        <QuickAddPanel UserId="@CurrentUserId" OnItemAdded="HandleItemAdded" />
-
-        @* Feature 3: Pantry Summary Cards *@
-        <PantrySummaryPanel UserId="@CurrentUserId" />
-
-        @* Feature 4: Attention Required List *@
-        <AttentionRequiredPanel UserId="@CurrentUserId" />
-
-        @* Feature 5: Category Breakdown Chart *@
-        <CategoryChartPanel UserId="@CurrentUserId" />
-
-        @* Feature 6: Recent Activity List *@
-        <RecentActivityPanel UserId="@CurrentUserId" />
-
-        @* Feature 7: Smart Suggestions Panel *@
-        <SmartSuggestionsPanel UserId="@CurrentUserId" />
+        <!-- Right Dashboard Stack: Input Controls and Expiry Reminders Lists -->
+        <div class="sf-dashboard-column-stack">
+            <QuickAddPanel UserId="@CurrentUserId" OnItemAdded="HandleItemAdded" />
+            <AttentionRequiredPanel UserId="@CurrentUserId" />
+            <RecentActivityPanel UserId="@CurrentUserId" />
+        </div>
     </div>
 }
 
@@ -54,12 +48,11 @@ else
         var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
         var user = await UserManager.GetUserAsync(authState.User);
 
-        if (user is null)
+        if (user is not null)
         {
-            return;
+            CurrentUserId = user.Id;
         }
 
-        CurrentUserId = user.Id;
         IsLoading = false;
     }
 

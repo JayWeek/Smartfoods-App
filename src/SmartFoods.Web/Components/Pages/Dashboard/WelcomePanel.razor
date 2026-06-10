@@ -1,65 +1,34 @@
+@* Components/Pages/Dashboard/WelcomePanel.razor *@
 @using SmartFoods.Web.Models.DTOs.Dashboard
 @using SmartFoods.Web.Services.Dashboard
 
 @inject IDashboardService DashboardService
 
-@if (IsLoading)
+@if (!IsLoading && Model is not null)
 {
-    <p>Loading...</p>
-}
-else if (Model is not null)
-{
-    <div>
-        <h1>
-            Welcome back, @Model.UserName!
-        </h1>
+    <div class="sf-premium-card sf-welcome-hero-banner">
+        <h1>Welcome back, @Model.UserName!</h1>
 
         @if (Model.IsEmptyPantry)
         {
-            <p>
-                Your pantry is ready.
-            </p>
-
-            <p>
-                Start by adding a few food items
-                to begin tracking your pantry.
-            </p>
+            <p>Your tracking balance framework is setup. Record baseline supplies below to invoke active tracking logs.</p>
         }
         else
         {
-            <p>
-                You currently have
-                <strong>@Model.TotalFoodItems</strong>
-                food items across
-                <strong>@Model.TotalCategories</strong>
-                categories.
-            </p>
-
-            <p>
-                <strong>
-                    @Model.ItemsNeedingAttention
-                </strong>
-                items need attention this week.
-            </p>
+            <p>Your configuration is tracking <strong>@Model.TotalFoodItems</strong> supplies across <strong>@Model.TotalCategories</strong> category metrics. There are <strong>@Model.ItemsNeedingAttention</strong> items requiring consumption review cycles this week.</p>
         }
     </div>
 }
 
 @code {
-
-    [Parameter]
-    public Guid UserId { get; set; }
-
+    [Parameter] public Guid UserId { get; set; }
     private WelcomePanelDto? Model;
-
     private bool IsLoading = true;
 
     protected override async Task OnParametersSetAsync()
     {
-        Model =
-            await DashboardService
-                .GetWelcomePanelAsync(UserId);
-
+        IsLoading = true;
+        Model = await DashboardService.GetWelcomePanelAsync(UserId);
         IsLoading = false;
     }
 }

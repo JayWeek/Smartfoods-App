@@ -63,6 +63,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xEYXNoYm9hcmRcRGFzaGJvYXJkLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/geral/OneDrive/Dokument/BYU Folder/BYU_Programming/NET-Dev/Smartfoods2.0/src/SmartFoods.Web/Components/Pages/Dashboard/DashboardSkeleton.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xEYXNoYm9hcmRcRGFzaGJvYXJkU2tlbGV0b24ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/geral/OneDrive/Dokument/BYU Folder/BYU_Programming/NET-Dev/Smartfoods2.0/src/SmartFoods.Web/Components/Pages/Dashboard/NotificationDetail.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xEYXNoYm9hcmRcTm90aWZpY2F0aW9uRGV0YWlsLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
@@ -97,6 +101,10 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/geral/OneDrive/Dokument/BYU Folder/BYU_Programming/NET-Dev/Smartfoods2.0/src/SmartFoods.Web/Components/Pages/Index.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbmRleC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/geral/OneDrive/Dokument/BYU Folder/BYU_Programming/NET-Dev/Smartfoods2.0/src/SmartFoods.Web/Components/Routes.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xSb3V0ZXMucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/geral/OneDrive/Dokument/BYU Folder/BYU_Programming/NET-Dev/Smartfoods2.0/src/SmartFoods.Web/Components/_Imports.razor]

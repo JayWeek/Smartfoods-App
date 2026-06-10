@@ -1,54 +1,53 @@
+@* Components/Pages/Dashboard/PantrySummaryPanel.razor *@
 @using SmartFoods.Web.Models.DTOs.Dashboard
 @using SmartFoods.Web.Services.Dashboard
 
 @inject IDashboardService DashboardService
 
-<h3>Pantry Summary</h3>
+<div class="sf-premium-card">
+    <h3 class="sf-card-header-title">Pantry Summary</h3>
+    <p class="sf-card-header-subtitle">Aggregated metrics detailing tracking totals recorded across database server tables.</p>
 
-@if (IsLoading)
-{
-    <p>Loading summary...</p>
-}
-else if (Model is not null)
-{
-    @if (Model.IsEmptyPantry)
+    @if (IsLoading)
     {
-        <div style="border: 1px dashed #ccc; padding: 15px; margin-bottom: 20px;">
-            <p><strong>No items tracked yet.</strong></p>
-            <p>Once you add grocery items, summary breakdown cards (Total Items, Categories, and Expiring Status) will populate here instantly.</p>
+        <div class="sf-summary-metric-row">
+            <div class="sf-summary-metric-tile"><span>Loading...</span></div>
+            <div class="sf-summary-metric-tile"><span>Loading...</span></div>
+            <div class="sf-summary-metric-tile"><span>Loading...</span></div>
         </div>
     }
-    else
+    else if (Model is not null)
     {
-        <div style="display: flex; gap: 20px; margin-bottom: 20px;">
-            <!-- Card 1: Total Items -->
-            <div style="border: 1px solid #aaa; padding: 15px; min-width: 150px;">
-                <h4>Total Items</h4>
-                <p style="font-size: 24px; font-weight: bold; margin: 5px 0;">@Model.TotalFoodItems</p>
-                <small>Items in Pantry</small>
+        @if (Model.IsEmptyPantry)
+        {
+            <div class="sf-empty-state-notice">
+                No storage parameters logged into memory archives.
             </div>
+        }
+        else
+        {
+            <div class="sf-summary-metric-row">
+                <div class="sf-summary-metric-tile">
+                    <span>Total Items</span>
+                    <strong>@Model.TotalFoodItems</strong>
+                </div>
 
-            <!-- Card 2: Expiring Soon -->
-            <div style="border: 1px solid #aaa; padding: 15px; min-width: 150px;">
-                <h4>Expiring Soon</h4>
-                <p style="font-size: 24px; font-weight: bold; margin: 5px 0; color: #b22222;">@Model.ExpiringSoonCount</p>
-                <small>Expiring Within 7 Days</small>
-            </div>
+                <div class="sf-summary-metric-tile" style="border-color: rgba(198, 40, 40, 0.15);">
+                    <span style="color: #c62828;">Expiring Soon</span>
+                    <strong style="color: #c62828;">@Model.ExpiringSoonCount</strong>
+                </div>
 
-            <!-- Card 3: Categories -->
-            <div style="border: 1px solid #aaa; padding: 15px; min-width: 150px;">
-                <h4>Categories</h4>
-                <p style="font-size: 24px; font-weight: bold; margin: 5px 0;">@Model.TotalCategories</p>
-                <small>Food Categories</small>
+                <div class="sf-summary-metric-tile">
+                    <span>Categories</span>
+                    <strong>@Model.TotalCategories</strong>
+                </div>
             </div>
-        </div>
+        }
     }
-}
+</div>
 
 @code {
-    [Parameter]
-    public Guid UserId { get; set; }
-
+    [Parameter] public Guid UserId { get; set; }
     private PantrySummaryDto? Model;
     private bool IsLoading = true;
 

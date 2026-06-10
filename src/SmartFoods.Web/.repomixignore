@@ -31,3 +31,4 @@ usersecrets/
 # Ignore local database files or SQLite files if used locally
 *.db
 *.sqlite
+.gitignore

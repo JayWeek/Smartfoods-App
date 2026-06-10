@@ -4,95 +4,80 @@
 
 @inject IDashboardService DashboardService
 
-<h2>Quick Add Food Item</h2>
+<div class="sf-premium-card">
+    <h3 class="sf-card-header-title">Quick Add Supply Item</h3>
+    <p class="sf-card-header-subtitle">Record new grocery stock balances instantly into the database ledger lines.</p>
 
-@if (!string.IsNullOrWhiteSpace(SuccessMessage))
-{
-    <p>@SuccessMessage</p>
-}
+    @if (!string.IsNullOrWhiteSpace(SuccessMessage))
+    {
+        <div class="sf-alert-banner success-mode">✓ @SuccessMessage</div>
+    }
 
-@if (!string.IsNullOrWhiteSpace(ErrorMessage))
-{
-    <p>@ErrorMessage</p>
-}
+    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <div class="sf-alert-banner error-mode">⚠ @ErrorMessage</div>
+    }
 
-@* ADDED FormName="QuickAddFoodForm" below *@
-<EditForm
-    Model="Model"
-    FormName="QuickAddFoodForm"
-    OnValidSubmit="HandleSubmit">
+    <EditForm Model="Model" FormName="QuickAddFoodForm" OnValidSubmit="HandleSubmit" class="sf-premium-form-layout">
+        <DataAnnotationsValidator />
 
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+        <div class="sf-form-field-block">
+            <label>Item Name</label>
+            <InputText @bind-Value="Model.Name" class="sf-form-input-element" placeholder="e.g., Whole Organic Milk" />
+        </div>
 
-    <div>
-        <label>Name</label>
-        <InputText @bind-Value="Model.Name" />
-    </div>
+        <div class="sf-form-double-column">
+            <div class="sf-form-field-block">
+                <label>Quantity</label>
+                <InputNumber TValue="decimal" Value="@Model.Quantity" ValueChanged="@(value => Model.Quantity = value)" ValueExpression="@(() => Model.Quantity)" class="sf-form-input-element" placeholder="0" step="0.01" />
+            </div>
 
-    <div>
-        <label>Quantity</label>
-        <InputNumber @bind-Value="Model.Quantity" />
-    </div>
+            <div class="sf-form-field-block">
+                <label>Measurement Unit</label>
+                <InputSelect @bind-Value="Model.Unit" class="sf-form-input-element">
+                    <option value="">Select Unit</option>
+                    <option value="Kg">Kg</option>
+                    <option value="Grams">Grams</option>
+                    <option value="Litres">Litres</option>
+                    <option value="Pieces">Pieces</option>
+                    <option value="Packets">Packets</option>
+                </InputSelect>
+            </div>
+        </div>
 
-    <div>
-        <label>Unit</label>
+        <div class="sf-form-double-column">
+            <div class="sf-form-field-block">
+                <label>Food Category</label>
+                <InputSelect @bind-Value="Model.Category" class="sf-form-input-element">
+                    <option value="">Select Category</option>
+                    <option value="Dairy">Dairy</option>
+                    <option value="Vegetables">Vegetables</option>
+                    <option value="Fruit">Fruit</option>
+                    <option value="Meat">Meat</option>
+                    <option value="Grains">Grains</option>
+                    <option value="Beverages">Beverages</option>
+                    <option value="Other">Other</option>
+                </InputSelect>
+            </div>
 
-        <InputSelect @bind-Value="Model.Unit">
-            <option value="">Select Unit</option>
-            <option>Kg</option>
-            <option>Grams</option>
-            <option>Litres</option>
-            <option>Millilitres</option>
-            <option>Pieces</option>
-            <option>Packets</option>
-        </InputSelect>
-    </div>
+            <div class="sf-form-field-block">
+                <label>Expiration Date</label>
+                <InputDate @bind-Value="Model.ExpiryDate" class="sf-form-input-element" />
+            </div>
+        </div>
 
-    <div>
-        <label>Category</label>
-
-        <InputSelect @bind-Value="Model.Category">
-            <option value="">Select Category</option>
-            <option>Dairy</option>
-            <option>Vegetables</option>
-            <option>Fruit</option>
-            <option>Meat</option>
-            <option>Grains</option>
-            <option>Beverages</option>
-            <option>Other</option>
-        </InputSelect>
-    </div>
-
-    <div>
-        <label>Expiry Date</label>
-
-        <InputDate @bind-Value="Model.ExpiryDate" />
-    </div>
-
-    <button type="submit" disabled="@IsSubmitting">
-        @if (IsSubmitting)
-        {
-            <span>Adding...</span>
-        }
-        else
-        {
-            <span>Add Item</span>
-        }
-    </button>
-
-</EditForm>
+        <button type="submit" class="sf-action-submit-button" style="margin-top: 0.5rem;" disabled="@IsSubmitting">
+            @(IsSubmitting ? "Saving to Database Ledger..." : "Add Item to Pantry")
+        </button>
+    </EditForm>
+</div>
 
 @code {
-    [Parameter]
-    public Guid UserId { get; set; }
+    [Parameter] public Guid UserId { get; set; }
+    [Parameter] public EventCallback OnItemAdded { get; set; }
 
-    [Parameter]
-    public EventCallback OnItemAdded { get; set; }
-
-    // Decorated with SupplyParameterFromForm to match Blazor form model handling pattern
     [SupplyParameterFromForm(FormName = "QuickAddFoodForm")]
-    private CreateFoodItemDto Model { get; set; } = new();
+    private CreateFoodItemDto Model { get; set; } = new() { ExpiryDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)) };
 
     private string? SuccessMessage;
     private string? ErrorMessage;
@@ -103,14 +88,10 @@
         try
         {
             IsSubmitting = true;
-
             await DashboardService.AddFoodItemAsync(UserId, Model);
-
-            SuccessMessage = $"{Model.Name} added successfully.";
+            SuccessMessage = $"{Model.Name} successfully catalogued.";
             ErrorMessage = null;
-
-            Model = new CreateFoodItemDto();
-
+            Model = new CreateFoodItemDto { ExpiryDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)) };
             await OnItemAdded.InvokeAsync();
         }
         catch (Exception ex)
