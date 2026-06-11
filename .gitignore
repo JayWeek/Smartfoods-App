@@ -1,0 +1,13 @@
+# Local app configuration
+src/SmartFoods.Web/appsettings.json
+src/SmartFoods.Web/appsettings.Development.json
+
+# Build artifacts
+**/bin/
+**/obj/
+**/.vs/
+
+# User-specific files
+*.user
+*.suo
+*.rsuser

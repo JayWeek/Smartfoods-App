@@ -5,48 +5,48 @@
 
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 
-<h3>Recent Notifications</h3>
+<div class="sf-premium-card">
+    <h3 class="sf-card-header-title">Historical Reminder Trace Logs</h3>
+    <p class="sf-card-header-subtitle">Review up to the latest 10 automated email deliveries executed across your account line.</p>
 
-@if (IsLoading)
-{
-    <p>Loading notification archives...</p>
-}
-else if (Logs != null)
-{
-    @if (!Logs.Any())
+    @if (IsLoading)
     {
-        <div style="border: 1px dashed #ccc; padding: 15px; margin-bottom: 20px;">
-            <p><strong>Your inbox is clear.</strong></p>
-            <p>Historical reminders, daily expiration logs, and recipe recommendation alerts will register right here once items near their deadlines.</p>
-        </div>
+        <div class="sf-empty-state-notice">Streaming notification logs...</div>
     }
-    else
+    else if (Logs != null)
     {
-        <div style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
-            @foreach (var log in Logs)
-            {
-                <div style="border: 1px solid #ccc; padding: 15px; border-radius: 4px; background-color: #fff; display: flex; justify-content: space-between; align-items: center;">
-                    <div>
-                        <div style="font-size: 12px; color: #666; margin-bottom: 4px;">
-                            📅 <strong>@log.NotificationDate.ToString("d")</strong>
+        @if (!Logs.Any())
+        {
+            <div class="sf-empty-state-notice" style="padding: 3rem 1.5rem;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📥</div>
+                <strong>Your reminder box is clean</strong>
+                <p style="margin: 0.25rem 0 0 0; font-size: 0.82rem; color: var(--sf-text-muted);">Daily critical expiry notifications will catalogue here once items trigger tracking limits.</p>
+            </div>
+        }
+        else
+        {
+            <div class="sf-list-group-wrapper">
+                @foreach (var log in Logs)
+                {
+                    <div class="sf-list-entry-item" style="background: rgba(255, 255, 255, 0.85); border-color: rgba(124, 77, 255, 0.08);">
+                        <div>
+                            <div style="font-size: 0.75rem; font-weight: 750; color: var(--sf-purple-primary); margin-bottom: 0.25rem;">
+                                📅 DELIVERED @log.NotificationDate.ToString("D").ToUpper()
+                            </div>
+                            <div class="sf-list-entry-title-text" style="font-size: 1.05rem; color: var(--sf-purple-dark);">@log.Title</div>
                         </div>
-                        <h4 style="margin: 0; font-size: 16px; color: #333;">@log.Title</h4>
+                        <a href="/notifications/@log.Id" class="sf-recipe-link-anchor" style="margin-top: 0; width: auto; padding: 0.6rem 1.2rem;">
+                            Read Message →
+                        </a>
                     </div>
-                    
-                    @* Action link to our new dedicated detail path *@
-                    <a href="/notifications/@log.Id" style="display: inline-block; padding: 6px 12px; background-color: #007bff; color: white; text-decoration: none; border-radius: 4px; font-size: 13px; font-weight: bold;">
-                        Read Message →
-                    </a>
-                </div>
-            }
-        </div>
+                }
+            </div>
+        }
     }
-}
+</div>
 
 @code {
-    [Parameter]
-    public Guid UserId { get; set; }
-
+    [Parameter] public Guid UserId { get; set; }
     private List<NotificationLog>? Logs;
     private bool IsLoading = true;
 
@@ -55,7 +55,6 @@ else if (Logs != null)
         IsLoading = true;
         using var dbContext = await DbContextFactory.CreateDbContextAsync();
 
-        // Extract latest 10 alerts delivered to this specific user profile
         Logs = await dbContext.NotificationLogs
             .AsNoTracking()
             .Where(n => n.UserId == UserId)
