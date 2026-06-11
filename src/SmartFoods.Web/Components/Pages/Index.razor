@@ -1,13 +1,30 @@
+@* Components/Pages/Index.razor *@
 @page "/"
 
-<PageTitle>Home - SmartFoods</PageTitle>
+<PageTitle>Welcome to SmartFoods</PageTitle>
 
-<div class="container mt-5">
-    <h1>Welcome to SmartFoods</h1>
-    <p>Manage your pantry and track your food items efficiently.</p>
-    
-    <div class="mt-4">
-        <a href="/login" class="btn btn-primary me-2">Login</a>
-        <a href="/register" class="btn btn-secondary">Register</a>
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; text-align: center;">
+    <div class="sf-premium-card" style="max-width: 540px; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; animation: sf-fade-up 0.5s ease both;">
+        
+        <div class="sf-logo-icon" style="width: 60px; height: 60px; font-size: 1.6rem; border-radius: 16px;">SF</div>
+        
+        <div>
+            <h1 style="margin: 0 0 0.5rem 0; font-size: 2.2rem; font-weight: 850; color: var(--sf-purple-dark); letter-spacing: -0.02em;">
+                SmartFoods
+            </h1>
+            <p style="margin: 0; font-size: 1.05rem; color: var(--sf-text-muted); line-height: 1.5;">
+                Manage your pantry, calculate dynamic supply lifespans, and generate matching meal recipes efficiently.
+            </p>
+        </div>
+
+        <div style="display: flex; gap: 1rem; width: 100%; margin-top: 1rem;">
+            <a href="/login" class="sf-action-submit-button" style="text-decoration: none; text-align: center; flex: 1;">
+                Login Account
+            </a>
+            <a href="/register" class="sf-action-submit-button" style="text-decoration: none; text-align: center; flex: 1; background: var(--sf-purple-light); color: var(--sf-purple-dark); box-shadow: none; border: 1px solid rgba(124, 77, 255, 0.15);">
+                Register
+            </a>
+        </div>
+        
     </div>
 </div>

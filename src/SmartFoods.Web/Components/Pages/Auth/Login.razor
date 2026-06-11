@@ -1,4 +1,4 @@
-@* src/SmartFoods.Web/Components/Pages/Auth/Login.razor *@
+@* Components/Pages/Auth/Login.razor *@
 @page "/login"
 
 @using SmartFoods.Web.Models.DTOs
@@ -8,31 +8,59 @@
 @inject IAuthService AuthService
 @inject NavigationManager Navigation
 
-<h3>Login</h3>
+<PageTitle>Sign In - SmartFoods</PageTitle>
 
-@if (!string.IsNullOrWhiteSpace(ErrorMessage))
-{
-    <p style="color:red">@ErrorMessage</p>
-}
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem;">
+    <div class="sf-premium-card" style="width: 100%; max-width: 440px; padding: 2.5rem 2rem; animation: sf-fade-up 0.5s ease both;">
+        
+        <!-- Header Brand Indicator -->
+        <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 2rem; gap: 0.75rem;">
+            <div class="sf-logo-icon">SF</div>
+            <h2 style="margin: 0; font-size: 1.6rem; font-weight: 800; color: var(--sf-purple-dark);">Welcome Back</h2>
+            <p style="margin: 0; font-size: 0.88rem; color: var(--sf-text-muted);">Enter your credentials to access your pantry ledger dashboards.</p>
+        </div>
 
-<EditForm Model="Model" OnValidSubmit="ExecuteLogin" FormName="LoginForm" method="post">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+        <!-- System Status Notifications -->
+        @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+        {
+            <div class="sf-alert-banner error-mode" style="animation: sf-scale-in 0.3s ease both;">
+                ⚠ @ErrorMessage
+            </div>
+        }
 
-    <div>
-        <label>Email</label>
-        <InputText @bind-Value="Model.Email" type="email" />
+        <!-- Interactive Credentials Input Form -->
+        <EditForm Model="Model" OnValidSubmit="ExecuteLogin" FormName="LoginForm" method="post" class="sf-premium-form-layout">
+            <DataAnnotationsValidator />
+
+            <div class="sf-form-field-block">
+                <label>Email Address</label>
+                <InputText @bind-Value="Model.Email" type="email" class="sf-form-input-element" placeholder="name@domain.com" autocomplete="username" />
+                <div style="font-size: 0.78rem; color: #c62828; margin-top: 0.25rem;"><ValidationMessage For="() => Model.Email" /></div>
+            </div>
+
+            <div class="sf-form-field-block">
+                <label>Account Password</label>
+                <InputText type="password" @bind-Value="Model.Password" class="sf-form-input-element" placeholder="••••••••" autocomplete="current-password" />
+                <div style="font-size: 0.78rem; color: #c62828; margin-top: 0.25rem;"><ValidationMessage For="() => Model.Password" /></div>
+            </div>
+
+            <button type="submit" class="sf-action-submit-button" style="margin-top: 0.5rem;" disabled="@IsSubmitting">
+                @(IsSubmitting ? "Verifying Credentials..." : "Sign In to Dashboard")
+            </button>
+        </EditForm>
+
+        <!-- Contextual Alternative Action Routing Footer -->
+        <div style="margin-top: 2rem; text-align: center; border-top: 1px solid var(--sf-card-border); padding-top: 1.25rem;">
+            <p style="margin: 0; font-size: 0.88rem; color: var(--sf-text-muted);">
+                Don't have an account? 
+                <a href="/register" style="color: var(--sf-purple-primary); font-weight: 700; text-decoration: none; margin-left: 0.25rem; transition: var(--sf-transition-smooth);">
+                    Register Now
+                </a>
+            </p>
+        </div>
+
     </div>
-
-    <div>
-        <label>Password</label>
-        <InputText type="password" @bind-Value="Model.Password" />
-    </div>
-
-    <button type="submit">
-        Login
-    </button>
-</EditForm>
+</div>
 
 @code {
     [SupplyParameterFromForm]
@@ -42,22 +70,49 @@
     private string? ReturnUrl { get; set; }
 
     private string? ErrorMessage;
+    private bool IsSubmitting;
 
     private async Task ExecuteLogin()
     {
-        var success = await AuthService.LoginAsync(Model);
-
-        if (success)
+        try 
         {
-            Navigation.NavigateTo(
-                string.IsNullOrWhiteSpace(ReturnUrl)
-                    ? "/dashboard"
-                    : ReturnUrl,
-                forceLoad: true);
+            IsSubmitting = true;
+            ErrorMessage = null;
+            
+            var success = await AuthService.LoginAsync(Model);
 
-            return;
+            if (success)
+            {
+                // This call triggers a standard NavigationException to stop rendering.
+                Navigation.NavigateTo(
+                    string.IsNullOrWhiteSpace(ReturnUrl) ? "/dashboard" : ReturnUrl,
+                    forceLoad: true);
+                return;
+            }
+
+            // Friendly message for input errors
+            ErrorMessage = "Invalid email address or password sequence.";
         }
+        catch (NavigationException)
+        {
+            // CRITICAL: Let Blazor handle its redirection process cleanly. 
+            // Do NOT catch or print this exception to the user.
+            throw;
+        }
+        catch (Exception ex)
+        {
+            // CRITICAL DIAGNOSTIC: Print the actual system error details quietly to the server terminal console log stream 
+            // so you can still debug it locally.
+            Console.WriteLine($"[SmartFoods Auth Failure Debug]: {ex.Message}");
+            if (ex.InnerException != null) Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
 
-        ErrorMessage = "Invalid email or password.";
+            // Friendly message displayed on the frontend UI for unexpected system crashes
+            ErrorMessage = "Something went wrong on our end. Please try again or contact support if the issue persists.";
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
     }
 }
+

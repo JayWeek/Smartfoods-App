@@ -1,5 +1,6 @@
 @* Components/Pages/Dashboard/NotificationDetail.razor *@
 @page "/notifications/{Id:guid}"
+@layout DashboardLayout
 @rendermode InteractiveServer
 
 @using SmartFoods.Web.Data
@@ -31,16 +32,26 @@ else if (LogItem is null)
 }
 else
 {
-    <div class="sf-premium-card" style="max-width: 750px; animation: sf-fade-up 0.4s ease both;">
-        <div style="border-bottom: 1px solid var(--sf-card-border); padding-bottom: 1rem; margin-bottom: 1.5rem;">
-            <span style="font-size: 0.8rem; font-weight: 700; color: var(--sf-text-muted);">Sent tracking archive timestamp: @LogItem.SentAt.ToLocalTime().ToString("f")</span>
-            <h2 style="margin: 0.5rem 0 0 0; font-size: 1.6rem; font-weight: 850; color: var(--sf-purple-dark); line-height: 1.2;">@LogItem.Title</h2>
+    <div class="sf-premium-card" style="max-width: 720px; padding: 2.5rem; animation: sf-fade-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;">
+        
+        <!-- Header Trace Section -->
+        <div style="border-bottom: 1px solid var(--sf-card-border); padding-bottom: 1.25rem; margin-bottom: 2rem;">
+            <div style="font-size: 0.78rem; font-weight: 750; color: var(--sf-purple-primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">
+                System Delivery Logs
+            </div>
+            <h1 style="margin: 0 0 0.5rem 0; font-size: 1.5rem; font-weight: 850; color: var(--sf-purple-dark); line-height: 1.25;">
+                @LogItem.Title
+            </h1>
+            <span style="font-size: 0.82rem; color: var(--sf-text-muted); font-weight: 500;">
+                Archived trace sequence: @LogItem.SentAt.ToLocalTime().ToString("f")
+            </span>
         </div>
 
-        @* Renders the safe HTML payload message compiled by your Hangfire background worker *@
-        <div style="line-height: 1.7; color: var(--sf-text-main); font-size: 0.98rem; background: #ffffff; padding: 1.5rem; border-radius: 8px; border: 1px solid rgba(124, 77, 255, 0.05);">
+        <!-- Rendered Container Block -->
+        <div style="background: transparent; padding: 0; border: none;">
             @((MarkupString)LogItem.MessageBody)
         </div>
+        
     </div>
 }
 

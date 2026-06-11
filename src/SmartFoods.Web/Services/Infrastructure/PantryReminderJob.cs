@@ -62,29 +62,82 @@ public class PantryReminderJob
                 .Select(i => i.Recipe)
                 .FirstOrDefaultAsync();
 
-            // 5. Construct the HTML Notification Message Template
+            // 5. Construct the Premium HTML Notification Message Template
+            // 5. Construct the Premium HTML Notification Message Template (Email-Safe & Blazor-Optimized)
             var emailBuilder = new StringBuilder();
-            emailBuilder.Append($"<h2>Hello, {user.Name}!</h2>");
-            emailBuilder.Append("<p>This is a quick summary of items in your pantry needing attention within the next 3 days:</p>");
-            emailBuilder.Append("<ul>");
-            
+
+            emailBuilder.Append("<div style=\"font-family: 'Inter', -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #211c2b; max-width: 600px; margin: 0 auto; padding: 10px;\">");
+            emailBuilder.Append($"<h2 style=\"margin: 0 0 8px 0; font-size: 1.4rem; font-weight: 800; color: #4a148c;\">Hello, {user.Name}!</h2>");
+            emailBuilder.Append("<p style=\"margin: 0 0 20px 0; font-size: 0.95rem; color: #6e657b; line-height: 1.5;\">This is a summary of tracking items in your pantry requiring consumption within your critical 3-day window:</p>");
+
+            // Use a clean table structures for guaranteed cross-client support instead of flex grids
+            emailBuilder.Append("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width: 100%; border-collapse: separate; margin-bottom: 25px;\">");
             foreach (var item in criticalItems)
             {
                 var daysLeft = item.ExpiryDate.DayNumber - today.DayNumber;
-                var dayText = daysLeft == 0 ? "Expires today!" : daysLeft == 1 ? "1 day left" : $"{daysLeft} days left";
-                emailBuilder.Append($"<li><strong>{item.Name}</strong> ({item.Quantity} {item.Unit}) - <span style='color:red;'>{dayText}</span></li>");
-            }
-            emailBuilder.Append("</ul>");
+                
+                string badgeBg = daysLeft == 0 ? "#ffebee" : "#fff3e0";
+                string badgeText = daysLeft == 0 ? "#c62828" : "#e65100";
+                string dayLabel = daysLeft == 0 ? "Expires Today" : daysLeft == 1 ? "1 Day Left" : $"{daysLeft} Days Remaining";
 
+                emailBuilder.Append($@"
+                    <tr>
+                        <td style=""padding: 14px 16px; background-color: #fbf9ff; border-top: 1px solid rgba(124, 77, 255, 0.08); border-bottom: 1px solid rgba(124, 77, 255, 0.08); border-left: 1px solid rgba(124, 77, 255, 0.08); border-right: 1px solid rgba(124, 77, 255, 0.08); border-radius: 12px; margin-bottom: 10px; display: block;"">
+                            <table cellpadding=""0"" cellspacing=""0"" border=""0"" style=""width: 100%;"">
+                                <tr>
+                                    <td style=""font-size: 0.95rem; font-weight: 600; color: #211c2b; vertical-align: middle;"">
+                                        <strong style=""color: #4a148c; font-weight: 750;"">{item.Name}</strong>
+                                        <span style=""font-size: 0.85rem; color: #6e657b; font-weight: 500; margin-left: 4px;"">({item.Quantity} {item.Unit})</span>
+                                    </td>
+                                    <td style=""text-align: right; vertical-align: middle;"">
+                                        <span style=""padding: 4px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 750; background-color: {badgeBg}; color: {badgeText}; text-transform: uppercase; letter-spacing: 0.03em; display: inline-block;"">
+                                            {dayLabel}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr><td style=""height: 8px; font-size: 8px; line-height: 8px;"">&nbsp;</td></tr>");
+            }
+            emailBuilder.Append("</table>");
+
+            // Premium Recipe Card Section
             if (matchedRecipe != null)
             {
-                emailBuilder.Append("<br/><h3>💡 Suggested Meal Idea</h3>");
-                emailBuilder.Append($"<p>To use up your expiring ingredients, consider making: <strong>{matchedRecipe.Title}</strong></p>");
-                emailBuilder.Append($"<p><a href='{matchedRecipe.SourceUrl}' style='display:inline-block;padding:8px 12px;background-color:#28a745;color:white;text-decoration:none;border-radius:4px;'>View Recipe Instructions</a></p>");
+                emailBuilder.Append("<div style=\"border-top: 1px solid rgba(124, 77, 255, 0.12); padding-top: 20px; margin-top: 25px;\">");
+                emailBuilder.Append("<h3 style=\"margin: 0 0 14px 0; font-size: 1.1rem; font-weight: 750; color: #4a148c;\">💡 Recommended Meal Idea</h3>");
+                
+                emailBuilder.Append(@"
+                    <table cellpadding=""0"" cellspacing=""0"" border=""0"" style=""width: 100%; background-color: #ffffff; border: 1px solid rgba(124, 77, 255, 0.12); border-radius: 14px; overflow: hidden;""><tr>");
+
+                if (!string.IsNullOrWhiteSpace(matchedRecipe.ImageUrl))
+                {
+                    emailBuilder.Append($@"
+                            <td style=""width: 150px; min-width: 150px; max-width: 150px; vertical-align: top;"">
+                                <img src=""{matchedRecipe.ImageUrl}"" alt=""{matchedRecipe.Title}"" style=""width: 150px; height: 130px; object-fit: cover; display: block; border-top-left-radius: 13px; border-bottom-left-radius: 13px;"" />
+                            </td>");
+                }
+
+                emailBuilder.Append($@"
+                            <td style=""padding: 18px; vertical-align: middle; text-align: left;"">
+                                <h4 style=""margin: 0 0 4px 0; font-size: 1.05rem; font-weight: 750; color: #4a148c; line-height: 1.35;"">{matchedRecipe.Title}</h4>
+                                <p style=""margin: 0 0 14px 0; font-size: 0.82rem; color: #6e657b; line-height: 1.4;"">This meal blueprint automatically salvages your expiring supplies to minimize kitchen food waste lines.</p>
+                                <a href=""{matchedRecipe.SourceUrl}"" target=""_blank"" rel=""noopener"" style=""display: inline-block; padding: 8px 16px; background: linear-gradient(135deg, #7c4dff, #b388ff); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 750; font-size: 0.8rem; text-align: center;"">
+                                    View Blueprint Instructions →
+                                </a>
+                            </td>
+                        </tr>
+                    </table>");
+                emailBuilder.Append("</div>");
             }
+
+            emailBuilder.Append("</div>");
 
             var subject = $"SmartFoods Reminder: {criticalItems.Count} items need attention soon!";
             var bodyText = emailBuilder.ToString();
+
+
 
             try
             {

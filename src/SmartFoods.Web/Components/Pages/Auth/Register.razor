@@ -1,4 +1,4 @@
-@* src/SmartFoods.Web/Components/Pages/Auth/Register.razor *@
+@* Components/Pages/Auth/Register.razor *@
 @page "/register"
 
 @using SmartFoods.Web.Models.DTOs
@@ -7,58 +7,114 @@
 @inject IAuthService AuthService
 @inject NavigationManager Navigation
 
-<h3>Register</h3>
+<PageTitle>Create Account - SmartFoods</PageTitle>
 
-@if (!string.IsNullOrWhiteSpace(ErrorMessage))
-{
-    <p style="color:red">@ErrorMessage</p>
-}
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem;">
+    <div class="sf-premium-card" style="width: 100%; max-width: 460px; padding: 2.5rem 2rem; animation: sf-fade-up 0.5s ease both;">
+        
+        <!-- Header Brand Indicator -->
+        <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 2rem; gap: 0.75rem;">
+            <div class="sf-logo-icon">SF</div>
+            <h2 style="margin: 0; font-size: 1.6rem; font-weight: 800; color: var(--sf-purple-dark);">Get Started</h2>
+            <p style="margin: 0; font-size: 0.88rem; color: var(--sf-text-muted);">Create your unified profile to begin monitoring grocery lifespans.</p>
+        </div>
 
-<EditForm Model="Model" OnValidSubmit="ExecuteRegister" FormName="RegisterForm" method="post">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+        <!-- System Status Notifications -->
+        @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+        {
+            <div class="sf-alert-banner error-mode" style="animation: sf-scale-in 0.3s ease both;">
+                ⚠ @ErrorMessage
+            </div>
+        }
 
-    <div>
-        <label>Name</label>
-        <InputText @bind-Value="Model.Name" />
+        <!-- Interactive Account Profile Generation Form -->
+        <EditForm Model="Model" OnValidSubmit="ExecuteRegister" FormName="RegisterForm" method="post" class="sf-premium-form-layout">
+            <DataAnnotationsValidator />
+
+            <div class="sf-form-field-block">
+                <label>Full Name</label>
+                <InputText @bind-Value="Model.Name" class="sf-form-input-element" placeholder="John Doe" autocomplete="name" />
+                <div style="font-size: 0.78rem; color: #c62828; margin-top: 0.25rem;"><ValidationMessage For="() => Model.Name" /></div>
+            </div>
+
+            <div class="sf-form-field-block">
+                <label>Email Address</label>
+                <InputText @bind-Value="Model.Email" type="email" class="sf-form-input-element" placeholder="name@domain.com" autocomplete="email" />
+                <div style="font-size: 0.78rem; color: #c62828; margin-top: 0.25rem;"><ValidationMessage For="() => Model.Email" /></div>
+            </div>
+
+            <div class="sf-form-double-column">
+                <div class="sf-form-field-block">
+                    <label>Password</label>
+                    <InputText type="password" @bind-Value="Model.Password" class="sf-form-input-element" placeholder="••••••••" autocomplete="new-password" />
+                    <div style="font-size: 0.78rem; color: #c62828; margin-top: 0.25rem;"><ValidationMessage For="() => Model.Password" /></div>
+                </div>
+
+                <div class="sf-form-field-block">
+                    <label>Confirm Password</label>
+                    <InputText type="password" @bind-Value="Model.ConfirmPassword" class="sf-form-input-element" placeholder="••••••••" autocomplete="new-password" />
+                    <div style="font-size: 0.78rem; color: #c62828; margin-top: 0.25rem;"><ValidationMessage For="() => Model.ConfirmPassword" /></div>
+                </div>
+            </div>
+
+            <button type="submit" class="sf-action-submit-button" style="margin-top: 0.5rem;" disabled="@IsSubmitting">
+                @(IsSubmitting ? "Generating System Accounts..." : "Register New Account")
+            </button>
+        </EditForm>
+
+        <!-- Contextual Alternative Action Routing Footer -->
+        <div style="margin-top: 2rem; text-align: center; border-top: 1px solid var(--sf-card-border); padding-top: 1.25rem;">
+            <p style="margin: 0; font-size: 0.88rem; color: var(--sf-text-muted);">
+                Already have an account? 
+                <a href="/login" style="color: var(--sf-purple-primary); font-weight: 700; text-decoration: none; margin-left: 0.25rem; transition: var(--sf-transition-smooth);">
+                    Sign In
+                </a>
+            </p>
+        </div>
+
     </div>
-
-    <div>
-        <label>Email</label>
-        <InputText @bind-Value="Model.Email" type="email" />
-    </div>
-
-    <div>
-        <label>Password</label>
-        <InputText type="password" @bind-Value="Model.Password" />
-    </div>
-
-    <div>
-        <label>Confirm Password</label>
-        <InputText type="password" @bind-Value="Model.ConfirmPassword" />
-    </div>
-
-    <button type="submit">
-        Register
-    </button>
-</EditForm>
+</div>
 
 @code {
     [SupplyParameterFromForm]
     private RegisterDto Model { get; set; } = new();
 
     private string? ErrorMessage;
+    private bool IsSubmitting;
 
     private async Task ExecuteRegister()
     {
-        var result = await AuthService.RegisterAsync(Model);
-
-        if (result.Success)
+        try
         {
-            Navigation.NavigateTo("/login", forceLoad: true);
-            return;
-        }
+            IsSubmitting = true;
+            ErrorMessage = null;
 
-        ErrorMessage = string.Join(", ", result.Errors);
+            var result = await AuthService.RegisterAsync(Model);
+
+            if (result.Success)
+            {
+                Navigation.NavigateTo("/login", forceLoad: true);
+                return;
+            }
+
+            ErrorMessage = string.Join(", ", result.Errors);
+        }
+        catch (NavigationException)
+        {
+            throw; // Let Blazor process its page change
+        }
+        catch (Exception ex)
+        {
+            // Print background trace logs to terminal output
+            Console.WriteLine($"[SmartFoods Registration Failure Debug]: {ex.Message}");
+
+            // User-friendly UI message
+            ErrorMessage = "Something went wrong on our end while creating your profile. Please try again shortly.";
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
     }
 }
+
