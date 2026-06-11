@@ -11,3 +11,7 @@ src/SmartFoods.Web/appsettings.Development.json
 *.user
 *.suo
 *.rsuser
+src/SmartFoods.Web/bin/Debug/net9.0/SmartFoods.Web.pdb
+src/SmartFoods.Web/bin/Debug/net9.0/SmartFoods.Web.pdb
+src/SmartFoods.Web/bin/Debug/net9.0/SmartFoods.Web.exe
+src/SmartFoods.Web/obj/Debug/net9.0/ref/SmartFoods.Web.dll
