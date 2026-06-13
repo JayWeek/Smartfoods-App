@@ -2,16 +2,30 @@
 src/SmartFoods.Web/appsettings.json
 src/SmartFoods.Web/appsettings.Development.json
 
-# Build artifacts
-**/bin/
-**/obj/
-**/.vs/
-
-# User-specific files
+# .NET build and tool-generated artifacts
+[Bb]in/
+[Oo]bj/
+.vs/
+.vscode/
 *.user
 *.suo
 *.rsuser
-src/SmartFoods.Web/bin/Debug/net9.0/SmartFoods.Web.pdb
-src/SmartFoods.Web/bin/Debug/net9.0/SmartFoods.Web.pdb
-src/SmartFoods.Web/bin/Debug/net9.0/SmartFoods.Web.exe
-src/SmartFoods.Web/obj/Debug/net9.0/ref/SmartFoods.Web.dll
+*.cache
+*.pdb
+*.exe
+*.dll
+*.runtimeconfig.json
+*.deps.json
+*.staticwebassets.*
+*.AssemblyInfo.cs
+
+# Test and coverage outputs
+TestResults/
+coverage/
+*.trx
+*.coverage
+
+# Keep source files tracked; ignore generated outputs everywhere
+**/bin/
+**/obj/
+**/.vs/
