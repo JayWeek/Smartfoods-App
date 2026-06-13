@@ -1,54 +1,58 @@
 @* Components/Pages/Dashboard/CategoryChartPanel.razor *@
 @using SmartFoods.Web.Models.DTOs.Dashboard
-@using SmartFoods.Web.Services.Dashboard
-
-@inject IDashboardService DashboardService
 
 <div class="sf-premium-card">
-    <h3 class="sf-card-header-title">Inventory Category Volume Distribution</h3>
-    <p class="sf-card-header-subtitle">Proportional volume calculation showing the structural alignment of stock elements across item profiles.</p>
+    <h3 class="sf-card-header-title">
+        Inventory Category Volume Distribution
+    </h3>
 
-    @if (IsLoading)
+    <p class="sf-card-header-subtitle">
+        Proportional volume calculation showing the structural alignment
+        of stock elements across item profiles.
+    </p>
+
+    @if (Model.IsEmptyPantry)
     {
-        <div class="sf-empty-state-notice">Computing volume balances...</div>
+        <div class="sf-empty-state-notice">
+            No categorical breakdown logs available.
+        </div>
     }
-    else if (Model is not null)
+    else
     {
-        @if (Model.IsEmptyPantry)
-        {
-            <div class="sf-empty-state-notice">
-                No categorical breakdown logs available.
-            </div>
-        }
-        else
-        {
-            <div class="sf-category-chart-row-container">
-                @foreach (var cat in Model.Categories)
-                {
-                    <div>
-                        <div class="sf-chart-row-header">
-                            <span style="color: var(--sf-purple-dark);">@cat.CategoryName <span style="font-weight: 500; font-size: 0.8rem; color: var(--sf-text-muted);">(@cat.ItemCount items)</span></span>
-                            <span style="color: var(--sf-purple-primary);">@cat.Percentage%</span>
-                        </div>
-                        <div class="sf-chart-bar-rail" style="margin-top: 0.35rem;">
-                            <div class="sf-chart-bar-fill" style="width: @(cat.Percentage)%;"></div>
-                        </div>
+        <div class="sf-category-chart-row-container">
+
+            @foreach (var cat in Model.Categories)
+            {
+                <div>
+
+                    <div class="sf-chart-row-header">
+                        <span style="color: var(--sf-purple-dark);">
+                            @cat.CategoryName
+                            <span style="font-weight: 500; font-size: 0.8rem; color: var(--sf-text-muted);">
+                                (@cat.ItemCount items)
+                            </span>
+                        </span>
+
+                        <span style="color: var(--sf-purple-primary);">
+                            @cat.Percentage%
+                        </span>
                     </div>
-                }
-            </div>
-        }
+
+                    <div class="sf-chart-bar-rail" style="margin-top: 0.35rem;">
+                        <div class="sf-chart-bar-fill"
+                             style="width: @(cat.Percentage)%;"></div>
+                    </div>
+
+                </div>
+            }
+
+        </div>
     }
 </div>
 
 @code {
-    [Parameter] public Guid UserId { get; set; }
-    private CategoryChartDto? Model;
-    private bool IsLoading = true;
 
-    protected override async Task OnParametersSetAsync()
-    {
-        IsLoading = true;
-        Model = await DashboardService.GetCategoryChartAsync(UserId);
-        IsLoading = false;
-    }
+    [Parameter, EditorRequired]
+    public CategoryChartDto Model { get; set; } = default!;
+
 }

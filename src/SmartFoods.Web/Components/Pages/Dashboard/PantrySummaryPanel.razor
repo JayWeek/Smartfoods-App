@@ -1,60 +1,50 @@
 @* Components/Pages/Dashboard/PantrySummaryPanel.razor *@
 @using SmartFoods.Web.Models.DTOs.Dashboard
-@using SmartFoods.Web.Services.Dashboard
-
-@inject IDashboardService DashboardService
 
 <div class="sf-premium-card">
     <h3 class="sf-card-header-title">Pantry Summary</h3>
-    <p class="sf-card-header-subtitle">Aggregated metrics detailing tracking totals recorded across database server tables.</p>
+    <p class="sf-card-header-subtitle">
+        Aggregated metrics detailing tracking totals recorded across database server tables.
+    </p>
 
-    @if (IsLoading)
+    @if (Model.IsEmptyPantry)
     {
-        <div class="sf-summary-metric-row">
-            <div class="sf-summary-metric-tile"><span>Loading...</span></div>
-            <div class="sf-summary-metric-tile"><span>Loading...</span></div>
-            <div class="sf-summary-metric-tile"><span>Loading...</span></div>
+        <div class="sf-empty-state-notice">
+            No storage parameters logged into memory archives.
         </div>
     }
-    else if (Model is not null)
+    else
     {
-        @if (Model.IsEmptyPantry)
-        {
-            <div class="sf-empty-state-notice">
-                No storage parameters logged into memory archives.
-            </div>
-        }
-        else
-        {
-            <div class="sf-summary-metric-row">
-                <div class="sf-summary-metric-tile">
-                    <span>Total Items</span>
-                    <strong>@Model.TotalFoodItems</strong>
-                </div>
+        <div class="sf-summary-metric-row">
 
-                <div class="sf-summary-metric-tile" style="border-color: rgba(198, 40, 40, 0.15);">
-                    <span style="color: #c62828;">Expiring Soon</span>
-                    <strong style="color: #c62828;">@Model.ExpiringSoonCount</strong>
-                </div>
-
-                <div class="sf-summary-metric-tile">
-                    <span>Categories</span>
-                    <strong>@Model.TotalCategories</strong>
-                </div>
+            <div class="sf-summary-metric-tile">
+                <span>Total Items</span>
+                <strong>@Model.TotalFoodItems</strong>
             </div>
-        }
+
+            <div class="sf-summary-metric-tile"
+                 style="border-color: rgba(198, 40, 40, 0.15);">
+                <span style="color: #c62828;">
+                    Expiring Soon
+                </span>
+
+                <strong style="color: #c62828;">
+                    @Model.ExpiringSoonCount
+                </strong>
+            </div>
+
+            <div class="sf-summary-metric-tile">
+                <span>Categories</span>
+                <strong>@Model.TotalCategories</strong>
+            </div>
+
+        </div>
     }
 </div>
 
 @code {
-    [Parameter] public Guid UserId { get; set; }
-    private PantrySummaryDto? Model;
-    private bool IsLoading = true;
 
-    protected override async Task OnParametersSetAsync()
-    {
-        IsLoading = true;
-        Model = await DashboardService.GetPantrySummaryAsync(UserId);
-        IsLoading = false;
-    }
+    [Parameter, EditorRequired]
+    public PantrySummaryDto Model { get; set; } = default!;
+
 }

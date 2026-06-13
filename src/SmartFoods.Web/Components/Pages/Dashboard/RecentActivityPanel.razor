@@ -1,50 +1,53 @@
 @* Components/Pages/Dashboard/RecentActivityPanel.razor *@
 @using SmartFoods.Web.Models.DTOs.Dashboard
-@using SmartFoods.Web.Services.Dashboard
-
-@inject IDashboardService DashboardService
 
 <div class="sf-premium-card">
-    <h3 class="sf-card-header-title">Recently Added</h3>
-    <p class="sf-card-header-subtitle">Chronological record tracing the latest 5 entries recorded to inventory storage files.</p>
 
-    @if (IsLoading)
+    <h3 class="sf-card-header-title">Recently Added</h3>
+
+    <p class="sf-card-header-subtitle">
+        Chronological record tracing the latest 5 entries recorded to inventory storage files.
+    </p>
+
+    @if (Model.IsEmptyHistory)
     {
-        <div class="sf-empty-state-notice">Fetching ledger entry points...</div>
+        <div class="sf-empty-state-notice">
+            No entry actions registered inside this tracking circuit.
+        </div>
     }
-    else if (Model is not null)
+    else
     {
-        @if (Model.IsEmptyHistory)
-        {
-            <div class="sf-empty-state-notice">No entry actions registered inside this tracking circuit.</div>
-        }
-        else
-        {
-            <div class="sf-list-group-wrapper">
-                @foreach (var item in Model.RecentItems)
-                {
-                    <div class="sf-list-entry-item">
-                        <div>
-                            <div class="sf-list-entry-title-text">@item.Name</div>
-                            <div class="sf-list-entry-meta-text">Added @item.AddedAt.ToLocalTime().ToString("g")</div>
+        <div class="sf-list-group-wrapper">
+
+            @foreach (var item in Model.RecentItems)
+            {
+                <div class="sf-list-entry-item">
+
+                    <div>
+                        <div class="sf-list-entry-title-text">
+                            @item.Name
                         </div>
-                        <span class="sf-pill-badge">@item.Quantity @item.Unit</span>
+
+                        <div class="sf-list-entry-meta-text">
+                            Added @item.AddedAt.ToLocalTime().ToString("g")
+                        </div>
                     </div>
-                }
-            </div>
-        }
+
+                    <span class="sf-pill-badge">
+                        @item.Quantity @item.Unit
+                    </span>
+
+                </div>
+            }
+
+        </div>
     }
+
 </div>
 
 @code {
-    [Parameter] public Guid UserId { get; set; }
-    private RecentActivityDto? Model;
-    private bool IsLoading = true;
 
-    protected override async Task OnParametersSetAsync()
-    {
-        IsLoading = true;
-        Model = await DashboardService.GetRecentActivityAsync(UserId);
-        IsLoading = false;
-    }
+    [Parameter, EditorRequired]
+    public RecentActivityDto Model { get; set; } = default!;
+
 }

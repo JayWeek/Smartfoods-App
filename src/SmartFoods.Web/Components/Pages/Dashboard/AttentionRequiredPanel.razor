@@ -1,56 +1,61 @@
 @* Components/Pages/Dashboard/AttentionRequiredPanel.razor *@
 @using SmartFoods.Web.Models.DTOs.Dashboard
-@using SmartFoods.Web.Services.Dashboard
-
-@inject IDashboardService DashboardService
 
 <div class="sf-premium-card" style="border-color: rgba(198, 40, 40, 0.12);">
     <h3 class="sf-card-header-title" style="color: #4a148c;">Attention Required</h3>
-    <p class="sf-card-header-subtitle">Critical stock units fast approaching validation expiration timeline deadlines.</p>
+    <p class="sf-card-header-subtitle">
+        Critical stock units fast approaching validation expiration timeline deadlines.
+    </p>
 
-    @if (IsLoading)
+    @if (Model.HasNoUrgentItems)
     {
-        <div class="sf-empty-state-notice">Analyzing expiry logs...</div>
+        <div class="sf-alert-banner success-mode">
+            <strong>✓ All Clear</strong>
+            All stock items reflect safe shelf lifetimes exceeding 7 days.
+        </div>
     }
-    else if (Model is not null)
+    else
     {
-        @if (Model.HasNoUrgentItems)
-        {
-            <div class="sf-alert-banner success-mode">
-                <strong>✓ All Clear</strong> All stock items reflect safe shelf lifetimes exceeding 7 days.
-            </div>
-        }
-        else
-        {
-            <div class="sf-list-group-wrapper">
-                @foreach (var item in Model.UrgentItems)
-                {
-                    <div class="sf-list-entry-item">
-                        <div>
-                            <div class="sf-list-entry-title-text">@item.Name</div>
-                            <div class="sf-list-entry-meta-text">Current Supply balance: @item.Quantity @item.Unit</div>
+        <div class="sf-list-group-wrapper">
+
+            @foreach (var item in Model.UrgentItems)
+            {
+                <div class="sf-list-entry-item">
+
+                    <div>
+                        <div class="sf-list-entry-title-text">@item.Name</div>
+                        <div class="sf-list-entry-meta-text">
+                            Current Supply balance: @item.Quantity @item.Unit
                         </div>
-                        <span class="sf-pill-badge danger-theme">
-                            @if (item.DaysRemaining == 0) { <span>Expires today!</span> }
-                            else if (item.DaysRemaining == 1) { <span>1 day left</span> }
-                            else { <span>@item.DaysRemaining days remaining</span> }
-                        </span>
                     </div>
-                }
-            </div>
-        }
+
+                    <span class="sf-pill-badge danger-theme">
+
+                        @if (item.DaysRemaining == 0)
+                        {
+                            <span>Expires today!</span>
+                        }
+                        else if (item.DaysRemaining == 1)
+                        {
+                            <span>1 day left</span>
+                        }
+                        else
+                        {
+                            <span>@item.DaysRemaining days remaining</span>
+                        }
+
+                    </span>
+
+                </div>
+            }
+
+        </div>
     }
 </div>
 
 @code {
-    [Parameter] public Guid UserId { get; set; }
-    private AttentionRequiredDto? Model;
-    private bool IsLoading = true;
 
-    protected override async Task OnParametersSetAsync()
-    {
-        IsLoading = true;
-        Model = await DashboardService.GetAttentionRequiredAsync(UserId);
-        IsLoading = false;
-    }
+    [Parameter, EditorRequired]
+    public AttentionRequiredDto Model { get; set; } = default!;
+
 }

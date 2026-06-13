@@ -16,4 +16,5 @@ public interface IDashboardService
     Task<CategoryChartDto> GetCategoryChartAsync(Guid userId);
     Task<RecentActivityDto> GetRecentActivityAsync(Guid userId);
     Task<SmartSuggestionsDto> GetSmartSuggestionsAsync(Guid userId);
+    Task<DashboardOverviewDto> GetDashboardOverviewAsync(Guid userId);
 }

@@ -360,6 +360,113 @@ public class DashboardService : IDashboardService
     }
 
 
+    public async Task<DashboardOverviewDto> GetDashboardOverviewAsync(Guid userId)
+    {
+        await using var dbContext =
+            await _dbContextFactory.CreateDbContextAsync();
+
+        var user = await dbContext.Users
+            .AsNoTracking()
+            .Include(u => u.Pantry)
+            .ThenInclude(p => p!.FoodItems)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+
+        if (user is null)
+            throw new Exception("User not found.");
+
+        var foodItems =
+            user.Pantry?.FoodItems ??
+            Enumerable.Empty<FoodItem>();
+
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var sevenDays = today.AddDays(7);
+
+        var totalItems = foodItems.Count();
+
+        var totalCategories = foodItems
+            .Where(x => !string.IsNullOrWhiteSpace(x.Category))
+            .Select(x => x.Category)
+            .Distinct()
+            .Count();
+
+        var expiringItems = foodItems
+            .Where(x =>
+                x.ExpiryDate >= today &&
+                x.ExpiryDate <= sevenDays)
+            .OrderBy(x => x.ExpiryDate)
+            .ToList();
+
+        var result = new DashboardOverviewDto();
+
+        result.Welcome = new WelcomePanelDto
+        {
+            UserName = user.Name,
+            TotalFoodItems = totalItems,
+            TotalCategories = totalCategories,
+            ItemsNeedingAttention = expiringItems.Count
+        };
+
+        result.PantrySummary = new PantrySummaryDto
+        {
+            TotalFoodItems = totalItems,
+            TotalCategories = totalCategories,
+            ExpiringSoonCount = expiringItems.Count
+        };
+
+        result.AttentionRequired = new AttentionRequiredDto
+        {
+            UrgentItems = expiringItems.Select(x =>
+                new AttentionRequiredItemDto
+                {
+                    Name = x.Name,
+                    Quantity = x.Quantity,
+                    Unit = x.Unit,
+                    DaysRemaining =
+                        x.ExpiryDate.DayNumber -
+                        today.DayNumber
+                })
+                .ToList()
+        };
+
+        result.CategoryChart = new CategoryChartDto
+        {
+            Categories = foodItems
+                .GroupBy(x => x.Category)
+                .Select(g =>
+                    new CategoryPercentageDto
+                    {
+                        CategoryName = g.Key,
+                        ItemCount = g.Count(),
+                        Percentage = Math.Round(
+                            ((decimal)g.Count() / totalItems) * 100,
+                            1)
+                    })
+                .OrderByDescending(x => x.ItemCount)
+                .ToList()
+        };
+
+        result.RecentActivity = new RecentActivityDto
+        {
+            RecentItems = foodItems
+                .OrderByDescending(x => x.CreatedAt)
+                .Take(5)
+                .Select(x => new RecentActivityItemDto
+                {
+                    Name = x.Name,
+                    Quantity = x.Quantity,
+                    Unit = x.Unit,
+                    AddedAt = x.CreatedAt
+                })
+                .ToList()
+        };
+
+        result.SmartSuggestions =
+            await GetSmartSuggestionsAsync(userId);
+
+        return result;
+    }
+
+
 
 
 }

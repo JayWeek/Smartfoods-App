@@ -1,34 +1,32 @@
 @* Components/Pages/Dashboard/WelcomePanel.razor *@
 @using SmartFoods.Web.Models.DTOs.Dashboard
-@using SmartFoods.Web.Services.Dashboard
 
-@inject IDashboardService DashboardService
+<div class="sf-premium-card sf-welcome-hero-banner">
+    <h1>Welcome back, @Model.UserName!</h1>
 
-@if (!IsLoading && Model is not null)
-{
-    <div class="sf-premium-card sf-welcome-hero-banner">
-        <h1>Welcome back, @Model.UserName!</h1>
-
-        @if (Model.IsEmptyPantry)
-        {
-            <p>Your tracking balance framework is setup. Record baseline supplies below to invoke active tracking logs.</p>
-        }
-        else
-        {
-            <p>Your configuration is tracking <strong>@Model.TotalFoodItems</strong> supplies across <strong>@Model.TotalCategories</strong> category metrics. There are <strong>@Model.ItemsNeedingAttention</strong> items requiring consumption review cycles this week.</p>
-        }
-    </div>
-}
+    @if (Model.IsEmptyPantry)
+    {
+        <p>
+            Your tracking balance framework is setup.
+            Record baseline supplies below to invoke active tracking logs.
+        </p>
+    }
+    else
+    {
+        <p>
+            Your configuration is tracking
+            <strong>@Model.TotalFoodItems</strong> supplies across
+            <strong>@Model.TotalCategories</strong> category metrics.
+            There are
+            <strong>@Model.ItemsNeedingAttention</strong>
+            items requiring consumption review cycles this week.
+        </p>
+    }
+</div>
 
 @code {
-    [Parameter] public Guid UserId { get; set; }
-    private WelcomePanelDto? Model;
-    private bool IsLoading = true;
 
-    protected override async Task OnParametersSetAsync()
-    {
-        IsLoading = true;
-        Model = await DashboardService.GetWelcomePanelAsync(UserId);
-        IsLoading = false;
-    }
+    [Parameter, EditorRequired]
+    public WelcomePanelDto Model { get; set; } = default!;
+
 }

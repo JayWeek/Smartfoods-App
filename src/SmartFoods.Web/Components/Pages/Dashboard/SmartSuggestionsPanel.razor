@@ -1,58 +1,67 @@
 @* Components/Pages/Dashboard/SmartSuggestionsPanel.razor *@
 @using SmartFoods.Web.Models.DTOs.Dashboard
-@using SmartFoods.Web.Services.Dashboard
-
-@inject IDashboardService DashboardService
 
 <div class="sf-premium-card">
-    <h3 class="sf-card-header-title">Intelligent Kitchen Blueprint Ideas</h3>
-    <p class="sf-card-header-subtitle">Automated suggestions crossing your current expiring supplies against verified third-party API recipe matrix options.</p>
 
-    @if (IsLoading)
+    <h3 class="sf-card-header-title">
+        Intelligent Kitchen Blueprint Ideas
+    </h3>
+
+    <p class="sf-card-header-subtitle">
+        Automated suggestions crossing your current expiring supplies
+        against verified third-party API recipe matrix options.
+    </p>
+
+    @if (Model.IsEmptyState)
     {
-        <div class="sf-empty-state-notice">Querying third party API recipe networks...</div>
+        <div class="sf-empty-state-notice">
+            No active blueprint options found within the current expiring tracking bounds.
+        </div>
     }
-    else if (Model is not null)
+    else
     {
-        @if (Model.IsEmptyState)
-        {
-            <div class="sf-empty-state-notice">
-                No active blueprint options found within the current expiring tracking bounds.
-            </div>
-        }
-        else
-        {
-            <div class="sf-meals-recipe-grid">
-                @foreach (var rec in Model.Suggestions)
-                {
-                    <div class="sf-meal-recipe-card">
-                        @if (!string.IsNullOrWhiteSpace(rec.ImageUrl))
-                        {
-                            <img src="@rec.ImageUrl" alt="@rec.Title" loading="lazy" />
-                        }
-                        <div class="sf-meal-recipe-details">
-                            <h4>@rec.Title</h4>
-                            <p>💡 Uses expiring: @rec.TargetIngredient</p>
-                            <a href="@rec.SourceUrl" target="_blank" rel="noopener" class="sf-recipe-link-anchor">
-                                View Blueprint
-                            </a>
-                        </div>
+        <div class="sf-meals-recipe-grid">
+
+            @foreach (var rec in Model.Suggestions)
+            {
+                <div class="sf-meal-recipe-card">
+
+                    @if (!string.IsNullOrWhiteSpace(rec.ImageUrl))
+                    {
+                        <img src="@rec.ImageUrl"
+                             alt="@rec.Title"
+                             loading="lazy" />
+                    }
+
+                    <div class="sf-meal-recipe-details">
+
+                        <h4>@rec.Title</h4>
+
+                        <p>
+                            💡 Uses expiring:
+                            @rec.TargetIngredient
+                        </p>
+
+                        <a href="@rec.SourceUrl"
+                           target="_blank"
+                           rel="noopener"
+                           class="sf-recipe-link-anchor">
+                            View Blueprint
+                        </a>
+
                     </div>
-                }
-            </div>
-        }
+
+                </div>
+            }
+
+        </div>
     }
+
 </div>
 
 @code {
-    [Parameter] public Guid UserId { get; set; }
-    private SmartSuggestionsDto? Model;
-    private bool IsLoading = true;
 
-    protected override async Task OnParametersSetAsync()
-    {
-        IsLoading = true;
-        Model = await DashboardService.GetSmartSuggestionsAsync(UserId);
-        IsLoading = false;
-    }
+    [Parameter, EditorRequired]
+    public SmartSuggestionsDto Model { get; set; } = default!;
+
 }
