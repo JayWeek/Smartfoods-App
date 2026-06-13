@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("SmartFoods.Web")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+83466cfc6254b6cf0af576c5923cb0caa7f9f4c9")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+77f070ad445cb89eb94be7a30fd2f005fcd660d1")]
 [assembly: System.Reflection.AssemblyProductAttribute("SmartFoods.Web")]
 [assembly: System.Reflection.AssemblyTitleAttribute("SmartFoods.Web")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
