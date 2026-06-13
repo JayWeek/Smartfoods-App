@@ -72,6 +72,8 @@ builder.Services.AddScoped<IDashboardService, DashboardService>();
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IRecipeIntegrationService, SpoonacularIntegrationService>();
 
+builder.Services.AddScoped<DashboardStateHub>();
+
 
 
 

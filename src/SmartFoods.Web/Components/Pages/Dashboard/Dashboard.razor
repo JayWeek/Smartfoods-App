@@ -35,8 +35,8 @@
         {
             <WelcomePanel Model="_dashboardData.Welcome" />
 
-            <PantrySummaryPanel
-                Model="_dashboardData.PantrySummary" />
+            <PantrySummaryPanel Model="_dashboardData.PantrySummary" UserId="@CurrentUserId" />
+
 
             <CategoryChartPanel
                 Model="_dashboardData.CategoryChart" />
@@ -59,8 +59,12 @@
         }
         else
         {
+            @* Centralized Event Hook Processing Implementation *@
             <AttentionRequiredPanel
-                Model="_dashboardData.AttentionRequired" />
+                Model="_dashboardData.AttentionRequired"
+                UserId="@CurrentUserId"
+                OnActionCompleted="HandleItemAdded" />
+
 
             <RecentActivityPanel
                 Model="_dashboardData.RecentActivity" />
@@ -104,4 +108,22 @@
         await InvokeAsync(StateHasChanged);
     }
 
+    // NEW CENTRALIZED DATABASE PIPELINE EXECUTION CALL
+    private async Task HandleItemResolved(ResolveFoodItemDto payload)
+    {
+        try
+        {
+            // Master Orchestrator communicates cleanly with database services
+            await DashboardService.ResolveFoodItemAsync(CurrentUserId, payload);
+
+            // Re-fetch optimized overview DTO to update all grids globally instantly
+            _dashboardData = await DashboardService.GetDashboardOverviewAsync(CurrentUserId);
+            
+            await InvokeAsync(StateHasChanged);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Dashboard Orchestrator Error]: {ex.Message}");
+        }
+    }
 }

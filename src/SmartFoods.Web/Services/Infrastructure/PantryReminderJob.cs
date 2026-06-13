@@ -20,13 +20,63 @@ public class PantryReminderJob
     }
 
     /// <summary>
-    /// Sweeps all users, checks for critical expiries, links a cache recipe, and delivers alerts safely.
+    /// Sweeps all users, automatically archives unhandled expired items, 
+    /// checks for critical expiries, links a cache recipe, and delivers alerts safely.
     /// </summary>
     public async Task SendDailyExpiryRemindersAsync()
     {
         using var dbContext = await _dbContextFactory.CreateDbContextAsync();
-        
         var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        // =========================================================================
+        // AUTOMATED SWEEP: ARCHIVE UNHANDLED EXPIRED FOOD ITEMS PLATFORM-WIDE
+        // =========================================================================
+        var expiredItems = await dbContext.FoodItems
+            .Include(f => f.Pantry)
+            .Where(f => f.ExpiryDate <= today)
+            .ToListAsync();
+
+        if (expiredItems.Any())
+        {
+            await using var transaction = await dbContext.Database.BeginTransactionAsync();
+            try
+            {
+                var logsToInsert = new List<PantryInventoryLog>();
+
+                foreach (var item in expiredItems)
+                {
+                    // Map unhandled items into historical analytics tracks as Wasted
+                    logsToInsert.Add(new PantryInventoryLog
+                    {
+                        UserId = item.Pantry.UserId,
+                        ItemName = item.Name,
+                        Quantity = item.Quantity,
+                        Unit = item.Unit,
+                        Category = item.Category,
+                        OriginalExpiryDate = item.ExpiryDate,
+                        Resolution = InventoryResolution.Wasted,
+                        LoggedAt = DateTime.UtcNow
+                    });
+                }
+
+                await dbContext.PantryInventoryLogs.AddRangeAsync(logsToInsert);
+                dbContext.FoodItems.RemoveRange(expiredItems);
+
+                await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+                
+                Console.WriteLine($"[Hangfire Automated Sweep]: Cleaned and archived {expiredItems.Count} unhandled expired items platform-wide.");
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                Console.WriteLine($"[Hangfire Automated Sweep Fault]: Database transaction error tracking sweeps: {ex.Message}");
+            }
+        }
+
+        // =========================================================================
+        // PRE-EXISTING ALERTS PIPELINE
+        // =========================================================================
         var criticalHorizon = today.AddDays(3); // Rule 1: 3-day critical window
 
         // 1. Fetch all active users containing their pantry food supplies
@@ -62,7 +112,6 @@ public class PantryReminderJob
                 .Select(i => i.Recipe)
                 .FirstOrDefaultAsync();
 
-            // 5. Construct the Premium HTML Notification Message Template
             // 5. Construct the Premium HTML Notification Message Template (Email-Safe & Blazor-Optimized)
             var emailBuilder = new StringBuilder();
 
@@ -70,7 +119,7 @@ public class PantryReminderJob
             emailBuilder.Append($"<h2 style=\"margin: 0 0 8px 0; font-size: 1.4rem; font-weight: 800; color: #4a148c;\">Hello, {user.Name}!</h2>");
             emailBuilder.Append("<p style=\"margin: 0 0 20px 0; font-size: 0.95rem; color: #6e657b; line-height: 1.5;\">This is a summary of tracking items in your pantry requiring consumption within your critical 3-day window:</p>");
 
-            // Use a clean table structures for guaranteed cross-client support instead of flex grids
+            // Use clean table structures for guaranteed cross-client support instead of flex grids
             emailBuilder.Append("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width: 100%; border-collapse: separate; margin-bottom: 25px;\">");
             foreach (var item in criticalItems)
             {
@@ -101,7 +150,6 @@ public class PantryReminderJob
                     <tr><td style=""height: 8px; font-size: 8px; line-height: 8px;"">&nbsp;</td></tr>");
             }
             emailBuilder.Append("</table>");
-
             // Premium Recipe Card Section
             if (matchedRecipe != null)
             {
@@ -136,8 +184,6 @@ public class PantryReminderJob
 
             var subject = $"SmartFoods Reminder: {criticalItems.Count} items need attention soon!";
             var bodyText = emailBuilder.ToString();
-
-
 
             try
             {

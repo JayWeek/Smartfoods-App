@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using SmartFoods.Web.Data;
@@ -11,9 +12,11 @@ using SmartFoods.Web.Data;
 namespace SmartFoods.Web.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260613165620_AddPantryInventoryLogs")]
+    partial class AddPantryInventoryLogs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -377,7 +380,7 @@ namespace SmartFoods.Web.Migrations
 
                     b.HasIndex("UserId", "Resolution");
 
-                    b.ToTable("PantryInventoryLogs");
+                    b.ToTable("PantryInventoryLog");
                 });
 
             modelBuilder.Entity("SmartFoods.Web.Models.Pantry.Recipe", b =>

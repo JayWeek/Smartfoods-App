@@ -1,13 +1,23 @@
 @* Components/Pages/Dashboard/AttentionRequiredPanel.razor *@
+@rendermode InteractiveServer
 @using SmartFoods.Web.Models.DTOs.Dashboard
+@using SmartFoods.Web.Models.Pantry
+@using SmartFoods.Web.Services.Dashboard
+@inject IDashboardService DashboardService
+@inject DashboardStateHub StateHub
 
-<div class="sf-premium-card" style="border-color: rgba(198, 40, 40, 0.12);">
+
+<div class="sf-premium-card" style="border-color: rgba(198, 40, 40, 0.12); position: relative;">
     <h3 class="sf-card-header-title" style="color: #4a148c;">Attention Required</h3>
     <p class="sf-card-header-subtitle">
         Critical stock units fast approaching validation expiration timeline deadlines.
     </p>
 
-    @if (Model.HasNoUrgentItems)
+    @if (Model == null)
+    {
+        <div class="sf-empty-state-notice">Analyzing expiry logs...</div>
+    }
+    else if (Model.HasNoUrgentItems)
     {
         <div class="sf-alert-banner success-mode">
             <strong>✓ All Clear</strong>
@@ -16,46 +26,138 @@
     }
     else
     {
-        <div class="sf-list-group-wrapper">
-
+        <div class="sf-list-group-wrapper" style="display: flex; flex-direction: column; gap: 0.75rem;">
             @foreach (var item in Model.UrgentItems)
             {
-                <div class="sf-list-entry-item">
+                var isSelected = _selectedItem?.FoodItemId == item.FoodItemId;
 
-                    <div>
-                        <div class="sf-list-entry-title-text">@item.Name</div>
+                @* Relative anchor wrapper row item *@
+                <div class="sf-list-entry-item" 
+                     style="position: relative; cursor: pointer; background: @(isSelected ? "rgba(124, 77, 255, 0.05)" : "transparent"); padding: 1rem; border-radius: 12px; transition: all 0.2s;"
+                     @onclick="() => ToggleResolutionPopover(item)">
+                    
+                    <div style="padding-right: @(isSelected ? "180px" : "0px"); transition: padding 0.2s;">
+                        <div class="sf-list-entry-title-text" style="font-weight: 600;">@item.Name</div>
                         <div class="sf-list-entry-meta-text">
                             Current Supply balance: @item.Quantity @item.Unit
                         </div>
                     </div>
 
-                    <span class="sf-pill-badge danger-theme">
+                    @* Hide badge smoothly if actions tray is open so layout stays wide *@
+                    @if (!isSelected)
+                    {
+                        <span class="sf-pill-badge danger-theme" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);">
+                            @if (item.DaysRemaining == 0)
+                            {
+                                <span>Expires today!</span>
+                            }
+                            else if (item.DaysRemaining == 1)
+                            {
+                                <span>1 day left</span>
+                            }
+                            else
+                            {
+                                <span>@item.DaysRemaining days remaining</span>
+                            }
+                        </span>
+                    }
 
-                        @if (item.DaysRemaining == 0)
-                        {
-                            <span>Expires today!</span>
-                        }
-                        else if (item.DaysRemaining == 1)
-                        {
-                            <span>1 day left</span>
-                        }
-                        else
-                        {
-                            <span>@item.DaysRemaining days remaining</span>
-                        }
+                    @* COMPACT INLINE ACTION HOVER MENU *@
+                    @if (isSelected)
+                    {
+                        <div style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: #ffffff; border: 1px solid var(--sf-purple-primary, #7c4dff); border-radius: 8px; box-shadow: 0 4px 16px rgba(74, 20, 140, 0.15); padding: 6px 10px; display: flex; align-items: center; gap: 8px; z-index: 50;" 
+                             @onclick:stopPropagation="true">
+                            
+                            <span style="font-size: 0.75rem; font-weight: 700; color: var(--sf-purple-dark, #4a148c);">Log:</span>
+                            
+                            <button type="button" 
+                                    style="padding: 4px 10px; font-size: 0.75rem; font-weight: 600; border: none; border-radius: 6px; background: var(--sf-purple-primary, #7c4dff); color: #ffffff; cursor: pointer;"
+                                    @onclick="() => ProcessResolutionAsync(item, InventoryResolution.Consumed)"
+                                    @onclick:stopPropagation="true">
+                                Consumed
+                            </button>
 
-                    </span>
+                            <button type="button" 
+                                    style="padding: 4px 10px; font-size: 0.75rem; font-weight: 600; border: 1px solid rgba(213, 0, 0, 0.2); border-radius: 6px; background: #fff0f0; color: #d50000; cursor: pointer;"
+                                    @onclick="() => ProcessResolutionAsync(item, InventoryResolution.Wasted)"
+                                    @onclick:stopPropagation="true">
+                                Wasted
+                            </button>
 
+                            <button type="button" 
+                                    style="background: none; border: none; color: #6e657b; font-size: 1.1rem; cursor: pointer; padding: 0 4px; line-height: 1;" 
+                                    @onclick="ClosePopover"
+                                    @onclick:stopPropagation="true">&times;</button>
+                        </div>
+                    }
                 </div>
             }
-
         </div>
     }
 </div>
 
 @code {
-
     [Parameter, EditorRequired]
     public AttentionRequiredDto Model { get; set; } = default!;
 
+    [Parameter, EditorRequired]
+    public Guid UserId { get; set; }
+
+    [Parameter]
+    public EventCallback OnActionCompleted { get; set; }
+
+    private AttentionRequiredItemDto? _selectedItem;
+
+    private void ToggleResolutionPopover(AttentionRequiredItemDto item)
+    {
+        if (_selectedItem?.FoodItemId == item.FoodItemId)
+        {
+            ClosePopover();
+        }
+        else
+        {
+            _selectedItem = item;
+        }
+    }
+
+    private void ClosePopover()
+    {
+        _selectedItem = null;
+    }
+
+    private async Task ProcessResolutionAsync(AttentionRequiredItemDto item, InventoryResolution resolution)
+    {
+        try
+        {
+            var payload = new ResolveFoodItemDto
+            {
+                FoodItemId = item.FoodItemId,
+                Resolution = resolution
+            };
+
+            // DIRECT SERVICE CALL PIPELINE RESOLVES CLASHING STATIC MEMORY BLOCKS
+            await DashboardService.ResolveFoodItemAsync(UserId, payload);
+
+            // Optimistically update the UI locally within this interactive scope immediately
+            if (Model?.UrgentItems != null)
+            {
+                Model.UrgentItems.Remove(item);
+            }
+
+            ClosePopover();
+
+            // BROADCAST SIGNAL TO UPDATE PANTRY SUMMARY PANELS GLOBALLY
+            StateHub.NotifyStateChanged();
+
+            // Bubble up a parameterless event to refresh remaining static page content areas safely
+            if (OnActionCompleted.HasDelegate)
+            {
+                await OnActionCompleted.InvokeAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Resolution Execution Failure]: {ex.Message}");
+        }
+    }
 }
