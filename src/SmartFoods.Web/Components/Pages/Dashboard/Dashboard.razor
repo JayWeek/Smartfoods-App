@@ -1,6 +1,7 @@
 @* Components/Pages/Dashboard/Dashboard.razor *@
 @page "/dashboard"
 @layout DashboardLayout
+@rendermode InteractiveServer
 
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
@@ -12,11 +13,12 @@
 @using SmartFoods.Web.Components.Pages.Dashboard.Skeletons
 
 @attribute [Authorize]
-@attribute [StreamRendering]
 
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IDashboardService DashboardService
+@inject DashboardStateHub StateHub
+@implements IDisposable
 
 <PageTitle>Dashboard - SmartFoods</PageTitle>
 
@@ -35,14 +37,11 @@
         {
             <WelcomePanel Model="_dashboardData.Welcome" />
 
-            <PantrySummaryPanel Model="_dashboardData.PantrySummary" UserId="@CurrentUserId" />
+            <PantrySummaryPanel Model="_dashboardData.PantrySummary" />
 
+            <CategoryChartPanel Model="_dashboardData.CategoryChart" />
 
-            <CategoryChartPanel
-                Model="_dashboardData.CategoryChart" />
-
-            <SmartSuggestionsPanel
-                Model="_dashboardData.SmartSuggestions" />
+            <SmartSuggestionsPanel Model="_dashboardData.SmartSuggestions" />
         }
 
     </div>
@@ -59,15 +58,12 @@
         }
         else
         {
-            @* Centralized Event Hook Processing Implementation *@
             <AttentionRequiredPanel
                 Model="_dashboardData.AttentionRequired"
                 UserId="@CurrentUserId"
                 OnActionCompleted="HandleItemAdded" />
 
-
-            <RecentActivityPanel
-                Model="_dashboardData.RecentActivity" />
+            <RecentActivityPanel Model="_dashboardData.RecentActivity" />
         }
 
     </div>
@@ -75,55 +71,53 @@
 </div>
 
 @code {
-
     private Guid CurrentUserId;
-
     private DashboardOverviewDto? _dashboardData;
 
     protected override async Task OnInitializedAsync()
     {
-        var authState =
-            await AuthenticationStateProvider
-                .GetAuthenticationStateAsync();
-
-        var user =
-            await UserManager.GetUserAsync(authState.User);
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await UserManager.GetUserAsync(authState.User);
 
         if (user is not null)
         {
             CurrentUserId = user.Id;
-
-            _dashboardData =
-                await DashboardService
-                    .GetDashboardOverviewAsync(CurrentUserId);
+            
+            // Initial asynchronous load
+            await RefreshGlobalDashboardDataAsync();
         }
+
+        // REGISTER THE GLOBAL REAL-TIME HUD LISTENER HERE
+        StateHub.OnDashboardChanged += HandleStateHubBroadcast;
     }
 
     private async Task HandleItemAdded()
     {
-        _dashboardData =
-            await DashboardService
-                .GetDashboardOverviewAsync(CurrentUserId);
-
-        await InvokeAsync(StateHasChanged);
+        await RefreshGlobalDashboardDataAsync();
     }
 
-    // NEW CENTRALIZED DATABASE PIPELINE EXECUTION CALL
-    private async Task HandleItemResolved(ResolveFoodItemDto payload)
+    private async void HandleStateHubBroadcast()
     {
         try
         {
-            // Master Orchestrator communicates cleanly with database services
-            await DashboardService.ResolveFoodItemAsync(CurrentUserId, payload);
-
-            // Re-fetch optimized overview DTO to update all grids globally instantly
-            _dashboardData = await DashboardService.GetDashboardOverviewAsync(CurrentUserId);
-            
-            await InvokeAsync(StateHasChanged);
+            // When ANY panel raises a change signal, re-fetch everything centrally
+            await RefreshGlobalDashboardDataAsync();
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"[Dashboard Orchestrator Error]: {ex.Message}");
+            Console.WriteLine($"[Global Orchestrator Broadcast Fault]: {ex.Message}");
         }
+    }
+
+    private async Task RefreshGlobalDashboardDataAsync()
+    {
+        _dashboardData = await DashboardService.GetDashboardOverviewAsync(CurrentUserId);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        // Explicit teardown prevents memory leaks on navigation tracking lines
+        StateHub.OnDashboardChanged -= HandleStateHubBroadcast;
     }
 }

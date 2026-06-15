@@ -660,6 +660,77 @@ body {
 
 
 
+/* --- High-Utility Mobile Drawer & Hamburger Styling Matrix --- */
+
+/* Hamburger Line Transform Into Close 'X' States */
+.sf-hamburger-button.open span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.sf-hamburger-button.open span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+.sf-hamburger-button.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Dimmed backdrop background context layer for mobile view scopes */
+.sf-mobile-drawer-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(33, 28, 43, 0.2);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 95;
+    animation: sfFadeIn 0.25s ease-out;
+}
+
+/* Enforce fluid mobile positioning over standard desktop sidebar grid templates */
+@media (max-width: 768px) {
+    .sf-mobile-top-bar {
+        display: flex !important; /* Forces layout tracking rules from your base theme */
+    }
+
+    .sf-left-sidebar {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 280px;
+        z-index: 100;
+        background: #ffffff !important;
+        box-shadow: 24px 0 50px rgba(74, 20, 140, 0.1);
+        
+        /* Default closed layout off-screen view position state */
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    /* Glides out smoothly from left bounds when variable state evaluates to open */
+    .sf-left-sidebar.mobile-open {
+        transform: translateX(0) !important;
+    }
+
+    /* Offsets main content box container down to clear space underneath fixed top mobile bar */
+    .sf-right-content-pane {
+        padding-top: calc(70px + 1.5rem) !important;
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+    }
+}
+
+
+
+
+
+
+
+
 /* =========================================================
    DASHBOARD SKELETONS
 ========================================================= */

@@ -1,8 +1,10 @@
 @* Components/Pages/Dashboard/QuickAddPanel.razor *@
+@rendermode InteractiveServer
 @using SmartFoods.Web.Models.DTOs.Dashboard
 @using SmartFoods.Web.Services.Dashboard
 
 @inject IDashboardService DashboardService
+@inject DashboardStateHub StateHub
 
 <div class="sf-premium-card">
     <h3 class="sf-card-header-title">Quick Add Supply Item</h3>
@@ -91,8 +93,18 @@
             await DashboardService.AddFoodItemAsync(UserId, Model);
             SuccessMessage = $"{Model.Name} successfully catalogued.";
             ErrorMessage = null;
+            
+            // Reset the form model safely in memory bounds
             Model = new CreateFoodItemDto { ExpiryDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)) };
-            await OnItemAdded.InvokeAsync();
+            
+            // BROADCAST THE UPDATE THROUGH THE REAL-TIME STATE SYNC CIRCUITS
+            StateHub.NotifyStateChanged();
+
+            // Fire structural backwards compatibility delegates to notify root layout templates
+            if (OnItemAdded.HasDelegate)
+            {
+                await OnItemAdded.InvokeAsync();
+            }
         }
         catch (Exception ex)
         {

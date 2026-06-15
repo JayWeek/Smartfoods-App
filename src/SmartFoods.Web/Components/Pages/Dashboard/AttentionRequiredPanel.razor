@@ -7,6 +7,8 @@
 @inject DashboardStateHub StateHub
 
 
+
+
 <div class="sf-premium-card" style="border-color: rgba(198, 40, 40, 0.12); position: relative;">
     <h3 class="sf-card-header-title" style="color: #4a148c;">Attention Required</h3>
     <p class="sf-card-header-subtitle">
@@ -135,10 +137,8 @@
                 Resolution = resolution
             };
 
-            // DIRECT SERVICE CALL PIPELINE RESOLVES CLASHING STATIC MEMORY BLOCKS
             await DashboardService.ResolveFoodItemAsync(UserId, payload);
 
-            // Optimistically update the UI locally within this interactive scope immediately
             if (Model?.UrgentItems != null)
             {
                 Model.UrgentItems.Remove(item);
@@ -146,14 +146,8 @@
 
             ClosePopover();
 
-            // BROADCAST SIGNAL TO UPDATE PANTRY SUMMARY PANELS GLOBALLY
+            // Notify State Hub to update components globally
             StateHub.NotifyStateChanged();
-
-            // Bubble up a parameterless event to refresh remaining static page content areas safely
-            if (OnActionCompleted.HasDelegate)
-            {
-                await OnActionCompleted.InvokeAsync();
-            }
         }
         catch (Exception ex)
         {
@@ -161,3 +155,4 @@
         }
     }
 }
+

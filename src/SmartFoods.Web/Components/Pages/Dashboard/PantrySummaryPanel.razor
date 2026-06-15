@@ -1,10 +1,5 @@
 @* Components/Pages/Dashboard/PantrySummaryPanel.razor *@
-@rendermode InteractiveServer
 @using SmartFoods.Web.Models.DTOs.Dashboard
-@using SmartFoods.Web.Services.Dashboard
-@inject IDashboardService DashboardService
-@inject DashboardStateHub StateHub
-@implements IDisposable
 
 <div class="sf-premium-card">
     <h3 class="sf-card-header-title">Pantry Summary</h3>
@@ -14,7 +9,9 @@
 
     @if (Model == null)
     {
-        <div class="sf-empty-state-notice">Synchronizing memory tracks...</div>
+        <div class="sf-empty-state-notice">
+            No storage parameters logged into memory archives.
+        </div>
     }
     else if (Model.IsEmptyPantry)
     {
@@ -24,64 +21,26 @@
     }
     else
     {
-        @* RESTORED YOUR EXACT ORIGINAL PREMIUM METRICS GRID ROW *@
         <div class="sf-summary-metric-row">
-
             <div class="sf-summary-metric-tile">
                 <span>Total Items</span>
                 <strong>@Model.TotalFoodItems</strong>
             </div>
 
             <div class="sf-summary-metric-tile" style="border-color: rgba(198, 40, 40, 0.15);">
-                <span style="color: #c62828;">
-                    Expiring Soon
-                </span>
-                <strong style="color: #c62828;">
-                    @Model.ExpiringSoonCount
-                </strong>
+                <span style="color: #c62828;">Expiring Soon</span>
+                <strong style="color: #c62828;">@Model.ExpiringSoonCount</strong>
             </div>
 
             <div class="sf-summary-metric-tile">
                 <span>Categories</span>
                 <strong>@Model.TotalCategories</strong>
             </div>
-
         </div>
     }
 </div>
 
 @code {
-    [Parameter, EditorRequired] 
+    [Parameter, EditorRequired]
     public PantrySummaryDto Model { get; set; } = default!;
-
-    [Parameter, EditorRequired] 
-    public Guid UserId { get; set; }
-
-    protected override void OnInitialized()
-    {
-        // Wire up the live state hook listener to capture background changes
-        StateHub.OnDashboardChanged += HandleExternalRefresh;
-    }
-
-    private async void HandleExternalRefresh()
-    {
-        try
-        {
-            // Re-fetch strictly this panel's metrics independently when an item is resolved
-            Model = await DashboardService.GetPantrySummaryAsync(UserId);
-            
-            // Re-render this specific slice of the UI immediately on the screen
-            await InvokeAsync(StateHasChanged);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"[Summary Sync Error Failure]: {ex.Message}");
-        }
-    }
-
-    public void Dispose()
-    {
-        // Clean up the event delegate reference tracking memory footprints on page destruction
-        StateHub.OnDashboardChanged -= HandleExternalRefresh;
-    }
 }
