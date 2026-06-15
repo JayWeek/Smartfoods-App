@@ -1,0 +1,4321 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.gitignore
+SmartFoods.Web.Tests/DashboardServiceTests.cs
+SmartFoods.Web.Tests/SmartFoods.Web.Tests.csproj
+SmartFoods.Web.Tests/UnitTest1.cs
+src/SmartFoods.Web/_Imports.razor
+src/SmartFoods.Web/Components/_Imports.razor
+src/SmartFoods.Web/Components/App.razor
+src/SmartFoods.Web/Components/Layout/DashboardLayout.razor
+src/SmartFoods.Web/Components/Layout/DashboardShell.razor
+src/SmartFoods.Web/Components/Layout/MainLayout.razor
+src/SmartFoods.Web/Components/Pages/Auth/Login.razor
+src/SmartFoods.Web/Components/Pages/Auth/Logout.razor
+src/SmartFoods.Web/Components/Pages/Auth/Register.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/AttentionRequiredPanel.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/CategoryChartPanel.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/Dashboard.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/DashboardSkeleton.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/NotificationDetail.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/NotificationsPage.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/NotificationsPanel.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/PantrySummaryPanel.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/QuickAddPanel.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/RecentActivityPanel.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/Skeletons/ActivitySkeleton.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/Skeletons/AttentionSkeleton.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/Skeletons/ChartSkeleton.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/Skeletons/RecipeSkeleton.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/Skeletons/SummarySkeleton.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/Skeletons/WelcomeSkeleton.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/SmartSuggestionsPanel.razor
+src/SmartFoods.Web/Components/Pages/Dashboard/WelcomePanel.razor
+src/SmartFoods.Web/Components/Pages/Index.razor
+src/SmartFoods.Web/Components/Routes.razor
+src/SmartFoods.Web/Data/ApplicationDbContext.cs
+src/SmartFoods.Web/Models/Base/BaseEntity.cs
+src/SmartFoods.Web/Models/DTOs/Dashboard/AttentionRequiredDto.cs
+src/SmartFoods.Web/Models/DTOs/Dashboard/CategoryChartDto.cs
+src/SmartFoods.Web/Models/DTOs/Dashboard/CreateFoodItemDto.cs
+src/SmartFoods.Web/Models/DTOs/Dashboard/DashboardOverviewDto.cs
+src/SmartFoods.Web/Models/DTOs/Dashboard/PantrySummaryDto.cs
+src/SmartFoods.Web/Models/DTOs/Dashboard/RecentActivityDto.cs
+src/SmartFoods.Web/Models/DTOs/Dashboard/ResolveFoodItemDto.cs
+src/SmartFoods.Web/Models/DTOs/Dashboard/SmartSuggestionsDto.cs
+src/SmartFoods.Web/Models/DTOs/Dashboard/WelcomePanelDto.cs
+src/SmartFoods.Web/Models/DTOs/LoginDto.cs
+src/SmartFoods.Web/Models/DTOs/RegisterDto.cs
+src/SmartFoods.Web/Models/Identity/ApplicationUser.cs
+src/SmartFoods.Web/Models/Pantry/FoodItem.cs
+src/SmartFoods.Web/Models/Pantry/NotificationLog.cs
+src/SmartFoods.Web/Models/Pantry/Pantry.cs
+src/SmartFoods.Web/Models/Pantry/PantryInventoryLog.cs
+src/SmartFoods.Web/Models/Pantry/Recipe.cs
+src/SmartFoods.Web/Models/Pantry/RecipeIngredient.cs
+src/SmartFoods.Web/Program.cs
+src/SmartFoods.Web/Services/Authentication/AuthService.cs
+src/SmartFoods.Web/Services/Dashboard/DashboardService.cs
+src/SmartFoods.Web/Services/Dashboard/DashboardStateHub.cs
+src/SmartFoods.Web/Services/Dashboard/IDashboardService.cs
+src/SmartFoods.Web/Services/Infrastructure/PantryReminderJob.cs
+src/SmartFoods.Web/Services/Infrastructure/SmtpEmailService.cs
+src/SmartFoods.Web/Services/Infrastructure/SpoonacularIntegrationService.cs
+src/SmartFoods.Web/Services/Interfaces/IAuthService.cs
+src/SmartFoods.Web/Services/Interfaces/IEmailService.cs
+src/SmartFoods.Web/Services/Interfaces/IRecipeIntegrationService.cs
+src/SmartFoods.Web/SmartFoods.Web.csproj
+src/SmartFoods.Web/wwwroot/app.css
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="src/SmartFoods.Web/Components/Layout/DashboardShell.razor">
+@* Components/Layout/DashboardShell.razor *@
+@rendermode InteractiveServer
+@inject NavigationManager Navigation
+
+<div class="sf-layout-wrapper" style="height: 100vh; max-height: 100vh; overflow: hidden; position: relative;">
+
+    <!-- Mobile Header Top-Bar Utilities -->
+    <header class="sf-mobile-top-bar">
+        <NavLink href="/dashboard"
+                 class="sf-sidebar-logo"
+                 style="margin-bottom: 0;">
+            <div class="sf-logo-icon">SF</div>
+            <div class="sf-logo-text">
+                SmartFoods
+                <span>Pantry Tracker</span>
+            </div>
+        </NavLink>
+
+        <button class="sf-hamburger-button @(IsMobileNavOpen ? "open" : "")"
+                @onclick="ToggleMobileNav"
+                aria-label="Toggle Navigation Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+    </header>
+
+    <!-- Left Sidebar Engine (Frozen Solid) -->
+    <aside class="sf-left-sidebar @(IsMobileNavOpen ? "mobile-open" : "")">
+
+        <NavLink href="/dashboard"
+                 class="sf-sidebar-logo"
+                 @onclick="CloseMobileNav">
+            <div class="sf-logo-icon">SF</div>
+            <div class="sf-logo-text">
+                SmartFoods
+                <span>Pantry Tracker</span>
+            </div>
+        </NavLink>
+
+        <nav class="sf-navigation-stack">
+
+            <NavLink href="/dashboard"
+                     Match="NavLinkMatch.All"
+                     class="sf-nav-item"
+                     ActiveClass="active"
+                     @onclick="CloseMobileNav">
+
+                @if (Navigation.Uri.EndsWith("/dashboard", StringComparison.OrdinalIgnoreCase))
+                {
+                    <div class="sf-nav-dot"></div>
+                }
+
+                <span>Overview Dashboard</span>
+
+            </NavLink>
+
+            <NavLink href="/dashboard/notifications"
+                     class="sf-nav-item"
+                     ActiveClass="active"
+                     @onclick="CloseMobileNav">
+
+                @if (Navigation.Uri.Contains("/dashboard/notifications", StringComparison.OrdinalIgnoreCase))
+                {
+                    <div class="sf-nav-dot"></div>
+                }
+
+                <span>Notification Logs</span>
+
+            </NavLink>
+
+        </nav>
+
+        <div class="sf-sidebar-footer-group">
+            <a href="/logout"
+               class="sf-nav-item"
+               style="color: #c62828;">
+                <span>Sign Out Account</span>
+            </a>
+        </div>
+
+    </aside>
+
+    <!-- Right Content Area (The ONLY layout element that will scroll) -->
+    <main class="sf-right-content-pane"
+          style="height: 100vh; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 5rem;">
+
+        @ChildContent
+
+    </main>
+
+</div>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    private bool IsMobileNavOpen;
+
+    private void ToggleMobileNav()
+    {
+        IsMobileNavOpen = !IsMobileNavOpen;
+    }
+
+    private void CloseMobileNav()
+    {
+        IsMobileNavOpen = false;
+    }
+}
+</file>
+
+<file path="SmartFoods.Web.Tests/DashboardServiceTests.cs">
+using Microsoft.EntityFrameworkCore;
+using SmartFoods.Web.Data;
+using SmartFoods.Web.Models.DTOs.Dashboard;
+using SmartFoods.Web.Services.Dashboard;
+
+namespace SmartFoods.Web.Tests;
+
+public class DashboardServiceTests
+{
+    [Fact]
+    public async Task AddFoodItemAsync_CreatesPantry_WhenOneDoesNotExist()
+    {
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseInMemoryDatabase(Guid.NewGuid().ToString())
+            .Options;
+
+        await using var dbContext = new ApplicationDbContext(options);
+        var service = new DashboardService(dbContext);
+
+        var userId = Guid.NewGuid();
+        var model = new CreateFoodItemDto
+        {
+            Name = "Milk",
+            Quantity = 2,
+            Unit = "Litres",
+            Category = "Dairy",
+            ExpiryDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(5))
+        };
+
+        await service.AddFoodItemAsync(userId, model);
+
+        var pantry = await dbContext.Pantries.SingleOrDefaultAsync(p => p.UserId == userId);
+        var foodItem = await dbContext.FoodItems.SingleOrDefaultAsync();
+
+        Assert.NotNull(pantry);
+        Assert.NotNull(foodItem);
+        Assert.Equal("Milk", foodItem!.Name);
+        Assert.Equal(pantry!.Id, foodItem.PantryId);
+    }
+}
+</file>
+
+<file path="SmartFoods.Web.Tests/SmartFoods.Web.Tests.csproj">
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="coverlet.collector" Version="6.0.2" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\SmartFoods.Web\SmartFoods.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+  </ItemGroup>
+
+</Project>
+</file>
+
+<file path="SmartFoods.Web.Tests/UnitTest1.cs">
+namespace SmartFoods.Web.Tests;
+
+public class UnitTest1
+{
+    [Fact]
+    public void Test1()
+    {
+
+    }
+}
+</file>
+
+<file path="src/SmartFoods.Web/_Imports.razor">
+@* src/SmartFoods.Web/_Imports.razor *@
+@using System.Net.Http
+@using System.Net.Http.Json
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@using Microsoft.JSInterop
+@using SmartFoods.Web
+</file>
+
+<file path="src/SmartFoods.Web/Components/_Imports.razor">
+@using System.Globalization
+@using Microsoft.AspNetCore.Components
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using static Microsoft.AspNetCore.Components.Web.RenderMode
+@using SmartFoods.Web.Components
+@using SmartFoods.Web.Components.Layout
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Auth/Logout.razor">
+@page "/logout"
+
+@using SmartFoods.Web.Services.Interfaces
+
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+<h3>Logging out...</h3>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthService.LogoutAsync();
+
+        Navigation.NavigateTo("/", forceLoad: true);
+    }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/DashboardSkeleton.razor">
+<div class="sf-skeleton-card">
+    <div class="sf-skeleton-line short"></div>
+    <div class="sf-skeleton-line medium"></div>
+    <div class="sf-skeleton-block"></div>
+</div>
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/Skeletons/ActivitySkeleton.razor">
+<div class="sf-premium-card sf-skeleton-card">
+
+    <div class="sf-skeleton-title"></div>
+
+    <div class="sf-skeleton-text"></div>
+
+    <div class="sf-skeleton-list-item">
+        <div class="sf-skeleton-list-content"></div>
+        <div class="sf-skeleton-pill"></div>
+    </div>
+
+    <div class="sf-skeleton-list-item">
+        <div class="sf-skeleton-list-content"></div>
+        <div class="sf-skeleton-pill"></div>
+    </div>
+
+    <div class="sf-skeleton-list-item">
+        <div class="sf-skeleton-list-content"></div>
+        <div class="sf-skeleton-pill"></div>
+    </div>
+
+    <div class="sf-skeleton-list-item">
+        <div class="sf-skeleton-list-content"></div>
+        <div class="sf-skeleton-pill"></div>
+    </div>
+
+</div>
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/Skeletons/AttentionSkeleton.razor">
+<div class="sf-premium-card sf-skeleton-card">
+
+    <div class="sf-skeleton-title"></div>
+
+    <div class="sf-skeleton-text"></div>
+
+    <div class="sf-skeleton-list-item">
+        <div class="sf-skeleton-list-content"></div>
+        <div class="sf-skeleton-pill"></div>
+    </div>
+
+    <div class="sf-skeleton-list-item">
+        <div class="sf-skeleton-list-content"></div>
+        <div class="sf-skeleton-pill"></div>
+    </div>
+
+    <div class="sf-skeleton-list-item">
+        <div class="sf-skeleton-list-content"></div>
+        <div class="sf-skeleton-pill"></div>
+    </div>
+
+</div>
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/Skeletons/ChartSkeleton.razor">
+<div class="sf-premium-card sf-skeleton-card">
+
+    <div class="sf-skeleton-title"></div>
+
+    <div class="sf-skeleton-text short"></div>
+
+    <div class="sf-skeleton-chart-row">
+        <div class="sf-skeleton-chart-label"></div>
+        <div class="sf-skeleton-chart-bar"></div>
+    </div>
+
+    <div class="sf-skeleton-chart-row">
+        <div class="sf-skeleton-chart-label"></div>
+        <div class="sf-skeleton-chart-bar"></div>
+    </div>
+
+    <div class="sf-skeleton-chart-row">
+        <div class="sf-skeleton-chart-label"></div>
+        <div class="sf-skeleton-chart-bar"></div>
+    </div>
+
+    <div class="sf-skeleton-chart-row">
+        <div class="sf-skeleton-chart-label"></div>
+        <div class="sf-skeleton-chart-bar"></div>
+    </div>
+
+</div>
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/Skeletons/RecipeSkeleton.razor">
+<div class="sf-premium-card sf-skeleton-card">
+
+    <div class="sf-skeleton-title"></div>
+
+    <div class="sf-skeleton-recipe-grid">
+
+        <div class="sf-skeleton-recipe-card">
+            <div class="sf-skeleton-image"></div>
+            <div class="sf-skeleton-text"></div>
+            <div class="sf-skeleton-text short"></div>
+        </div>
+
+        <div class="sf-skeleton-recipe-card">
+            <div class="sf-skeleton-image"></div>
+            <div class="sf-skeleton-text"></div>
+            <div class="sf-skeleton-text short"></div>
+        </div>
+
+    </div>
+
+</div>
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/Skeletons/SummarySkeleton.razor">
+<div class="sf-premium-card sf-skeleton-card">
+
+    <div class="sf-skeleton-title"></div>
+
+    <div class="sf-summary-metric-row">
+
+        <div class="sf-summary-metric-tile">
+            <div class="sf-skeleton-value"></div>
+            <div class="sf-skeleton-label"></div>
+        </div>
+
+        <div class="sf-summary-metric-tile">
+            <div class="sf-skeleton-value"></div>
+            <div class="sf-skeleton-label"></div>
+        </div>
+
+        <div class="sf-summary-metric-tile">
+            <div class="sf-skeleton-value"></div>
+            <div class="sf-skeleton-label"></div>
+        </div>
+
+    </div>
+
+</div>
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/Skeletons/WelcomeSkeleton.razor">
+<div class="sf-premium-card sf-skeleton-card">
+
+    <div class="sf-skeleton-title"></div>
+
+    <div class="sf-skeleton-text"></div>
+
+    <div class="sf-skeleton-text short"></div>
+
+</div>
+</file>
+
+<file path="src/SmartFoods.Web/Models/Base/BaseEntity.cs">
+namespace SmartFoods.Web.Models.Base;
+
+public abstract class BaseEntity
+{
+    public Guid Id { get; set; }
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/DTOs/Dashboard/CategoryChartDto.cs">
+namespace SmartFoods.Web.Models.DTOs.Dashboard;
+
+public class CategoryPercentageDto
+{
+    public string CategoryName { get; set; } = string.Empty;
+    public int ItemCount { get; set; }
+    public decimal Percentage { get; set; }
+}
+
+public class CategoryChartDto
+{
+    public List<CategoryPercentageDto> Categories { get; set; } = new();
+    public bool IsEmptyPantry => Categories.Count == 0;
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/DTOs/Dashboard/CreateFoodItemDto.cs">
+using System.ComponentModel.DataAnnotations;
+
+namespace SmartFoods.Web.Models.DTOs.Dashboard;
+
+public class CreateFoodItemDto
+{
+    [Required]
+    public string Name { get; set; } = string.Empty;
+
+    [Range(0.01, double.MaxValue)]
+    public decimal Quantity { get; set; }
+
+    [Required]
+    public string Unit { get; set; } = string.Empty;
+
+    [Required]
+    public string Category { get; set; } = string.Empty;
+
+    [Required]
+    public DateOnly ExpiryDate { get; set; }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/DTOs/Dashboard/DashboardOverviewDto.cs">
+namespace SmartFoods.Web.Models.DTOs.Dashboard;
+
+public sealed class DashboardOverviewDto
+{
+    public WelcomePanelDto Welcome { get; set; } = new();
+
+    public PantrySummaryDto PantrySummary { get; set; } = new();
+
+    public AttentionRequiredDto AttentionRequired { get; set; } = new();
+
+    public CategoryChartDto CategoryChart { get; set; } = new();
+
+    public RecentActivityDto RecentActivity { get; set; } = new();
+
+    public SmartSuggestionsDto SmartSuggestions { get; set; } = new();
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/DTOs/Dashboard/PantrySummaryDto.cs">
+namespace SmartFoods.Web.Models.DTOs.Dashboard;
+
+public class PantrySummaryDto
+{
+    public int TotalFoodItems { get; set; }
+    public int TotalCategories { get; set; }
+    public int ExpiringSoonCount { get; set; }
+    public bool IsEmptyPantry => TotalFoodItems == 0;
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/DTOs/Dashboard/RecentActivityDto.cs">
+namespace SmartFoods.Web.Models.DTOs.Dashboard;
+
+public class RecentActivityItemDto
+{
+    public string Name { get; set; } = string.Empty;
+    public decimal Quantity { get; set; }
+    public string Unit { get; set; } = string.Empty;
+    public DateTime AddedAt { get; set; }
+}
+
+public class RecentActivityDto
+{
+    public List<RecentActivityItemDto> RecentItems { get; set; } = new();
+    public bool IsEmptyHistory => RecentItems.Count == 0;
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/DTOs/Dashboard/ResolveFoodItemDto.cs">
+using System.ComponentModel.DataAnnotations;
+using SmartFoods.Web.Models.Pantry;
+
+namespace SmartFoods.Web.Models.DTOs.Dashboard;
+
+public class ResolveFoodItemDto
+{
+    [Required]
+    public Guid FoodItemId { get; set; }
+
+    [Required]
+    public InventoryResolution Resolution { get; set; }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/DTOs/Dashboard/SmartSuggestionsDto.cs">
+namespace SmartFoods.Web.Models.DTOs.Dashboard;
+
+public class SuggestedRecipeDto
+{
+    public string Title { get; set; } = string.Empty;
+    public string ImageUrl { get; set; } = string.Empty;
+    public string SourceUrl { get; set; } = string.Empty;
+    public string TargetIngredient { get; set; } = string.Empty; // e.g., "Uses your expiring Milk!"
+}
+
+public class SmartSuggestionsDto
+{
+    public List<SuggestedRecipeDto> Suggestions { get; set; } = new();
+    public bool IsEmptyState => Suggestions.Count == 0;
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/DTOs/Dashboard/WelcomePanelDto.cs">
+namespace SmartFoods.Web.Models.DTOs.Dashboard;
+
+public class WelcomePanelDto
+{
+    public string UserName { get; set; } = string.Empty;
+
+    public int TotalFoodItems { get; set; }
+
+    public int TotalCategories { get; set; }
+
+    public int ItemsNeedingAttention { get; set; }
+
+    public bool IsEmptyPantry => TotalFoodItems == 0;
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/DTOs/LoginDto.cs">
+// src/SmartFoods.Web/Models/DTOs/LoginDto.cs
+using System.ComponentModel.DataAnnotations;
+
+namespace SmartFoods.Web.Models.DTOs;
+
+public class LoginDto
+{
+    [Required(ErrorMessage = "Email is required.")]
+    [EmailAddress(ErrorMessage = "Invalid email address.")]
+    public string Email { get; set; } = string.Empty;
+
+    [Required(ErrorMessage = "Password is required.")]
+    public string Password { get; set; } = string.Empty;
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/DTOs/RegisterDto.cs">
+using System.ComponentModel.DataAnnotations;
+
+namespace SmartFoods.Web.Models.DTOs;
+
+public class RegisterDto
+{
+    [Required]
+    public string Name { get; set; } = string.Empty;
+
+    [Required]
+    [EmailAddress]
+    public string Email { get; set; } = string.Empty;
+
+    [Required]
+    [MinLength(8)]
+    public string Password { get; set; } = string.Empty;
+
+    [Required]
+    [Compare(nameof(Password))]
+    public string ConfirmPassword { get; set; } = string.Empty;
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/Identity/ApplicationUser.cs">
+using Microsoft.AspNetCore.Identity;
+
+namespace SmartFoods.Web.Models.Identity;
+
+public class ApplicationUser : IdentityUser<Guid>
+{
+    public string Name { get; set; } = string.Empty;
+
+    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+    public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+
+    public Pantry.Pantry? Pantry { get; set; }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/Pantry/FoodItem.cs">
+using SmartFoods.Web.Models.Base;
+
+namespace SmartFoods.Web.Models.Pantry;
+
+public class FoodItem : BaseEntity
+{
+    public string Name { get; set; } = string.Empty;
+
+    public decimal Quantity { get; set; }
+
+    public string Unit { get; set; } = string.Empty;
+
+    public string Category { get; set; } = string.Empty;
+
+    public DateOnly ExpiryDate { get; set; }
+
+    public Guid PantryId { get; set; }
+
+    public Pantry Pantry { get; set; } = null!;
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/Pantry/NotificationLog.cs">
+using SmartFoods.Web.Models.Base;
+using SmartFoods.Web.Models.Identity;
+
+namespace SmartFoods.Web.Models.Pantry;
+
+public class NotificationLog : BaseEntity
+{
+    public Guid UserId { get; set; }
+    public ApplicationUser User { get; set; } = null!;
+
+    public DateOnly NotificationDate { get; set; } // Tracks the specific day (e.g. 2026-06-09)
+    public string Title { get; set; } = string.Empty;
+    public string MessageBody { get; set; } = string.Empty;
+    public bool IsEmailSent { get; set; }
+    public DateTime SentAt { get; set; }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/Pantry/Pantry.cs">
+using SmartFoods.Web.Models.Base;
+using SmartFoods.Web.Models.Identity;
+
+namespace SmartFoods.Web.Models.Pantry;
+
+public class Pantry : BaseEntity
+{
+    public string Name { get; set; } = "Main Pantry";
+
+    public Guid UserId { get; set; }
+
+    public ApplicationUser User { get; set; } = null!;
+
+    public ICollection<FoodItem> FoodItems { get; set; }
+        = new List<FoodItem>();
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/Pantry/PantryInventoryLog.cs">
+using SmartFoods.Web.Models.Base;
+using SmartFoods.Web.Models.Identity;
+
+namespace SmartFoods.Web.Models.Pantry;
+
+public enum InventoryResolution
+{
+    Consumed = 1,
+    Wasted = 2
+}
+
+public class PantryInventoryLog : BaseEntity
+{
+    public Guid UserId { get; set; }
+    public ApplicationUser User { get; set; } = null!;
+
+    public string ItemName { get; set; } = string.Empty;
+    public decimal Quantity { get; set; }
+    public string Unit { get; set; } = string.Empty;
+    public string Category { get; set; } = string.Empty;
+    
+    public DateOnly OriginalExpiryDate { get; set; }
+    public DateTime LoggedAt { get; set; } = DateTime.UtcNow;
+    
+    public InventoryResolution Resolution { get; set; }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/Pantry/Recipe.cs">
+using SmartFoods.Web.Models.Base;
+
+namespace SmartFoods.Web.Models.Pantry;
+
+public class Recipe : BaseEntity
+{
+    public int ExternalApiId { get; set; } // Tracks Spoonacular ID to prevent duplicate imports
+    public string Title { get; set; } = string.Empty;
+    public string ImageUrl { get; set; } = string.Empty;
+    public string SourceUrl { get; set; } = string.Empty;
+    public int ReadyInMinutes { get; set; }
+    public int Servings { get; set; }
+
+    public ICollection<RecipeIngredient> Ingredients { get; set; } = new List<RecipeIngredient>();
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/Pantry/RecipeIngredient.cs">
+using SmartFoods.Web.Models.Base;
+
+namespace SmartFoods.Web.Models.Pantry;
+
+public class RecipeIngredient : BaseEntity
+{
+    public Guid RecipeId { get; set; }
+    public Recipe Recipe { get; set; } = null!;
+
+    public string Name { get; set; } = string.Empty; // e.g., "milk", "carrot"
+    public string OriginalText { get; set; } = string.Empty; // e.g., "2 cups of low-fat milk"
+    public decimal Amount { get; set; }
+    public string Unit { get; set; } = string.Empty;
+}
+</file>
+
+<file path="src/SmartFoods.Web/Services/Authentication/AuthService.cs">
+using Microsoft.AspNetCore.Identity;
+using SmartFoods.Web.Data;
+using SmartFoods.Web.Models.DTOs;
+using SmartFoods.Web.Models.Identity;
+using SmartFoods.Web.Models.Pantry;
+using SmartFoods.Web.Services.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
+namespace SmartFoods.Web.Services.Authentication;
+
+public class AuthService : IAuthService
+{
+    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly ApplicationDbContext _dbContext;
+
+    public AuthService(
+        UserManager<ApplicationUser> userManager,
+        SignInManager<ApplicationUser> signInManager,
+        ApplicationDbContext dbContext)
+    {
+        _userManager = userManager;
+        _signInManager = signInManager;
+        _dbContext = dbContext;
+    }
+
+    public async Task<(bool Success, IEnumerable<string> Errors)>
+        RegisterAsync(RegisterDto model)
+    {
+        if (model.Password != model.ConfirmPassword)
+        {
+            return (
+                false,
+                new[] { "Passwords do not match." }
+            );
+        }
+
+        await using var transaction =
+            await _dbContext.Database.BeginTransactionAsync();
+
+        try
+        {
+            var user = new ApplicationUser
+            {
+                Name = model.Name,
+                UserName = model.Email,
+                Email = model.Email
+            };
+
+            var result = await _userManager.CreateAsync(
+                user,
+                model.Password);
+
+            if (!result.Succeeded)
+            {
+                return (
+                    false,
+                    result.Errors.Select(e => e.Description)
+                );
+            }
+
+            var pantry = new Pantry
+            {
+                Name = "Main Pantry",
+                UserId = user.Id
+            };
+
+            _dbContext.Pantries.Add(pantry);
+
+            await _dbContext.SaveChangesAsync();
+
+            await transaction.CommitAsync();
+
+            return (
+                true,
+                Enumerable.Empty<string>()
+            );
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+
+            return (
+                false,
+                new[] { ex.Message }
+            );
+        }
+    }
+
+    public async Task<bool> LoginAsync(LoginDto model)
+    {
+        var result =
+            await _signInManager.PasswordSignInAsync(
+                model.Email,
+                model.Password,
+                isPersistent: false,
+                lockoutOnFailure: false);
+
+        return result.Succeeded;
+    }
+
+    public async Task LogoutAsync()
+    {
+        await _signInManager.SignOutAsync();
+    }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Services/Dashboard/DashboardStateHub.cs">
+namespace SmartFoods.Web.Services.Dashboard;
+
+public class DashboardStateHub
+{
+    // Reactive multicast delegate event
+    public event Action? OnDashboardChanged;
+
+    /// <summary>
+    /// Notifies all active listening UI panels globally to synchronize their data states.
+    /// </summary>
+    public void NotifyStateChanged()
+    {
+        OnDashboardChanged?.Invoke();
+    }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Services/Infrastructure/SmtpEmailService.cs">
+using MailKit.Net.Smtp;
+using MimeKit;
+using SmartFoods.Web.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
+
+namespace SmartFoods.Web.Services.Infrastructure;
+
+public class SmtpEmailService : IEmailService
+{
+    private readonly IConfiguration _config;
+
+    public SmtpEmailService(IConfiguration configuration)
+    {
+        _config = configuration;
+    }
+
+    public async Task SendEmailAsync(string toEmail, string subject, string htmlBody)
+    {
+        var message = new MimeMessage();
+        var fromName = _config["Smtp:FromName"] ?? "SmartFoods";
+        var fromEmail = _config["Smtp:FromEmail"] ?? "no-reply@smartfoods.com";
+
+        message.From.Add(new MailboxAddress(fromName, fromEmail));
+        message.To.Add(new MailboxAddress("", toEmail));
+        message.Subject = subject;
+
+        var bodyBuilder = new BodyBuilder { HtmlBody = htmlBody };
+        message.Body = bodyBuilder.ToMessageBody();
+
+        using var client = new SmtpClient();
+        
+        var host = _config["Smtp:Host"] ?? "localhost";
+        var port = int.Parse(_config["Smtp:Port"] ?? "587");
+
+        // Connect securely using STARTTLS
+        await client.ConnectAsync(host, port, MailKit.Security.SecureSocketOptions.StartTls);
+        await client.AuthenticateAsync(_config["Smtp:Username"], _config["Smtp:Password"]);
+        await client.SendAsync(message);
+        await client.DisconnectAsync(true);
+    }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Services/Infrastructure/SpoonacularIntegrationService.cs">
+using System.Net.Http.Json;
+using System.Text.Json.Serialization;
+using SmartFoods.Web.Models.Pantry;
+using SmartFoods.Web.Services.Interfaces;
+using Microsoft.Extensions.Configuration;
+
+namespace SmartFoods.Web.Services.Infrastructure;
+
+public class SpoonacularIntegrationService : IRecipeIntegrationService
+{
+    private readonly IHttpClientFactory _httpClientFactory;
+    private readonly string _apiKey;
+
+    // CHANGED: Inject IHttpClientFactory directly to obtain isolated client instances safely
+    public SpoonacularIntegrationService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+    {
+        _httpClientFactory = httpClientFactory;
+        _apiKey = configuration["Spoonacular:ApiKey"] ?? throw new ArgumentNullException("Spoonacular API Key is missing.");
+    }
+
+    public async Task<List<Recipe>> FetchAndMapRecipesAsync(string ingredientName)
+    {
+        var normalizedIngredientName = ingredientName.ToLowerOffsetCleaned();
+        var url = $"https://api.spoonacular.com/recipes/findByIngredients?ingredients={Uri.EscapeDataString(normalizedIngredientName)}&number=10&ranking=1&ignorePantry=true&apiKey={_apiKey}";
+
+        // Obtain a standalone, clean execution client
+        var httpClient = _httpClientFactory.CreateClient();
+        
+        var apiResponse = await httpClient.GetFromJsonAsync<List<SpoonacularRecipeResponse>>(url);
+        var localRecipes = new List<Recipe>();
+
+        if (apiResponse == null) return localRecipes;
+
+        foreach (var item in apiResponse)
+        {
+            var recipe = new Recipe
+            {
+                ExternalApiId = item.Id,
+                Title = item.Title,
+                ImageUrl = item.Image,
+                SourceUrl = $"https://spoonacular.com{item.Title.Replace(" ", "-")}-{item.Id}",
+                ReadyInMinutes = 30,
+                Servings = 4,
+                Ingredients = new List<RecipeIngredient>()
+            };
+
+            var allIngredients = (item.UsedIngredients ?? Enumerable.Empty<SpoonacularIngredient>())
+                .Concat(item.MissedIngredients ?? Enumerable.Empty<SpoonacularIngredient>());
+
+            foreach (var ing in allIngredients)
+            {
+                recipe.Ingredients.Add(new RecipeIngredient
+                {
+                    Name = ing.Name.ToLowerOffsetCleaned(),
+                    OriginalText = ing.Original ?? $"{ing.Amount} {ing.Unit} {ing.Name}",
+                    Amount = (decimal)ing.Amount,
+                    Unit = ing.Unit ?? string.Empty
+                });
+            }
+
+            if (!recipe.Ingredients.Any(i => i.Name == normalizedIngredientName))
+            {
+                recipe.Ingredients.Add(new RecipeIngredient
+                {
+                    Name = normalizedIngredientName,
+                    OriginalText = normalizedIngredientName,
+                    Amount = 0,
+                    Unit = string.Empty
+                });
+            }
+
+            localRecipes.Add(recipe);
+        }
+
+        return localRecipes;
+    }
+}
+
+
+// Internal mapping transfer objects to parse the incoming Spoonacular JSON structure cleanly
+internal class SpoonacularRecipeResponse
+{
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
+
+    [JsonPropertyName("title")]
+    public string Title { get; set; } = string.Empty;
+
+    [JsonPropertyName("image")]
+    public string Image { get; set; } = string.Empty;
+
+    [JsonPropertyName("usedIngredients")]
+    public List<SpoonacularIngredient>? UsedIngredients { get; set; }
+
+    [JsonPropertyName("missedIngredients")]
+    public List<SpoonacularIngredient>? MissedIngredients { get; set; }
+}
+
+internal class SpoonacularIngredient
+{
+    [JsonPropertyName("name")]
+    public string Name { get; set; } = string.Empty;
+
+    [JsonPropertyName("original")]
+    public string? Original { get; set; }
+
+    [JsonPropertyName("amount")]
+    public double Amount { get; set; }
+
+    [JsonPropertyName("unit")]
+    public string? Unit { get; set; }
+}
+
+// Tiny text sanitizer to optimize database uniformity
+internal static class StringExtensions
+{
+    public static string ToLowerOffsetCleaned(this string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return string.Empty;
+        return input.Trim().ToLowerInvariant();
+    }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Services/Interfaces/IAuthService.cs">
+using SmartFoods.Web.Models.DTOs;
+
+namespace SmartFoods.Web.Services.Interfaces;
+
+public interface IAuthService
+{
+    Task<(bool Success, IEnumerable<string> Errors)>
+        RegisterAsync(RegisterDto model);
+
+    Task<bool>
+        LoginAsync(LoginDto model);
+
+    Task LogoutAsync();
+}
+</file>
+
+<file path="src/SmartFoods.Web/Services/Interfaces/IEmailService.cs">
+namespace SmartFoods.Web.Services.Interfaces;
+
+public interface IEmailService
+{
+    Task SendEmailAsync(string toEmail, string subject, string htmlBody);
+}
+</file>
+
+<file path="src/SmartFoods.Web/Services/Interfaces/IRecipeIntegrationService.cs">
+using SmartFoods.Web.Models.Pantry;
+
+namespace SmartFoods.Web.Services.Interfaces;
+
+public interface IRecipeIntegrationService
+{
+    /// <summary>
+    /// Connects to Spoonacular, fetches recipes containing the specified ingredient, 
+    /// and maps them into our local domain models.
+    /// </summary>
+    Task<List<Recipe>> FetchAndMapRecipesAsync(string ingredientName);
+}
+</file>
+
+<file path="src/SmartFoods.Web/SmartFoods.Web.csproj">
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.*" />
+    <PackageReference Include="Hangfire.PostgreSql" Version="1.20.*" />
+    <PackageReference Include="MailKit" Version="4.10.*" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.0" />
+  </ItemGroup>
+
+</Project>
+</file>
+
+<file path="src/SmartFoods.Web/Components/Layout/DashboardLayout.razor">
+@* Components/Layout/DashboardLayout.razor *@
+@inherits LayoutComponentBase
+@inject NavigationManager Navigation
+
+<div class="sf-layout-wrapper" style="height: 100vh; max-height: 100vh; overflow: hidden; position: relative;">
+
+<!-- Mobile Header Top-Bar Utilities -->
+<header class="sf-mobile-top-bar">
+    <NavLink href="/dashboard"
+             class="sf-sidebar-logo"
+             style="margin-bottom: 0;">
+        <div class="sf-logo-icon">SF</div>
+        <div class="sf-logo-text">
+            SmartFoods
+            <span>Pantry Tracker</span>
+        </div>
+    </NavLink>
+
+    <button class="sf-hamburger-button @(IsMobileNavOpen ? "open" : "")"
+            @onclick="ToggleMobileNav"
+            aria-label="Toggle Navigation Menu">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
+</header>
+
+<!-- Left Sidebar Engine (Frozen Solid) -->
+<aside class="sf-left-sidebar @(IsMobileNavOpen ? "mobile-open" : "")">
+
+    <NavLink href="/dashboard"
+             class="sf-sidebar-logo"
+             @onclick="CloseMobileNav">
+        <div class="sf-logo-icon">SF</div>
+        <div class="sf-logo-text">
+            SmartFoods
+            <span>Pantry Tracker</span>
+        </div>
+    </NavLink>
+
+    <nav class="sf-navigation-stack">
+
+        <NavLink href="/dashboard"
+                 Match="NavLinkMatch.All"
+                 class="sf-nav-item"
+                 ActiveClass="active"
+                 @onclick="CloseMobileNav">
+
+            @if (Navigation.Uri.EndsWith("/dashboard", StringComparison.OrdinalIgnoreCase))
+            {
+                <div class="sf-nav-dot"></div>
+            }
+
+            <span>Overview Dashboard</span>
+
+        </NavLink>
+
+        <NavLink href="/dashboard/notifications"
+                 class="sf-nav-item"
+                 ActiveClass="active"
+                 @onclick="CloseMobileNav">
+
+            @if (Navigation.Uri.Contains("/dashboard/notifications", StringComparison.OrdinalIgnoreCase))
+            {
+                <div class="sf-nav-dot"></div>
+            }
+
+            <span>Notification Logs</span>
+
+        </NavLink>
+
+    </nav>
+
+    <div class="sf-sidebar-footer-group">
+        <a href="/logout"
+           class="sf-nav-item"
+           style="color: #c62828;">
+            <span>Sign Out Account</span>
+        </a>
+    </div>
+
+</aside>
+
+<!-- Right Content Area (The ONLY layout element that will scroll) -->
+<main class="sf-right-content-pane"
+      style="height: 100vh; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 5rem;">
+
+    @Body
+
+</main>
+
+</div>
+
+@code {
+private bool IsMobileNavOpen;
+
+private void ToggleMobileNav()
+{
+    IsMobileNavOpen = !IsMobileNavOpen;
+}
+
+private void CloseMobileNav()
+{
+    IsMobileNavOpen = false;
+}
+
+}
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Auth/Login.razor">
+@* Components/Pages/Auth/Login.razor *@
+@page "/login"
+
+@using SmartFoods.Web.Models.DTOs
+@using SmartFoods.Web.Services.Interfaces
+@using Microsoft.AspNetCore.Components.Authorization
+
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+<PageTitle>Sign In - SmartFoods</PageTitle>
+
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem;">
+    <div class="sf-premium-card" style="width: 100%; max-width: 440px; padding: 2.5rem 2rem; animation: sf-fade-up 0.5s ease both;">
+        
+        <!-- Header Brand Indicator -->
+        <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 2rem; gap: 0.75rem;">
+            <div class="sf-logo-icon">SF</div>
+            <h2 style="margin: 0; font-size: 1.6rem; font-weight: 800; color: var(--sf-purple-dark);">Welcome Back</h2>
+            <p style="margin: 0; font-size: 0.88rem; color: var(--sf-text-muted);">Enter your credentials to access your pantry ledger dashboards.</p>
+        </div>
+
+        <!-- System Status Notifications -->
+        @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+        {
+            <div class="sf-alert-banner error-mode" style="animation: sf-scale-in 0.3s ease both;">
+                ⚠ @ErrorMessage
+            </div>
+        }
+
+        <!-- Interactive Credentials Input Form -->
+        <EditForm Model="Model" OnValidSubmit="ExecuteLogin" FormName="LoginForm" method="post" class="sf-premium-form-layout">
+            <DataAnnotationsValidator />
+
+            <div class="sf-form-field-block">
+                <label>Email Address</label>
+                <InputText @bind-Value="Model.Email" type="email" class="sf-form-input-element" placeholder="name@domain.com" autocomplete="username" />
+                <div style="font-size: 0.78rem; color: #c62828; margin-top: 0.25rem;"><ValidationMessage For="() => Model.Email" /></div>
+            </div>
+
+            <div class="sf-form-field-block">
+                <label>Account Password</label>
+                <InputText type="password" @bind-Value="Model.Password" class="sf-form-input-element" placeholder="••••••••" autocomplete="current-password" />
+                <div style="font-size: 0.78rem; color: #c62828; margin-top: 0.25rem;"><ValidationMessage For="() => Model.Password" /></div>
+            </div>
+
+            <button type="submit" class="sf-action-submit-button" style="margin-top: 0.5rem;" disabled="@IsSubmitting">
+                @(IsSubmitting ? "Verifying Credentials..." : "Sign In to Dashboard")
+            </button>
+        </EditForm>
+
+        <!-- Contextual Alternative Action Routing Footer -->
+        <div style="margin-top: 2rem; text-align: center; border-top: 1px solid var(--sf-card-border); padding-top: 1.25rem;">
+            <p style="margin: 0; font-size: 0.88rem; color: var(--sf-text-muted);">
+                Don't have an account? 
+                <a href="/register" style="color: var(--sf-purple-primary); font-weight: 700; text-decoration: none; margin-left: 0.25rem; transition: var(--sf-transition-smooth);">
+                    Register Now
+                </a>
+            </p>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private LoginDto Model { get; set; } = new();
+
+    [SupplyParameterFromQuery]
+    private string? ReturnUrl { get; set; }
+
+    private string? ErrorMessage;
+    private bool IsSubmitting;
+
+    private async Task ExecuteLogin()
+    {
+        try 
+        {
+            IsSubmitting = true;
+            ErrorMessage = null;
+            
+            var success = await AuthService.LoginAsync(Model);
+
+            if (success)
+            {
+                // This call triggers a standard NavigationException to stop rendering.
+                Navigation.NavigateTo(
+                    string.IsNullOrWhiteSpace(ReturnUrl) ? "/dashboard" : ReturnUrl,
+                    forceLoad: true);
+                return;
+            }
+
+            // Friendly message for input errors
+            ErrorMessage = "Invalid email address or password sequence.";
+        }
+        catch (NavigationException)
+        {
+            // CRITICAL: Let Blazor handle its redirection process cleanly. 
+            // Do NOT catch or print this exception to the user.
+            throw;
+        }
+        catch (Exception ex)
+        {
+            // CRITICAL DIAGNOSTIC: Print the actual system error details quietly to the server terminal console log stream 
+            // so you can still debug it locally.
+            Console.WriteLine($"[SmartFoods Auth Failure Debug]: {ex.Message}");
+            if (ex.InnerException != null) Console.WriteLine($"Inner Exception: {ex.InnerException.Message}");
+
+            // Friendly message displayed on the frontend UI for unexpected system crashes
+            ErrorMessage = "Something went wrong on our end. Please try again or contact support if the issue persists.";
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
+    }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Auth/Register.razor">
+@* Components/Pages/Auth/Register.razor *@
+@page "/register"
+
+@using SmartFoods.Web.Models.DTOs
+@using SmartFoods.Web.Services.Interfaces
+
+@inject IAuthService AuthService
+@inject NavigationManager Navigation
+
+<PageTitle>Create Account - SmartFoods</PageTitle>
+
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem;">
+    <div class="sf-premium-card" style="width: 100%; max-width: 460px; padding: 2.5rem 2rem; animation: sf-fade-up 0.5s ease both;">
+        
+        <!-- Header Brand Indicator -->
+        <div style="display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 2rem; gap: 0.75rem;">
+            <div class="sf-logo-icon">SF</div>
+            <h2 style="margin: 0; font-size: 1.6rem; font-weight: 800; color: var(--sf-purple-dark);">Get Started</h2>
+            <p style="margin: 0; font-size: 0.88rem; color: var(--sf-text-muted);">Create your unified profile to begin monitoring grocery lifespans.</p>
+        </div>
+
+        <!-- System Status Notifications -->
+        @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+        {
+            <div class="sf-alert-banner error-mode" style="animation: sf-scale-in 0.3s ease both;">
+                ⚠ @ErrorMessage
+            </div>
+        }
+
+        <!-- Interactive Account Profile Generation Form -->
+        <EditForm Model="Model" OnValidSubmit="ExecuteRegister" FormName="RegisterForm" method="post" class="sf-premium-form-layout">
+            <DataAnnotationsValidator />
+
+            <div class="sf-form-field-block">
+                <label>Full Name</label>
+                <InputText @bind-Value="Model.Name" class="sf-form-input-element" placeholder="John Doe" autocomplete="name" />
+                <div style="font-size: 0.78rem; color: #c62828; margin-top: 0.25rem;"><ValidationMessage For="() => Model.Name" /></div>
+            </div>
+
+            <div class="sf-form-field-block">
+                <label>Email Address</label>
+                <InputText @bind-Value="Model.Email" type="email" class="sf-form-input-element" placeholder="name@domain.com" autocomplete="email" />
+                <div style="font-size: 0.78rem; color: #c62828; margin-top: 0.25rem;"><ValidationMessage For="() => Model.Email" /></div>
+            </div>
+
+            <div class="sf-form-double-column">
+                <div class="sf-form-field-block">
+                    <label>Password</label>
+                    <InputText type="password" @bind-Value="Model.Password" class="sf-form-input-element" placeholder="••••••••" autocomplete="new-password" />
+                    <div style="font-size: 0.78rem; color: #c62828; margin-top: 0.25rem;"><ValidationMessage For="() => Model.Password" /></div>
+                </div>
+
+                <div class="sf-form-field-block">
+                    <label>Confirm Password</label>
+                    <InputText type="password" @bind-Value="Model.ConfirmPassword" class="sf-form-input-element" placeholder="••••••••" autocomplete="new-password" />
+                    <div style="font-size: 0.78rem; color: #c62828; margin-top: 0.25rem;"><ValidationMessage For="() => Model.ConfirmPassword" /></div>
+                </div>
+            </div>
+
+            <button type="submit" class="sf-action-submit-button" style="margin-top: 0.5rem;" disabled="@IsSubmitting">
+                @(IsSubmitting ? "Generating System Accounts..." : "Register New Account")
+            </button>
+        </EditForm>
+
+        <!-- Contextual Alternative Action Routing Footer -->
+        <div style="margin-top: 2rem; text-align: center; border-top: 1px solid var(--sf-card-border); padding-top: 1.25rem;">
+            <p style="margin: 0; font-size: 0.88rem; color: var(--sf-text-muted);">
+                Already have an account? 
+                <a href="/login" style="color: var(--sf-purple-primary); font-weight: 700; text-decoration: none; margin-left: 0.25rem; transition: var(--sf-transition-smooth);">
+                    Sign In
+                </a>
+            </p>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    [SupplyParameterFromForm]
+    private RegisterDto Model { get; set; } = new();
+
+    private string? ErrorMessage;
+    private bool IsSubmitting;
+
+    private async Task ExecuteRegister()
+    {
+        try
+        {
+            IsSubmitting = true;
+            ErrorMessage = null;
+
+            var result = await AuthService.RegisterAsync(Model);
+
+            if (result.Success)
+            {
+                Navigation.NavigateTo("/login", forceLoad: true);
+                return;
+            }
+
+            ErrorMessage = string.Join(", ", result.Errors);
+        }
+        catch (NavigationException)
+        {
+            throw; // Let Blazor process its page change
+        }
+        catch (Exception ex)
+        {
+            // Print background trace logs to terminal output
+            Console.WriteLine($"[SmartFoods Registration Failure Debug]: {ex.Message}");
+
+            // User-friendly UI message
+            ErrorMessage = "Something went wrong on our end while creating your profile. Please try again shortly.";
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
+    }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/NotificationsPanel.razor">
+@* Components/Pages/Dashboard/NotificationsPanel.razor *@
+@using SmartFoods.Web.Data
+@using Microsoft.EntityFrameworkCore
+@using SmartFoods.Web.Models.Pantry
+
+@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+
+<div class="sf-premium-card">
+    <h3 class="sf-card-header-title">Historical Reminder Trace Logs</h3>
+    <p class="sf-card-header-subtitle">Review up to the latest 10 automated email deliveries executed across your account line.</p>
+
+    @if (IsLoading)
+    {
+        <div class="sf-empty-state-notice">Streaming notification logs...</div>
+    }
+    else if (Logs != null)
+    {
+        @if (!Logs.Any())
+        {
+            <div class="sf-empty-state-notice" style="padding: 3rem 1.5rem;">
+                <div style="font-size: 2rem; margin-bottom: 0.5rem;">📥</div>
+                <strong>Your reminder box is clean</strong>
+                <p style="margin: 0.25rem 0 0 0; font-size: 0.82rem; color: var(--sf-text-muted);">Daily critical expiry notifications will catalogue here once items trigger tracking limits.</p>
+            </div>
+        }
+        else
+        {
+            <div class="sf-list-group-wrapper">
+                @foreach (var log in Logs)
+                {
+                    <div class="sf-list-entry-item" style="background: rgba(255, 255, 255, 0.85); border-color: rgba(124, 77, 255, 0.08);">
+                        <div>
+                            <div style="font-size: 0.75rem; font-weight: 750; color: var(--sf-purple-primary); margin-bottom: 0.25rem;">
+                                📅 DELIVERED @log.NotificationDate.ToString("D").ToUpper()
+                            </div>
+                            <div class="sf-list-entry-title-text" style="font-size: 1.05rem; color: var(--sf-purple-dark);">@log.Title</div>
+                        </div>
+                        <a href="/notifications/@log.Id" class="sf-recipe-link-anchor" style="margin-top: 0; width: auto; padding: 0.6rem 1.2rem;">
+                            Read Message →
+                        </a>
+                    </div>
+                }
+            </div>
+        }
+    }
+</div>
+
+@code {
+    [Parameter] public Guid UserId { get; set; }
+    private List<NotificationLog>? Logs;
+    private bool IsLoading = true;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        IsLoading = true;
+        using var dbContext = await DbContextFactory.CreateDbContextAsync();
+
+        Logs = await dbContext.NotificationLogs
+            .AsNoTracking()
+            .Where(n => n.UserId == UserId)
+            .OrderByDescending(n => n.NotificationDate)
+            .Take(10)
+            .ToListAsync();
+
+        IsLoading = false;
+    }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Index.razor">
+@* Components/Pages/Index.razor *@
+@page "/"
+
+<PageTitle>Welcome to SmartFoods</PageTitle>
+
+<div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 2rem; text-align: center;">
+    <div class="sf-premium-card" style="max-width: 540px; padding: 3rem 2rem; display: flex; flex-direction: column; align-items: center; gap: 1.5rem; animation: sf-fade-up 0.5s ease both;">
+        
+        <div class="sf-logo-icon" style="width: 60px; height: 60px; font-size: 1.6rem; border-radius: 16px;">SF</div>
+        
+        <div>
+            <h1 style="margin: 0 0 0.5rem 0; font-size: 2.2rem; font-weight: 850; color: var(--sf-purple-dark); letter-spacing: -0.02em;">
+                SmartFoods
+            </h1>
+            <p style="margin: 0; font-size: 1.05rem; color: var(--sf-text-muted); line-height: 1.5;">
+                Manage your pantry, calculate dynamic supply lifespans, and generate matching meal recipes efficiently.
+            </p>
+        </div>
+
+        <div style="display: flex; gap: 1rem; width: 100%; margin-top: 1rem;">
+            <a href="/login" class="sf-action-submit-button" style="text-decoration: none; text-align: center; flex: 1;">
+                Login Account
+            </a>
+            <a href="/register" class="sf-action-submit-button" style="text-decoration: none; text-align: center; flex: 1; background: var(--sf-purple-light); color: var(--sf-purple-dark); box-shadow: none; border: 1px solid rgba(124, 77, 255, 0.15);">
+                Register
+            </a>
+        </div>
+        
+    </div>
+</div>
+</file>
+
+<file path="src/SmartFoods.Web/Components/Routes.razor">
+@using Microsoft.AspNetCore.Components.Routing
+
+<Router AppAssembly="@typeof(Program).Assembly">
+
+<Found Context="routeData">
+
+    <RouteView RouteData="@routeData"
+               DefaultLayout="@typeof(Layout.MainLayout)" />
+
+    <FocusOnNavigate RouteData="@routeData"
+                     Selector="h1" />
+
+</Found>
+
+<NotFound>
+
+    <PageTitle>Not found</PageTitle>
+
+    <LayoutView Layout="@typeof(Layout.MainLayout)">
+        <p role="alert">
+            Sorry, there's nothing at this address.
+        </p>
+    </LayoutView>
+
+</NotFound>
+
+</Router>
+</file>
+
+<file path="src/SmartFoods.Web/Data/ApplicationDbContext.cs">
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
+using SmartFoods.Web.Models.Identity;
+using SmartFoods.Web.Models.Pantry;
+
+namespace SmartFoods.Web.Data;
+
+public class ApplicationDbContext
+    : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>
+{
+    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        : base(options)
+    {
+    }
+
+    public DbSet<Pantry> Pantries => Set<Pantry>();
+    public DbSet<FoodItem> FoodItems => Set<FoodItem>();
+    public DbSet<Recipe> Recipes => Set<Recipe>();
+    public DbSet<RecipeIngredient> RecipeIngredients => Set<RecipeIngredient>();
+    public DbSet<NotificationLog> NotificationLogs => Set<NotificationLog>();
+    public DbSet<PantryInventoryLog> PantryInventoryLogs => Set<PantryInventoryLog>();
+
+    protected override void OnModelCreating(ModelBuilder builder)
+    {
+        base.OnModelCreating(builder);
+
+        builder.Entity<ApplicationUser>()
+            .HasOne(u => u.Pantry)
+            .WithOne(p => p.User)
+            .HasForeignKey<Pantry>(p => p.UserId);
+
+        builder.Entity<Pantry>()
+            .HasMany(p => p.FoodItems)
+            .WithOne(f => f.Pantry)
+            .HasForeignKey(f => f.PantryId);
+
+        builder.Entity<Recipe>()
+            .HasMany(r => r.Ingredients)
+            .WithOne(i => i.Recipe)
+            .HasForeignKey(i => i.RecipeId);
+
+        builder.Entity<RecipeIngredient>()
+            .HasIndex(i => i.Name);
+        
+        builder.Entity<Recipe>()
+            .HasIndex(r => r.ExternalApiId)
+            .IsUnique();
+
+        builder.Entity<NotificationLog>()
+            .HasOne(n => n.User)
+            .WithMany()
+            .HasForeignKey(n => n.UserId);
+
+        builder.Entity<NotificationLog>()
+            .HasIndex(n => new { n.UserId, n.NotificationDate })
+            .IsUnique();
+
+        // Index configurations to optimize future analytics lookups
+        builder.Entity<PantryInventoryLog>()
+            .HasOne(l => l.User)
+            .WithMany()
+            .HasForeignKey(l => l.UserId);
+
+        builder.Entity<PantryInventoryLog>()
+            .HasIndex(l => new { l.UserId, l.Resolution });
+    }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Models/DTOs/Dashboard/AttentionRequiredDto.cs">
+namespace SmartFoods.Web.Models.DTOs.Dashboard;
+
+public class AttentionRequiredItemDto
+{
+ public Guid FoodItemId { get; set; }
+ public string Name { get; set; } = string.Empty;
+ public decimal Quantity { get; set; }
+ public string Unit { get; set; } = string.Empty;
+ public int DaysRemaining { get; set; }
+}
+
+public class AttentionRequiredDto
+{
+ public List<AttentionRequiredItemDto> UrgentItems { get; set; } = new();
+ public bool HasNoUrgentItems => UrgentItems.Count == 0;
+}
+</file>
+
+<file path="src/SmartFoods.Web/Program.cs">
+// src/SmartFoods.Web/Program.cs
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using SmartFoods.Web.Components;
+using SmartFoods.Web.Data;
+using SmartFoods.Web.Models.Identity;
+using SmartFoods.Web.Services.Interfaces;
+using SmartFoods.Web.Services.Authentication;
+using SmartFoods.Web.Services.Dashboard;
+using SmartFoods.Web.Services.Infrastructure;
+using Hangfire;
+using Hangfire.PostgreSql;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Register standard email service
+builder.Services.AddScoped<IEmailService, SmtpEmailService>();
+
+// Configure Hangfire Background Processing to use your existing Connection String
+builder.Services.AddHangfire(config => config
+    .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+    .UseSimpleAssemblyNameTypeSerializer()
+    .UseRecommendedSerializerSettings()
+    .UsePostgreSqlStorage(c => c.UseNpgsqlConnection(builder.Configuration.GetConnectionString("DefaultConnection"))));
+
+// Run the background server agent inside the web application instance
+builder.Services.AddHangfireServer();
+
+// Add services to the container.
+builder.Services.AddRazorComponents()
+    .AddInteractiveServerComponents();
+
+// Add Authentication/Authorization Core Utilities
+builder.Services.AddCascadingAuthenticationState();
+
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+// Add DbContext
+builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
+{
+    options.UseNpgsql(
+        builder.Configuration.GetConnectionString("DefaultConnection"));
+});
+
+// Add Identity with explicit generic type configurations matching ApplicationDbContext
+builder.Services
+    .AddIdentity<ApplicationUser, IdentityRole<Guid>>(options =>
+    {
+        options.Password.RequiredLength = 8;
+        options.Password.RequireDigit = true;
+        options.Password.RequireLowercase = true;
+        options.Password.RequireUppercase = false;
+        options.Password.RequireNonAlphanumeric = false;
+    })
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/login";
+    options.AccessDeniedPath = "/access-denied"; // Optional: For unauthorized roles
+});
+
+builder.Services.AddAuthorization();
+builder.Services.AddHttpContextAccessor();
+
+// Dashboard services
+
+builder.Services.AddScoped<IDashboardService, DashboardService>();
+
+// Register Recipe Infrastructure Integrations using an isolated Factory descriptor
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<IRecipeIntegrationService, SpoonacularIntegrationService>();
+
+builder.Services.AddScoped<DashboardStateHub>();
+
+
+
+
+var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (!app.Environment.IsDevelopment())
+{
+    app.UseExceptionHandler("/Error", createScopeForErrors: true);
+    app.UseHsts();
+}
+
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseAntiforgery();
+
+// Securely map Hangfire Dashboard UI panel (Accessible at http://localhost:5000/hangfire)
+app.MapHangfireDashboard();
+
+app.MapRazorComponents<SmartFoods.Web.Components.App>()
+    .AddInteractiveServerRenderMode();
+
+// Schedule the expiry tracking routine to run automatically every morning at 8:00 AM
+RecurringJob.AddOrUpdate<PantryReminderJob>(
+    "daily-expiry-reminders",
+    job => job.SendDailyExpiryRemindersAsync(),
+    Cron.Daily(8, 0));
+    
+app.Run();
+</file>
+
+<file path=".gitignore">
+# Local app configuration
+src/SmartFoods.Web/appsettings.json
+src/SmartFoods.Web/appsettings.Development.json
+
+# .NET build and tool-generated artifacts
+[Bb]in/
+[Oo]bj/
+.vs/
+.vscode/
+*.user
+*.suo
+*.rsuser
+*.cache
+*.pdb
+*.exe
+*.dll
+*.runtimeconfig.json
+*.deps.json
+*.staticwebassets.*
+*.AssemblyInfo.cs
+
+# Test and coverage outputs
+TestResults/
+coverage/
+*.trx
+*.coverage
+
+# Keep source files tracked; ignore generated outputs everywhere
+**/bin/
+**/obj/
+**/.vs/
+</file>
+
+<file path="src/SmartFoods.Web/Components/App.razor">
+@* Components/App.razor *@
+
+<!DOCTYPE html>
+
+<html lang="en" style="height: 100vh; max-height: 100vh; overflow: hidden;">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <base href="/" />
+    <link rel="stylesheet" href="app.css" />
+    <HeadOutlet />
+</head>
+
+<body style="height: 100vh; max-height: 100vh; overflow: hidden; margin: 0; padding: 0;">
+
+<Routes />
+
+<script src="_framework/blazor.web.js"></script>
+
+
+</body>
+
+</html>
+</file>
+
+<file path="src/SmartFoods.Web/Components/Layout/MainLayout.razor">
+@* Components/Layout/MainLayout.razor *@
+@inherits LayoutComponentBase
+
+@Body
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/CategoryChartPanel.razor">
+@* Components/Pages/Dashboard/CategoryChartPanel.razor *@
+@using SmartFoods.Web.Models.DTOs.Dashboard
+
+<div class="sf-premium-card">
+    <h3 class="sf-card-header-title">
+        Inventory Category Volume Distribution
+    </h3>
+
+    <p class="sf-card-header-subtitle">
+        Proportional volume calculation showing the structural alignment
+        of stock elements across item profiles.
+    </p>
+
+    @if (Model.IsEmptyPantry)
+    {
+        <div class="sf-empty-state-notice">
+            No categorical breakdown logs available.
+        </div>
+    }
+    else
+    {
+        <div class="sf-category-chart-row-container">
+
+            @foreach (var cat in Model.Categories)
+            {
+                <div>
+
+                    <div class="sf-chart-row-header">
+                        <span style="color: var(--sf-purple-dark);">
+                            @cat.CategoryName
+                            <span style="font-weight: 500; font-size: 0.8rem; color: var(--sf-text-muted);">
+                                (@cat.ItemCount items)
+                            </span>
+                        </span>
+
+                        <span style="color: var(--sf-purple-primary);">
+                            @cat.Percentage%
+                        </span>
+                    </div>
+
+                    <div class="sf-chart-bar-rail" style="margin-top: 0.35rem;">
+                        <div class="sf-chart-bar-fill"
+                             style="width: @(cat.Percentage)%;"></div>
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+</div>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public CategoryChartDto Model { get; set; } = default!;
+
+}
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/QuickAddPanel.razor">
+@* Components/Pages/Dashboard/QuickAddPanel.razor *@
+@rendermode InteractiveServer
+@using SmartFoods.Web.Models.DTOs.Dashboard
+@using SmartFoods.Web.Services.Dashboard
+
+@inject IDashboardService DashboardService
+@inject DashboardStateHub StateHub
+
+<div class="sf-premium-card">
+    <h3 class="sf-card-header-title">Quick Add Supply Item</h3>
+    <p class="sf-card-header-subtitle">Record new grocery stock balances instantly into the database ledger lines.</p>
+
+    @if (!string.IsNullOrWhiteSpace(SuccessMessage))
+    {
+        <div class="sf-alert-banner success-mode">✓ @SuccessMessage</div>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <div class="sf-alert-banner error-mode">⚠ @ErrorMessage</div>
+    }
+
+    <EditForm Model="Model" FormName="QuickAddFoodForm" OnValidSubmit="HandleSubmit" class="sf-premium-form-layout">
+        <DataAnnotationsValidator />
+
+        <div class="sf-form-field-block">
+            <label>Item Name</label>
+            <InputText @bind-Value="Model.Name" class="sf-form-input-element" placeholder="e.g., Whole Organic Milk" />
+        </div>
+
+        <div class="sf-form-double-column">
+            <div class="sf-form-field-block">
+                <label>Quantity</label>
+                <InputNumber TValue="decimal" Value="@Model.Quantity" ValueChanged="@(value => Model.Quantity = value)" ValueExpression="@(() => Model.Quantity)" class="sf-form-input-element" placeholder="0" step="0.01" />
+            </div>
+
+            <div class="sf-form-field-block">
+                <label>Measurement Unit</label>
+                <InputSelect @bind-Value="Model.Unit" class="sf-form-input-element">
+                    <option value="">Select Unit</option>
+                    <option value="Kg">Kg</option>
+                    <option value="Grams">Grams</option>
+                    <option value="Litres">Litres</option>
+                    <option value="Pieces">Pieces</option>
+                    <option value="Packets">Packets</option>
+                </InputSelect>
+            </div>
+        </div>
+
+        <div class="sf-form-double-column">
+            <div class="sf-form-field-block">
+                <label>Food Category</label>
+                <InputSelect @bind-Value="Model.Category" class="sf-form-input-element">
+                    <option value="">Select Category</option>
+                    <option value="Dairy">Dairy</option>
+                    <option value="Vegetables">Vegetables</option>
+                    <option value="Fruit">Fruit</option>
+                    <option value="Meat">Meat</option>
+                    <option value="Grains">Grains</option>
+                    <option value="Beverages">Beverages</option>
+                    <option value="Other">Other</option>
+                </InputSelect>
+            </div>
+
+            <div class="sf-form-field-block">
+                <label>Expiration Date</label>
+                <InputDate @bind-Value="Model.ExpiryDate" class="sf-form-input-element" />
+            </div>
+        </div>
+
+        <button type="submit" class="sf-action-submit-button" style="margin-top: 0.5rem;" disabled="@IsSubmitting">
+            @(IsSubmitting ? "Saving to Database Ledger..." : "Add Item to Pantry")
+        </button>
+    </EditForm>
+</div>
+
+@code {
+    [Parameter] public Guid UserId { get; set; }
+    [Parameter] public EventCallback OnItemAdded { get; set; }
+
+    [SupplyParameterFromForm(FormName = "QuickAddFoodForm")]
+    private CreateFoodItemDto Model { get; set; } = new() { ExpiryDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)) };
+
+    private string? SuccessMessage;
+    private string? ErrorMessage;
+    private bool IsSubmitting;
+
+    private async Task HandleSubmit()
+    {
+        try
+        {
+            IsSubmitting = true;
+            await DashboardService.AddFoodItemAsync(UserId, Model);
+            SuccessMessage = $"{Model.Name} successfully catalogued.";
+            ErrorMessage = null;
+            
+            // Reset the form model safely in memory bounds
+            Model = new CreateFoodItemDto { ExpiryDate = DateOnly.FromDateTime(DateTime.UtcNow.AddDays(7)) };
+            
+            // BROADCAST THE UPDATE THROUGH THE REAL-TIME STATE SYNC CIRCUITS
+            StateHub.NotifyStateChanged();
+
+            // Fire structural backwards compatibility delegates to notify root layout templates
+            if (OnItemAdded.HasDelegate)
+            {
+                await OnItemAdded.InvokeAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = ex.Message;
+            SuccessMessage = null;
+        }
+        finally
+        {
+            IsSubmitting = false;
+        }
+    }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/RecentActivityPanel.razor">
+@* Components/Pages/Dashboard/RecentActivityPanel.razor *@
+@using SmartFoods.Web.Models.DTOs.Dashboard
+
+<div class="sf-premium-card">
+
+    <h3 class="sf-card-header-title">Recently Added</h3>
+
+    <p class="sf-card-header-subtitle">
+        Chronological record tracing the latest 5 entries recorded to inventory storage files.
+    </p>
+
+    @if (Model.IsEmptyHistory)
+    {
+        <div class="sf-empty-state-notice">
+            No entry actions registered inside this tracking circuit.
+        </div>
+    }
+    else
+    {
+        <div class="sf-list-group-wrapper">
+
+            @foreach (var item in Model.RecentItems)
+            {
+                <div class="sf-list-entry-item">
+
+                    <div>
+                        <div class="sf-list-entry-title-text">
+                            @item.Name
+                        </div>
+
+                        <div class="sf-list-entry-meta-text">
+                            Added @item.AddedAt.ToLocalTime().ToString("g")
+                        </div>
+                    </div>
+
+                    <span class="sf-pill-badge">
+                        @item.Quantity @item.Unit
+                    </span>
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public RecentActivityDto Model { get; set; } = default!;
+
+}
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/SmartSuggestionsPanel.razor">
+@* Components/Pages/Dashboard/SmartSuggestionsPanel.razor *@
+@using SmartFoods.Web.Models.DTOs.Dashboard
+
+<div class="sf-premium-card">
+
+    <h3 class="sf-card-header-title">
+        Intelligent Kitchen Blueprint Ideas
+    </h3>
+
+    <p class="sf-card-header-subtitle">
+        Automated suggestions crossing your current expiring supplies
+        against verified third-party API recipe matrix options.
+    </p>
+
+    @if (Model.IsEmptyState)
+    {
+        <div class="sf-empty-state-notice">
+            No active blueprint options found within the current expiring tracking bounds.
+        </div>
+    }
+    else
+    {
+        <div class="sf-meals-recipe-grid">
+
+            @foreach (var rec in Model.Suggestions)
+            {
+                <div class="sf-meal-recipe-card">
+
+                    @if (!string.IsNullOrWhiteSpace(rec.ImageUrl))
+                    {
+                        <img src="@rec.ImageUrl"
+                             alt="@rec.Title"
+                             loading="lazy" />
+                    }
+
+                    <div class="sf-meal-recipe-details">
+
+                        <h4>@rec.Title</h4>
+
+                        <p>
+                            💡 Uses expiring:
+                            @rec.TargetIngredient
+                        </p>
+
+                        <a href="@rec.SourceUrl"
+                           target="_blank"
+                           rel="noopener"
+                           class="sf-recipe-link-anchor">
+                            View Blueprint
+                        </a>
+
+                    </div>
+
+                </div>
+            }
+
+        </div>
+    }
+
+</div>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public SmartSuggestionsDto Model { get; set; } = default!;
+
+}
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/WelcomePanel.razor">
+@* Components/Pages/Dashboard/WelcomePanel.razor *@
+@using SmartFoods.Web.Models.DTOs.Dashboard
+
+<div class="sf-premium-card sf-welcome-hero-banner">
+    <h1>Welcome back, @Model.UserName!</h1>
+
+    @if (Model.IsEmptyPantry)
+    {
+        <p>
+            Your tracking balance framework is setup.
+            Record baseline supplies below to invoke active tracking logs.
+        </p>
+    }
+    else
+    {
+        <p>
+            Your configuration is tracking
+            <strong>@Model.TotalFoodItems</strong> supplies across
+            <strong>@Model.TotalCategories</strong> category metrics.
+            There are
+            <strong>@Model.ItemsNeedingAttention</strong>
+            items requiring consumption review cycles this week.
+        </p>
+    }
+</div>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public WelcomePanelDto Model { get; set; } = default!;
+
+}
+</file>
+
+<file path="src/SmartFoods.Web/Services/Dashboard/DashboardService.cs">
+using Microsoft.EntityFrameworkCore;
+using SmartFoods.Web.Data;
+using SmartFoods.Web.Models.DTOs.Dashboard;
+using SmartFoods.Web.Models.Pantry;
+using SmartFoods.Web.Services.Interfaces;
+
+namespace SmartFoods.Web.Services.Dashboard;
+
+public class DashboardService : IDashboardService
+{
+    private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
+    private readonly IRecipeIntegrationService _recipeIntegrationService;
+
+    public DashboardService(
+        IDbContextFactory<ApplicationDbContext> dbContextFactory,
+        IRecipeIntegrationService recipeIntegrationService)
+    {
+        _dbContextFactory = dbContextFactory;
+        _recipeIntegrationService = recipeIntegrationService;
+    }
+
+    public async Task<WelcomePanelDto> GetWelcomePanelAsync(Guid userId)
+    {
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var user = await dbContext.Users
+            .AsNoTracking()
+            .Include(u => u.Pantry)
+            .ThenInclude(p => p!.FoodItems)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+            
+        if (user is null)
+        {
+            throw new Exception("User not found.");
+        }
+        
+        var pantry = user.Pantry;
+        var foodItems = pantry?.FoodItems ?? Enumerable.Empty<Models.Pantry.FoodItem>();
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var sevenDaysFromNow = today.AddDays(7);
+        
+        return new WelcomePanelDto
+        {
+            UserName = user.Name,
+            TotalFoodItems = foodItems.Count(),
+            TotalCategories = foodItems
+                .Where(f => !string.IsNullOrWhiteSpace(f.Category))
+                .Select(f => f.Category)
+                .Distinct()
+                .Count(),
+            ItemsNeedingAttention = foodItems.Count(f =>
+                f.ExpiryDate >= today &&
+                f.ExpiryDate <= sevenDaysFromNow)
+        };
+    }
+
+        public async Task AddFoodItemAsync(Guid userId, CreateFoodItemDto model)
+    {
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var pantry = await dbContext.Pantries.FirstOrDefaultAsync(p => p.UserId == userId);
+        
+        if (pantry is null)
+        {
+            pantry = new Pantry
+            {
+                Name = "Main Pantry",
+                UserId = userId
+            };
+            dbContext.Pantries.Add(pantry);
+            await dbContext.SaveChangesAsync();
+        }
+        
+        var foodItem = new Models.Pantry.FoodItem
+        {
+            Name = model.Name,
+            Quantity = model.Quantity,
+            Unit = model.Unit,
+            Category = model.Category,
+            ExpiryDate = model.ExpiryDate,
+            PantryId = pantry.Id
+        };
+        
+        dbContext.FoodItems.Add(foodItem);
+        await dbContext.SaveChangesAsync();
+    }
+
+    public async Task<PantrySummaryDto> GetPantrySummaryAsync(Guid userId)
+    {
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var user = await dbContext.Users
+            .AsNoTracking()
+            .Include(u => u.Pantry)
+            .ThenInclude(p => p!.FoodItems)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+            
+        if (user is null)
+        {
+            throw new Exception("User not found.");
+        }
+        
+        var foodItems = user.Pantry?.FoodItems ?? Enumerable.Empty<Models.Pantry.FoodItem>();
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var sevenDaysFromNow = today.AddDays(7);
+        
+        return new PantrySummaryDto
+        {
+            TotalFoodItems = foodItems.Count(),
+            TotalCategories = foodItems
+                .Where(f => !string.IsNullOrWhiteSpace(f.Category))
+                .Select(f => f.Category)
+                .Distinct()
+                .Count(),
+            ExpiringSoonCount = foodItems.Count(f => 
+                f.ExpiryDate >= today && 
+                f.ExpiryDate <= sevenDaysFromNow)
+        };
+    }
+
+    public async Task<AttentionRequiredDto> GetAttentionRequiredAsync(Guid userId)
+    {
+        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var user = await dbContext.Users
+            .AsNoTracking()
+            .Include(u => u.Pantry)
+            .ThenInclude(p => p!.FoodItems)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+            
+        if (user is null)
+        {
+            throw new Exception("User not found.");
+        }
+        
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var sevenDaysFromNow = today.AddDays(7);
+        var foodItems = user.Pantry?.FoodItems ?? Enumerable.Empty<Models.Pantry.FoodItem>();
+        
+        var urgentItems = foodItems
+            .Where(f => f.ExpiryDate >= today && f.ExpiryDate <= sevenDaysFromNow)
+            .OrderBy(f => f.ExpiryDate)
+            .Select(f => new AttentionRequiredItemDto
+            {
+                FoodItemId = f.Id, // Populating the unique ID mapping reference
+                Name = f.Name,
+                Quantity = f.Quantity,
+                Unit = f.Unit,
+                DaysRemaining = f.ExpiryDate.DayNumber - today.DayNumber
+            })
+            .ToList();
+            
+        return new AttentionRequiredDto
+        {
+            UrgentItems = urgentItems
+        };
+    }
+
+    public async Task<CategoryChartDto> GetCategoryChartAsync(Guid userId)
+    {
+        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var user = await dbContext.Users
+            .AsNoTracking()
+            .Include(u => u.Pantry)
+            .ThenInclude(p => p!.FoodItems)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+            
+        if (user is null)
+        {
+            throw new Exception("User not found.");
+        }
+        
+        var foodItems = user.Pantry?.FoodItems ?? Enumerable.Empty<Models.Pantry.FoodItem>();
+        var totalItems = foodItems.Count();
+        
+        if (totalItems == 0)
+        {
+            return new CategoryChartDto();
+        }
+        
+        var groupedCategories = foodItems
+            .Where(f => !string.IsNullOrWhiteSpace(f.Category))
+            .GroupBy(f => f.Category)
+            .Select(g => new CategoryPercentageDto
+            {
+                CategoryName = g.Key,
+                ItemCount = g.Count(),
+                Percentage = Math.Round(((decimal)g.Count() / totalItems) * 100, 1)
+            })
+            .OrderByDescending(c => c.ItemCount)
+            .ToList();
+            
+        return new CategoryChartDto
+        {
+            Categories = groupedCategories
+        };
+    }
+
+    public async Task<RecentActivityDto> GetRecentActivityAsync(Guid userId)
+    {
+        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var user = await dbContext.Users
+            .AsNoTracking()
+            .Include(u => u.Pantry)
+            .ThenInclude(p => p!.FoodItems)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+            
+        if (user is null)
+        {
+            throw new Exception("User not found.");
+        }
+        
+        var foodItems = user.Pantry?.FoodItems ?? Enumerable.Empty<Models.Pantry.FoodItem>();
+        
+        var recentItems = foodItems
+            .OrderByDescending(f => f.CreatedAt)
+            .Take(5)
+            .Select(f => new RecentActivityItemDto
+            {
+                Name = f.Name,
+                Quantity = f.Quantity,
+                Unit = f.Unit,
+                AddedAt = f.CreatedAt
+            })
+            .ToList();
+            
+        return new RecentActivityDto
+        {
+            RecentItems = recentItems
+        };
+    }
+
+        public async Task<SmartSuggestionsDto> GetSmartSuggestionsAsync(Guid userId)
+    {
+        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var user = await dbContext.Users
+            .AsNoTracking()
+            .Include(u => u.Pantry)
+            .ThenInclude(p => p!.FoodItems)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+            
+        if (user is null) throw new Exception("User not found.");
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        
+        var testingHorizon = today.AddDays(30);
+        var expiringItems = (user.Pantry?.FoodItems ?? Enumerable.Empty<FoodItem>())
+            .Where(f => f.ExpiryDate >= today && f.ExpiryDate <= testingHorizon)
+            .OrderBy(f => f.ExpiryDate)
+            .Select(f => f.Name.Trim().ToLowerInvariant())
+            .Distinct()
+            .Take(3)
+            .ToList();
+            
+        var result = new SmartSuggestionsDto();
+        if (!expiringItems.Any()) return result; 
+        
+        foreach (var ingredient in expiringItems)
+        {
+            var localCount = await dbContext.RecipeIngredients.CountAsync(i => i.Name == ingredient);
+            if (localCount < 3)
+            {
+                try
+                {
+                    var fetchedRecipes = await _recipeIntegrationService.FetchAndMapRecipesAsync(ingredient);
+                    
+                    foreach (var apiRecipe in fetchedRecipes)
+                    {
+                        var existingRecipe = await dbContext.Recipes
+                            .Include(r => r.Ingredients)
+                            .FirstOrDefaultAsync(r => r.ExternalApiId == apiRecipe.ExternalApiId);
+                            
+                        if (existingRecipe is null)
+                        {
+                            dbContext.Recipes.Add(apiRecipe);
+                        }
+                        else if (!existingRecipe.Ingredients.Any(i => i.Name == ingredient))
+                        {
+                            existingRecipe.Ingredients.Add(new RecipeIngredient
+                            {
+                                Name = ingredient,
+                                OriginalText = ingredient,
+                                Amount = 0,
+                                Unit = string.Empty
+                            });
+                        }
+                    }
+                    await dbContext.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[SmartFoods Harvest Error] Failed mapping ingredient '{ingredient}': {ex.Message}");
+                }
+            }
+            
+            var localRecipeMatch = await dbContext.RecipeIngredients
+                .AsNoTracking()
+                .Include(i => i.Recipe)
+                .Where(i => i.Name == ingredient)
+                .Select(i => i.Recipe)
+                .FirstOrDefaultAsync();
+                
+            if (localRecipeMatch != null)
+            {
+                result.Suggestions.Add(new SuggestedRecipeDto
+                {
+                    Title = localRecipeMatch.Title,
+                    ImageUrl = localRecipeMatch.ImageUrl,
+                    SourceUrl = localRecipeMatch.SourceUrl,
+                    TargetIngredient = ingredient
+                });
+            }
+        }
+        return result;
+    }
+
+        public async Task<DashboardOverviewDto> GetDashboardOverviewAsync(Guid userId)
+    {
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var user = await dbContext.Users
+            .AsNoTracking()
+            .Include(u => u.Pantry)
+            .ThenInclude(p => p!.FoodItems)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+            
+        if (user is null) throw new Exception("User not found.");
+        
+        var foodItems = user.Pantry?.FoodItems ?? Enumerable.Empty<FoodItem>();
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var sevenDays = today.AddDays(7);
+        var totalItems = foodItems.Count();
+        
+        var totalCategories = foodItems
+            .Where(x => !string.IsNullOrWhiteSpace(x.Category))
+            .Select(x => x.Category)
+            .Distinct()
+            .Count();
+            
+        var expiringItems = foodItems
+            .Where(x => x.ExpiryDate >= today && x.ExpiryDate <= sevenDays)
+            .OrderBy(x => x.ExpiryDate)
+            .ToList();
+            
+        var result = new DashboardOverviewDto();
+        result.Welcome = new WelcomePanelDto
+        {
+            UserName = user.Name,
+            TotalFoodItems = totalItems,
+            TotalCategories = totalCategories,
+            ItemsNeedingAttention = expiringItems.Count
+        };
+        
+        result.PantrySummary = new PantrySummaryDto
+        {
+            TotalFoodItems = totalItems,
+            TotalCategories = totalCategories,
+            ExpiringSoonCount = expiringItems.Count
+        };
+        
+        result.AttentionRequired = new AttentionRequiredDto
+        {
+            UrgentItems = expiringItems.Select(x => new AttentionRequiredItemDto
+            {
+                FoodItemId = x.Id,
+                Name = x.Name,
+                Quantity = x.Quantity,
+                Unit = x.Unit,
+                DaysRemaining = x.ExpiryDate.DayNumber - today.DayNumber
+            }).ToList()
+        };
+        
+        result.CategoryChart = new CategoryChartDto
+        {
+            Categories = foodItems
+                .GroupBy(x => x.Category)
+                .Select(g => new CategoryPercentageDto
+                {
+                    CategoryName = g.Key,
+                    ItemCount = g.Count(),
+                    Percentage = Math.Round(((decimal)g.Count() / totalItems) * 100, 1)
+                })
+                .OrderByDescending(x => x.ItemCount)
+                .ToList()
+        };
+        
+        result.RecentActivity = new RecentActivityDto
+        {
+            RecentItems = foodItems
+                .OrderByDescending(x => x.CreatedAt)
+                .Take(5)
+                .Select(x => new RecentActivityItemDto
+                {
+                    Name = x.Name,
+                    Quantity = x.Quantity,
+                    Unit = x.Unit,
+                    AddedAt = x.CreatedAt
+                })
+                .ToList()
+        };
+        
+        result.SmartSuggestions = await GetSmartSuggestionsAsync(userId);
+        return result;
+    }
+
+    // RESOLVES CS0535 INTERFACE ENFORCEMENT COMPLIANCE
+    public async Task ResolveFoodItemAsync(Guid userId, ResolveFoodItemDto model)
+    {
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        
+        var foodItem = await dbContext.FoodItems
+            .Include(f => f.Pantry)
+            .FirstOrDefaultAsync(f => f.Id == model.FoodItemId && f.Pantry.UserId == userId);
+
+        if (foodItem is null)
+        {
+            throw new Exception("Target inventory record could not be verified inside your tracking parameters.");
+        }
+
+        await using var transaction = await dbContext.Database.BeginTransactionAsync();
+        try
+         {
+            var logEntry = new PantryInventoryLog
+            {
+                UserId = userId,
+                ItemName = foodItem.Name,
+                Quantity = foodItem.Quantity,
+                Unit = foodItem.Unit,
+                Category = foodItem.Category,
+                OriginalExpiryDate = foodItem.ExpiryDate,
+                Resolution = model.Resolution,
+                LoggedAt = DateTime.UtcNow
+            };
+
+            dbContext.PantryInventoryLogs.Add(logEntry);
+            dbContext.FoodItems.Remove(foodItem);
+
+            await dbContext.SaveChangesAsync();
+            await transaction.CommitAsync();
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
+    }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Services/Dashboard/IDashboardService.cs">
+using SmartFoods.Web.Models.DTOs.Dashboard;
+
+namespace SmartFoods.Web.Services.Dashboard;
+
+public interface IDashboardService
+{
+    Task<WelcomePanelDto> GetWelcomePanelAsync(Guid userId);
+    Task AddFoodItemAsync(Guid userId, CreateFoodItemDto model);
+    Task<PantrySummaryDto> GetPantrySummaryAsync(Guid userId);
+    Task<AttentionRequiredDto> GetAttentionRequiredAsync(Guid userId);
+    Task<CategoryChartDto> GetCategoryChartAsync(Guid userId);
+    Task<RecentActivityDto> GetRecentActivityAsync(Guid userId);
+    Task<SmartSuggestionsDto> GetSmartSuggestionsAsync(Guid userId);
+    Task<DashboardOverviewDto> GetDashboardOverviewAsync(Guid userId);
+    
+    // NEW OPERATION FOR FEATURE STEP 2
+    Task ResolveFoodItemAsync(Guid userId, ResolveFoodItemDto model);
+}
+</file>
+
+<file path="src/SmartFoods.Web/Services/Infrastructure/PantryReminderJob.cs">
+using Microsoft.EntityFrameworkCore;
+using SmartFoods.Web.Data;
+using SmartFoods.Web.Models.Pantry;
+using SmartFoods.Web.Services.Interfaces;
+using System.Text;
+
+namespace SmartFoods.Web.Services.Infrastructure;
+
+public class PantryReminderJob
+{
+    private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
+    private readonly IEmailService _emailService;
+
+    public PantryReminderJob(
+        IDbContextFactory<ApplicationDbContext> dbContextFactory,
+        IEmailService emailService)
+    {
+        _dbContextFactory = dbContextFactory;
+        _emailService = emailService;
+    }
+
+    /// <summary>
+    /// Sweeps all users, automatically archives unhandled expired items, 
+    /// checks for critical expiries, links a cache recipe, and delivers alerts safely.
+    /// </summary>
+    public async Task SendDailyExpiryRemindersAsync()
+    {
+        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+
+        // =========================================================================
+        // AUTOMATED SWEEP: ARCHIVE UNHANDLED EXPIRED FOOD ITEMS PLATFORM-WIDE
+        // =========================================================================
+        var expiredItems = await dbContext.FoodItems
+            .Include(f => f.Pantry)
+            .Where(f => f.ExpiryDate <= today)
+            .ToListAsync();
+
+        if (expiredItems.Any())
+        {
+            await using var transaction = await dbContext.Database.BeginTransactionAsync();
+            try
+            {
+                var logsToInsert = new List<PantryInventoryLog>();
+
+                foreach (var item in expiredItems)
+                {
+                    // Map unhandled items into historical analytics tracks as Wasted
+                    logsToInsert.Add(new PantryInventoryLog
+                    {
+                        UserId = item.Pantry.UserId,
+                        ItemName = item.Name,
+                        Quantity = item.Quantity,
+                        Unit = item.Unit,
+                        Category = item.Category,
+                        OriginalExpiryDate = item.ExpiryDate,
+                        Resolution = InventoryResolution.Wasted,
+                        LoggedAt = DateTime.UtcNow
+                    });
+                }
+
+                await dbContext.PantryInventoryLogs.AddRangeAsync(logsToInsert);
+                dbContext.FoodItems.RemoveRange(expiredItems);
+
+                await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+                
+                Console.WriteLine($"[Hangfire Automated Sweep]: Cleaned and archived {expiredItems.Count} unhandled expired items platform-wide.");
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                Console.WriteLine($"[Hangfire Automated Sweep Fault]: Database transaction error tracking sweeps: {ex.Message}");
+            }
+        }
+
+        // =========================================================================
+        // PRE-EXISTING ALERTS PIPELINE
+        // =========================================================================
+        var criticalHorizon = today.AddDays(3); // Rule 1: 3-day critical window
+
+        // 1. Fetch all active users containing their pantry food supplies
+        var users = await dbContext.Users
+            .Include(u => u.Pantry)
+            .ThenInclude(p => p!.FoodItems)
+            .ToListAsync();
+
+        foreach (var user in users)
+        {
+            if (user.Pantry == null) continue;
+
+            // 2. Idempotency Check: Verify if an alert went out for this user today
+            var alreadyNotified = await dbContext.NotificationLogs
+                .AnyAsync(n => n.UserId == user.Id && n.NotificationDate == today);
+
+            if (alreadyNotified) continue;
+
+            // 3. Extract items expiring within 3 days
+            var criticalItems = user.Pantry.FoodItems
+                .Where(f => f.ExpiryDate >= today && f.ExpiryDate <= criticalHorizon)
+                .ToList();
+
+            if (!criticalItems.Any()) continue; // No critical items = no email sent
+
+            // 4. Rule 3: Pick one recipe from local cache matching ANY critical item name
+            var itemNames = criticalItems.Select(c => c.Name.Trim().ToLowerInvariant()).ToList();
+            
+            var matchedRecipe = await dbContext.RecipeIngredients
+                .AsNoTracking()
+                .Include(i => i.Recipe)
+                .Where(i => itemNames.Contains(i.Name))
+                .Select(i => i.Recipe)
+                .FirstOrDefaultAsync();
+
+            // 5. Construct the Premium HTML Notification Message Template (Email-Safe & Blazor-Optimized)
+            var emailBuilder = new StringBuilder();
+
+            emailBuilder.Append("<div style=\"font-family: 'Inter', -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; color: #211c2b; max-width: 600px; margin: 0 auto; padding: 10px;\">");
+            emailBuilder.Append($"<h2 style=\"margin: 0 0 8px 0; font-size: 1.4rem; font-weight: 800; color: #4a148c;\">Hello, {user.Name}!</h2>");
+            emailBuilder.Append("<p style=\"margin: 0 0 20px 0; font-size: 0.95rem; color: #6e657b; line-height: 1.5;\">This is a summary of tracking items in your pantry requiring consumption within your critical 3-day window:</p>");
+
+            // Use clean table structures for guaranteed cross-client support instead of flex grids
+            emailBuilder.Append("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width: 100%; border-collapse: separate; margin-bottom: 25px;\">");
+            foreach (var item in criticalItems)
+            {
+                var daysLeft = item.ExpiryDate.DayNumber - today.DayNumber;
+                
+                string badgeBg = daysLeft == 0 ? "#ffebee" : "#fff3e0";
+                string badgeText = daysLeft == 0 ? "#c62828" : "#e65100";
+                string dayLabel = daysLeft == 0 ? "Expires Today" : daysLeft == 1 ? "1 Day Left" : $"{daysLeft} Days Remaining";
+
+                emailBuilder.Append($@"
+                    <tr>
+                        <td style=""padding: 14px 16px; background-color: #fbf9ff; border-top: 1px solid rgba(124, 77, 255, 0.08); border-bottom: 1px solid rgba(124, 77, 255, 0.08); border-left: 1px solid rgba(124, 77, 255, 0.08); border-right: 1px solid rgba(124, 77, 255, 0.08); border-radius: 12px; margin-bottom: 10px; display: block;"">
+                            <table cellpadding=""0"" cellspacing=""0"" border=""0"" style=""width: 100%;"">
+                                <tr>
+                                    <td style=""font-size: 0.95rem; font-weight: 600; color: #211c2b; vertical-align: middle;"">
+                                        <strong style=""color: #4a148c; font-weight: 750;"">{item.Name}</strong>
+                                        <span style=""font-size: 0.85rem; color: #6e657b; font-weight: 500; margin-left: 4px;"">({item.Quantity} {item.Unit})</span>
+                                    </td>
+                                    <td style=""text-align: right; vertical-align: middle;"">
+                                        <span style=""padding: 4px 12px; border-radius: 20px; font-size: 0.72rem; font-weight: 750; background-color: {badgeBg}; color: {badgeText}; text-transform: uppercase; letter-spacing: 0.03em; display: inline-block;"">
+                                            {dayLabel}
+                                        </span>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr><td style=""height: 8px; font-size: 8px; line-height: 8px;"">&nbsp;</td></tr>");
+            }
+            emailBuilder.Append("</table>");
+            // Premium Recipe Card Section
+            if (matchedRecipe != null)
+            {
+                emailBuilder.Append("<div style=\"border-top: 1px solid rgba(124, 77, 255, 0.12); padding-top: 20px; margin-top: 25px;\">");
+                emailBuilder.Append("<h3 style=\"margin: 0 0 14px 0; font-size: 1.1rem; font-weight: 750; color: #4a148c;\">💡 Recommended Meal Idea</h3>");
+                
+                emailBuilder.Append(@"
+                    <table cellpadding=""0"" cellspacing=""0"" border=""0"" style=""width: 100%; background-color: #ffffff; border: 1px solid rgba(124, 77, 255, 0.12); border-radius: 14px; overflow: hidden;""><tr>");
+
+                if (!string.IsNullOrWhiteSpace(matchedRecipe.ImageUrl))
+                {
+                    emailBuilder.Append($@"
+                            <td style=""width: 150px; min-width: 150px; max-width: 150px; vertical-align: top;"">
+                                <img src=""{matchedRecipe.ImageUrl}"" alt=""{matchedRecipe.Title}"" style=""width: 150px; height: 130px; object-fit: cover; display: block; border-top-left-radius: 13px; border-bottom-left-radius: 13px;"" />
+                            </td>");
+                }
+
+                emailBuilder.Append($@"
+                            <td style=""padding: 18px; vertical-align: middle; text-align: left;"">
+                                <h4 style=""margin: 0 0 4px 0; font-size: 1.05rem; font-weight: 750; color: #4a148c; line-height: 1.35;"">{matchedRecipe.Title}</h4>
+                                <p style=""margin: 0 0 14px 0; font-size: 0.82rem; color: #6e657b; line-height: 1.4;"">This meal blueprint automatically salvages your expiring supplies to minimize kitchen food waste lines.</p>
+                                <a href=""{matchedRecipe.SourceUrl}"" target=""_blank"" rel=""noopener"" style=""display: inline-block; padding: 8px 16px; background: linear-gradient(135deg, #7c4dff, #b388ff); color: #ffffff; text-decoration: none; border-radius: 8px; font-weight: 750; font-size: 0.8rem; text-align: center;"">
+                                    View Blueprint Instructions →
+                                </a>
+                            </td>
+                        </tr>
+                    </table>");
+                emailBuilder.Append("</div>");
+            }
+
+            emailBuilder.Append("</div>");
+
+            var subject = $"SmartFoods Reminder: {criticalItems.Count} items need attention soon!";
+            var bodyText = emailBuilder.ToString();
+
+            try
+            {
+                // 6. Deliver the alert email message using our SMTP implementation
+                await _emailService.SendEmailAsync(user.Email!, subject, bodyText);
+
+                // 7. Permanently track notification state history logs to block duplicate deliveries
+                var log = new NotificationLog
+                {
+                    UserId = user.Id,
+                    NotificationDate = today,
+                    Title = subject,
+                    MessageBody = bodyText,
+                    IsEmailSent = true,
+                    SentAt = DateTime.UtcNow
+                };
+
+                dbContext.NotificationLogs.Add(log);
+                await dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                // Log delivery exception errors to terminal streams gracefully without breaking other users
+                Console.WriteLine($"[Hangfire Expiry Job Error] Failed delivering email to {user.Email}: {ex.Message}");
+            }
+        }
+    }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/NotificationDetail.razor">
+@* Components/Pages/Dashboard/NotificationDetail.razor *@
+@page "/notifications/{Id:guid}"
+@layout DashboardLayout
+
+
+@using SmartFoods.Web.Data
+@using Microsoft.EntityFrameworkCore
+@using SmartFoods.Web.Models.Pantry
+@using Microsoft.AspNetCore.Authorization
+
+@attribute [Authorize]
+@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+
+<PageTitle>System Alert Trace Payload - SmartFoods</PageTitle>
+
+<div style="margin-bottom: 1.5rem;">
+    <a href="/dashboard/notifications" class="sf-recipe-link-anchor" style="display: inline-block; width: auto; padding: 0.5rem 1rem;">
+        ← Back to Notifications Feed
+    </a>
+</div>
+
+@if (IsLoading)
+{
+    <div class="sf-empty-state-notice">Decrypting secure communication packet...</div>
+}
+else if (LogItem is null)
+{
+    <div class="sf-premium-card" style="border-color: rgba(198, 40, 40, 0.15);">
+        <div class="sf-alert-banner error-mode">⚠ Record Archive Error</div>
+        <p style="margin: 0; color: var(--sf-text-muted);">The requested unique reference trace could not be identified inside the database ledger tables.</p>
+    </div>
+}
+else
+{
+    <div class="sf-premium-card" style="max-width: 720px; padding: 2.5rem; animation: sf-fade-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;">
+        
+        <!-- Header Trace Section -->
+        <div style="border-bottom: 1px solid var(--sf-card-border); padding-bottom: 1.25rem; margin-bottom: 2rem;">
+            <div style="font-size: 0.78rem; font-weight: 750; color: var(--sf-purple-primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">
+                System Delivery Logs
+            </div>
+            <h1 style="margin: 0 0 0.5rem 0; font-size: 1.5rem; font-weight: 850; color: var(--sf-purple-dark); line-height: 1.25;">
+                @LogItem.Title
+            </h1>
+            <span style="font-size: 0.82rem; color: var(--sf-text-muted); font-weight: 500;">
+                Archived trace sequence: @LogItem.SentAt.ToLocalTime().ToString("f")
+            </span>
+        </div>
+
+        <!-- Rendered Container Block -->
+        <div style="background: transparent; padding: 0; border: none;">
+            @((MarkupString)LogItem.MessageBody)
+        </div>
+        
+    </div>
+}
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+    private NotificationLog? LogItem;
+    private bool IsLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        LogItem = await dbContext.NotificationLogs
+            .AsNoTracking()
+            .FirstOrDefaultAsync(n => n.Id == Id);
+
+        IsLoading = false;
+    }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/NotificationsPage.razor">
+@* Components/Pages/Dashboard/NotificationsPage.razor *@
+@page "/dashboard/notifications"
+@layout DashboardLayout
+
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@using SmartFoods.Web.Models.Identity
+
+@attribute [Authorize]
+
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<PageTitle>Alerts Archive Feed - SmartFoods</PageTitle>
+
+@if (IsLoading)
+{
+    <div class="sf-empty-state-notice">Verifying profile session metrics...</div>
+}
+else
+{
+    <div class="sf-dashboard-grid-layout" style="grid-template-columns: 1fr;">
+        <div class="sf-premium-card sf-welcome-hero-banner" style="background: linear-gradient(135deg, #311b92 0%, #7c4dff 100%);">
+            <h1>System Notifications Archive</h1>
+            <p>Historical reminder delivery logs tracking expired shelf-life items and daily kitchen recipe matching routines.</p>
+        </div>
+
+        <NotificationsPanel UserId="@CurrentUserId" />
+    </div>
+}
+
+@code {
+    private Guid CurrentUserId;
+    private bool IsLoading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await UserManager.GetUserAsync(authState.User);
+
+        if (user is not null)
+        {
+            CurrentUserId = user.Id;
+        }
+        IsLoading = false;
+    }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/AttentionRequiredPanel.razor">
+@* Components/Pages/Dashboard/AttentionRequiredPanel.razor *@
+@rendermode InteractiveServer
+@using SmartFoods.Web.Models.DTOs.Dashboard
+@using SmartFoods.Web.Models.Pantry
+@using SmartFoods.Web.Services.Dashboard
+@inject IDashboardService DashboardService
+@inject DashboardStateHub StateHub
+
+
+
+
+<div class="sf-premium-card" style="border-color: rgba(198, 40, 40, 0.12); position: relative;">
+    <h3 class="sf-card-header-title" style="color: #4a148c;">Attention Required</h3>
+    <p class="sf-card-header-subtitle">
+        Critical stock units fast approaching validation expiration timeline deadlines.
+    </p>
+
+    @if (Model == null)
+    {
+        <div class="sf-empty-state-notice">Analyzing expiry logs...</div>
+    }
+    else if (Model.HasNoUrgentItems)
+    {
+        <div class="sf-alert-banner success-mode">
+            <strong>✓ All Clear</strong>
+            All stock items reflect safe shelf lifetimes exceeding 7 days.
+        </div>
+    }
+    else
+    {
+        <div class="sf-list-group-wrapper" style="display: flex; flex-direction: column; gap: 0.75rem;">
+            @foreach (var item in Model.UrgentItems)
+            {
+                var isSelected = _selectedItem?.FoodItemId == item.FoodItemId;
+
+                @* Relative anchor wrapper row item *@
+                <div class="sf-list-entry-item" 
+                     style="position: relative; cursor: pointer; background: @(isSelected ? "rgba(124, 77, 255, 0.05)" : "transparent"); padding: 1rem; border-radius: 12px; transition: all 0.2s;"
+                     @onclick="() => ToggleResolutionPopover(item)">
+                    
+                    <div style="padding-right: @(isSelected ? "180px" : "0px"); transition: padding 0.2s;">
+                        <div class="sf-list-entry-title-text" style="font-weight: 600;">@item.Name</div>
+                        <div class="sf-list-entry-meta-text">
+                            Current Supply balance: @item.Quantity @item.Unit
+                        </div>
+                    </div>
+
+                    @* Hide badge smoothly if actions tray is open so layout stays wide *@
+                    @if (!isSelected)
+                    {
+                        <span class="sf-pill-badge danger-theme" style="position: absolute; right: 1rem; top: 50%; transform: translateY(-50%);">
+                            @if (item.DaysRemaining == 0)
+                            {
+                                <span>Expires today!</span>
+                            }
+                            else if (item.DaysRemaining == 1)
+                            {
+                                <span>1 day left</span>
+                            }
+                            else
+                            {
+                                <span>@item.DaysRemaining days remaining</span>
+                            }
+                        </span>
+                    }
+
+                    @* COMPACT INLINE ACTION HOVER MENU *@
+                    @if (isSelected)
+                    {
+                        <div style="position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); background: #ffffff; border: 1px solid var(--sf-purple-primary, #7c4dff); border-radius: 8px; box-shadow: 0 4px 16px rgba(74, 20, 140, 0.15); padding: 6px 10px; display: flex; align-items: center; gap: 8px; z-index: 50;" 
+                             @onclick:stopPropagation="true">
+                            
+                            <span style="font-size: 0.75rem; font-weight: 700; color: var(--sf-purple-dark, #4a148c);">Log:</span>
+                            
+                            <button type="button" 
+                                    style="padding: 4px 10px; font-size: 0.75rem; font-weight: 600; border: none; border-radius: 6px; background: var(--sf-purple-primary, #7c4dff); color: #ffffff; cursor: pointer;"
+                                    @onclick="() => ProcessResolutionAsync(item, InventoryResolution.Consumed)"
+                                    @onclick:stopPropagation="true">
+                                Consumed
+                            </button>
+
+                            <button type="button" 
+                                    style="padding: 4px 10px; font-size: 0.75rem; font-weight: 600; border: 1px solid rgba(213, 0, 0, 0.2); border-radius: 6px; background: #fff0f0; color: #d50000; cursor: pointer;"
+                                    @onclick="() => ProcessResolutionAsync(item, InventoryResolution.Wasted)"
+                                    @onclick:stopPropagation="true">
+                                Wasted
+                            </button>
+
+                            <button type="button" 
+                                    style="background: none; border: none; color: #6e657b; font-size: 1.1rem; cursor: pointer; padding: 0 4px; line-height: 1;" 
+                                    @onclick="ClosePopover"
+                                    @onclick:stopPropagation="true">&times;</button>
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public AttentionRequiredDto Model { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public Guid UserId { get; set; }
+
+    [Parameter]
+    public EventCallback OnActionCompleted { get; set; }
+
+    private AttentionRequiredItemDto? _selectedItem;
+
+    private void ToggleResolutionPopover(AttentionRequiredItemDto item)
+    {
+        if (_selectedItem?.FoodItemId == item.FoodItemId)
+        {
+            ClosePopover();
+        }
+        else
+        {
+            _selectedItem = item;
+        }
+    }
+
+    private void ClosePopover()
+    {
+        _selectedItem = null;
+    }
+
+    private async Task ProcessResolutionAsync(AttentionRequiredItemDto item, InventoryResolution resolution)
+    {
+        try
+        {
+            var payload = new ResolveFoodItemDto
+            {
+                FoodItemId = item.FoodItemId,
+                Resolution = resolution
+            };
+
+            await DashboardService.ResolveFoodItemAsync(UserId, payload);
+
+            if (Model?.UrgentItems != null)
+            {
+                Model.UrgentItems.Remove(item);
+            }
+
+            ClosePopover();
+
+            // Notify State Hub to update components globally
+            StateHub.NotifyStateChanged();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Resolution Execution Failure]: {ex.Message}");
+        }
+    }
+}
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/PantrySummaryPanel.razor">
+@* Components/Pages/Dashboard/PantrySummaryPanel.razor *@
+@using SmartFoods.Web.Models.DTOs.Dashboard
+
+<div class="sf-premium-card">
+    <h3 class="sf-card-header-title">Pantry Summary</h3>
+    <p class="sf-card-header-subtitle">
+        Aggregated metrics detailing tracking totals recorded across database server tables.
+    </p>
+
+    @if (Model == null)
+    {
+        <div class="sf-empty-state-notice">
+            No storage parameters logged into memory archives.
+        </div>
+    }
+    else if (Model.IsEmptyPantry)
+    {
+        <div class="sf-empty-state-notice">
+            No storage parameters logged into memory archives.
+        </div>
+    }
+    else
+    {
+        <div class="sf-summary-metric-row">
+            <div class="sf-summary-metric-tile">
+                <span>Total Items</span>
+                <strong>@Model.TotalFoodItems</strong>
+            </div>
+
+            <div class="sf-summary-metric-tile" style="border-color: rgba(198, 40, 40, 0.15);">
+                <span style="color: #c62828;">Expiring Soon</span>
+                <strong style="color: #c62828;">@Model.ExpiringSoonCount</strong>
+            </div>
+
+            <div class="sf-summary-metric-tile">
+                <span>Categories</span>
+                <strong>@Model.TotalCategories</strong>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter, EditorRequired]
+    public PantrySummaryDto Model { get; set; } = default!;
+}
+</file>
+
+<file path="src/SmartFoods.Web/wwwroot/app.css">
+:root {
+	--sf-bg-gradient: linear-gradient(135deg, #ffffff 0%, #fcfbfe 45%, #f5efff 100%);
+	--sf-purple-primary: #7c4dff;
+	--sf-purple-light: #f3e5f5;
+	--sf-purple-dark: #4a148c;
+	--sf-accent-gradient: linear-gradient(135deg, #7c4dff, #b388ff);
+	--sf-text-main: #211c2b;
+	--sf-text-muted: #6e657b;
+	--sf-card-bg: rgba(255, 255, 255, 0.85);
+	--sf-card-border: rgba(124, 77, 255, 0.12);
+	--sf-shadow-premium: 0 16px 40px rgba(74, 20, 140, 0.06);
+	--sf-shadow-hover: 0 24px 50px rgba(124, 77, 255, 0.14);
+	--sf-border-radius: 16px;
+	--sf-transition-smooth: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	font-family: 'Inter', system-ui, -apple-system, sans-serif;
+	color: var(--sf-text-main);
+	background: var(--sf-bg-gradient);
+	letter-spacing: -0.01em;
+}
+
+/* --- Split-Screen Base Layout Structure --- */
+.sf-layout-wrapper {
+	display: flex;
+	min-height: 100vh;
+	width: 100vw;
+	overflow-x: hidden;
+}
+
+/* Left Sidebar Engine */
+.sf-left-sidebar {
+	width: 280px;
+	background: rgba(255, 255, 255, 0.75);
+	border-right: 1px solid var(--sf-card-border);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	display: flex;
+	flex-direction: column;
+	padding: 2rem 1.5rem;
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	z-index: 100;
+	transition: var(--sf-transition-smooth);
+}
+
+/* Right Content Area */
+.sf-right-content-pane {
+	flex: 1;
+	min-width: 0;
+	padding: 2.5rem;
+	overflow-y: auto;
+}
+
+/* Sidebar Elements Navigation Stack */
+.sf-sidebar-logo {
+	display: flex;
+	align-items: center;
+	gap: 0.85rem;
+	text-decoration: none;
+	margin-bottom: 3.5rem;
+	animation: sf-fade-down 0.5s ease both;
+}
+
+.sf-logo-icon {
+	width: 44px;
+	height: 44px;
+	background: var(--sf-accent-gradient);
+	border-radius: 12px;
+	display: grid;
+	place-items: center;
+	color: white;
+	font-weight: 800;
+	font-size: 1.25rem;
+	box-shadow: 0 8px 20px rgba(124, 77, 255, 0.3);
+}
+
+.sf-logo-text {
+	font-weight: 800;
+	font-size: 1.2rem;
+	color: var(--sf-purple-dark);
+	line-height: 1.1;
+}
+
+.sf-logo-text span {
+	display: block;
+	font-size: 0.75rem;
+	color: var(--sf-text-muted);
+	font-weight: 500;
+}
+
+.sf-navigation-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 0.65rem;
+	flex: 1;
+}
+
+.sf-nav-item {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	padding: 0.9rem 1.2rem;
+	border-radius: 12px;
+	color: var(--sf-text-muted);
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 0.95rem;
+	border: 1px solid transparent;
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-nav-item:hover {
+	color: var(--sf-purple-primary);
+	background: rgba(124, 77, 255, 0.05);
+	transform: translateX(4px);
+}
+
+.sf-nav-item.active {
+	color: var(--sf-purple-dark);
+	background: var(--sf-purple-light);
+	border-edge: 1px solid rgba(124, 77, 255, 0.15);
+}
+
+.sf-nav-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--sf-purple-primary);
+	box-shadow: 0 0 0 4px rgba(124, 77, 255, 0.15);
+}
+
+.sf-sidebar-footer-group {
+	margin-top: auto;
+	border-top: 1px solid var(--sf-card-border);
+	padding-top: 1.5rem;
+}
+
+/* Mobile Header Top-Bar Utilities */
+.sf-mobile-top-bar {
+	display: none;
+	width: 100%;
+	height: 70px;
+	background: rgba(255, 255, 255, 0.85);
+	backdrop-filter: blur(10px);
+	border-bottom: 1px solid var(--sf-card-border);
+	padding: 0 1.5rem;
+	align-items: center;
+	justify-content: space-between;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 110;
+}
+
+.sf-hamburger-button {
+	background: none;
+	border: none;
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 8px;
+	z-index: 120;
+}
+
+.sf-hamburger-button span {
+	display: block;
+	width: 24px;
+	height: 2.5px;
+	background: var(--sf-purple-dark);
+	border-radius: 2px;
+	transition: var(--sf-transition-smooth);
+}
+
+/* Hamburger toggle active animation shapes */
+.sf-hamburger-button.open span:nth-child(1) {
+	transform: translateY(8.5px) rotate(45deg);
+}
+
+.sf-hamburger-button.open span:nth-child(2) {
+	opacity: 0;
+}
+
+.sf-hamburger-button.open span:nth-child(3) {
+	transform: translateY(-8.5px) rotate(-45deg);
+}
+
+/* --- Premium Grid Systems & Content Dashboard Areas --- */
+.sf-dashboard-grid-layout {
+	display: grid;
+	grid-template-columns: 1.3fr 1fr;
+	gap: 2rem;
+	align-items: start;
+	animation: sf-fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.sf-dashboard-column-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+}
+
+/* Premium Glassmorphic Cards Styling Layouts */
+.sf-premium-card {
+	background: var(--sf-card-bg);
+	border: 1px solid var(--sf-card-border);
+	border-radius: var(--sf-border-radius);
+	box-shadow: var(--sf-shadow-premium);
+	backdrop-filter: blur(16px);
+	-webkit-backdrop-filter: blur(16px);
+	padding: 1.75rem;
+	position: relative;
+	overflow: hidden;
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-premium-card:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--sf-shadow-hover);
+	border-color: rgba(124, 77, 255, 0.25);
+}
+
+.sf-premium-card::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 4px;
+	background: var(--sf-accent-gradient);
+	opacity: 0.15;
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-premium-card:hover::after {
+	opacity: 1;
+}
+
+/* Typography Titles Standards */
+.sf-card-header-title {
+	margin: 0 0 0.35rem 0;
+	font-size: 1.15rem;
+	font-weight: 750;
+	color: var(--sf-purple-dark);
+}
+
+.sf-card-header-subtitle {
+	margin: 0 0 1.5rem 0;
+	font-size: 0.88rem;
+	color: var(--sf-text-muted);
+	line-height: 1.4;
+}
+
+/* Premium Welcome Panel Hero Unit Banner */
+.sf-welcome-hero-banner {
+	background: linear-gradient(135deg, #4a148c 0%, #7c4dff 100%);
+	color: white;
+	border: none;
+}
+
+.sf-welcome-hero-banner::after {
+	display: none;
+}
+
+.sf-welcome-hero-banner h1 {
+	margin: 0 0 0.75rem 0;
+	font-size: 2.2rem;
+	font-weight: 800;
+	letter-spacing: -0.02em;
+	animation: sf-scale-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.sf-welcome-hero-banner p {
+	margin: 0;
+	font-size: 1.05rem;
+	color: rgba(255, 255, 255, 0.88);
+	line-height: 1.5;
+}
+
+/* Summary Panels Metrics Flex Row Styles */
+.sf-summary-metric-row {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 1.25rem;
+}
+
+.sf-summary-metric-tile {
+	background: rgba(255, 255, 255, 0.6);
+	border: 1px solid rgba(124, 77, 255, 0.08);
+	border-radius: 14px;
+	padding: 1.25rem;
+	text-align: center;
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-summary-metric-tile:hover {
+	background: #ffffff;
+	border-color: rgba(124, 77, 255, 0.2);
+	transform: scale(1.02);
+}
+
+.sf-summary-metric-tile span {
+	font-size: 0.72rem;
+	font-weight: 750;
+	color: var(--sf-text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	display: block;
+	margin-bottom: 0.5rem;
+}
+
+.sf-summary-metric-tile strong {
+	font-size: 2.2rem;
+	font-weight: 850;
+	color: var(--sf-purple-dark);
+	display: block;
+	line-height: 1;
+	animation: sf-number-bump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Form Controls & Styling Elements */
+.sf-premium-form-layout {
+	display: flex;
+	flex-direction: column;
+	gap: 1.1rem;
+}
+
+.sf-form-double-column {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
+}
+
+.sf-form-field-block {
+	display: flex;
+	flex-direction: column;
+	gap: 0.45rem;
+}
+
+.sf-form-field-block label {
+	font-size: 0.82rem;
+	font-weight: 700;
+	color: var(--sf-purple-dark);
+}
+
+.sf-form-input-element {
+	width: 100%;
+	padding: 0.8rem 1rem;
+	border: 1px solid rgba(124, 77, 255, 0.2);
+	border-radius: 10px;
+	background: white;
+	color: var(--sf-text-main);
+	font-size: 0.92rem;
+	outline: none;
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-form-input-element:focus {
+	border-color: var(--sf-purple-primary);
+	box-shadow: 0 0 0 4px rgba(124, 77, 255, 0.12);
+}
+
+.sf-action-submit-button {
+	width: 100%;
+	padding: 0.9rem;
+	border: none;
+	border-radius: 10px;
+	background: var(--sf-accent-gradient);
+	color: white;
+	font-weight: 750;
+	font-size: 0.95rem;
+	cursor: pointer;
+	box-shadow: 0 6px 16px rgba(124, 77, 255, 0.2);
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-action-submit-button:hover:not(:disabled) {
+	box-shadow: 0 10px 24px rgba(124, 77, 255, 0.35);
+	transform: translateY(-1px);
+}
+
+.sf-action-submit-button:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+/* Premium Lists and Feed Item Cards Styles */
+.sf-list-group-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.sf-list-entry-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.9rem 1.1rem;
+	background: rgba(255, 255, 255, 0.5);
+	border: 1px solid rgba(124, 77, 255, 0.06);
+	border-radius: 12px;
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-list-entry-item:hover {
+	background: white;
+	border-color: rgba(124, 77, 255, 0.2);
+}
+
+.sf-list-entry-title-text {
+	font-weight: 650;
+	font-size: 0.95rem;
+	color: var(--sf-text-main);
+}
+
+.sf-list-entry-meta-text {
+	font-size: 0.78rem;
+	color: var(--sf-text-muted);
+	margin-top: 0.2rem;
+}
+
+.sf-pill-badge {
+	padding: 0.35rem 0.75rem;
+	border-radius: 20px;
+	font-size: 0.75rem;
+	font-weight: 750;
+	background: var(--sf-purple-light);
+	color: var(--sf-purple-dark);
+}
+
+.sf-pill-badge.danger-theme {
+	background: #ffebee;
+	color: #c62828;
+}
+
+/* Category Charts Distributions Visualization Bar Elements */
+.sf-category-chart-row-container {
+	display: flex;
+	flex-direction: column;
+	gap: 1.1rem;
+}
+
+.sf-chart-row-header {
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.88rem;
+	font-weight: 600;
+}
+
+.sf-chart-bar-rail {
+	width: 100%;
+	height: 10px;
+	background: var(--sf-purple-light);
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.sf-chart-bar-fill {
+	height: 100%;
+	background: var(--sf-accent-gradient);
+	border-radius: 6px;
+	transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smart Meal Ideas Dynamic Cards Grids layout */
+.sf-meals-recipe-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	gap: 1.25rem;
+}
+
+.sf-meal-recipe-card {
+	background: white;
+	border: 1px solid var(--sf-card-border);
+	border-radius: 12px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-meal-recipe-card:hover {
+	transform: scale(1.03) translateY(-2px);
+	box-shadow: var(--sf-shadow-premium);
+}
+
+.sf-meal-recipe-card img {
+	width: 100%;
+	height: 110px;
+	object-fit: cover;
+}
+
+.sf-meal-recipe-details {
+	padding: 1rem;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	gap: 0.5rem;
+}
+
+.sf-meal-recipe-details h4 {
+	margin: 0;
+	font-size: 0.95rem;
+	color: var(--sf-purple-dark);
+	line-height: 1.3;
+}
+
+.sf-meal-recipe-details p {
+	margin: 0;
+	font-size: 0.78rem;
+	color: #c62828;
+	font-weight: 600;
+}
+
+.sf-recipe-link-anchor {
+	margin-top: auto;
+	display: block;
+	width: 100%;
+	text-align: center;
+	padding: 0.55rem;
+	background: var(--sf-purple-light);
+	color: var(--sf-purple-dark);
+	text-decoration: none;
+	font-weight: 750;
+	font-size: 0.8rem;
+	border-radius: 8px;
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-recipe-link-anchor:hover {
+	background: var(--sf-purple-primary);
+	color: white;
+}
+
+.sf-empty-state-notice {
+	border: 2px dashed rgba(124, 77, 255, 0.2);
+	border-radius: 12px;
+	padding: 1.5rem;
+	text-align: center;
+	color: var(--sf-text-muted);
+	font-size: 0.88rem;
+}
+
+.sf-alert-banner {
+	padding: 0.8rem 1rem;
+	border-radius: 10px;
+	font-size: 0.88rem;
+	font-weight: 600;
+	margin-bottom: 1rem;
+}
+
+.sf-alert-banner.success-mode {
+	background: #e8f5e9;
+	color: #2e7d32;
+}
+
+.sf-alert-banner.error-mode {
+	background: #ffebee;
+	color: #c62828;
+}
+
+/* --- CSS Visual Presentation System Animations --- */
+@keyframes sf-fade-up {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes sf-fade-down {
+	from {
+		opacity: 0;
+		transform: translateY(-15px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes sf-scale-in {
+	from {
+		opacity: 0;
+		transform: scale(0.95);
+	}
+
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+@keyframes sf-number-bump {
+	0% {
+		transform: scale(0.8);
+		opacity: 0;
+	}
+
+	50% {
+		transform: scale(1.1);
+	}
+
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+/* --- Responsive Tablet and Mobile Breakpoint Queries --- */
+@media (max-width: 1024px) {
+	.sf-dashboard-grid-layout {
+		grid-template-columns: 1fr;
+		gap: 1.75rem;
+	}
+}
+
+@media (max-width: 768px) {
+	.sf-mobile-top-bar {
+		display: flex;
+	}
+
+	.sf-left-sidebar {
+		position: fixed;
+		top: 70px;
+		left: -100%;
+		width: 280px;
+		height: calc(100vh - 70px);
+		z-index: 105;
+		box-shadow: 15px 0 30px rgba(0, 0, 0, 0.05);
+	}
+
+	.sf-left-sidebar.mobile-open {
+		left: 0;
+	}
+
+	.sf-right-content-pane {
+		padding: 6.5rem 1.25rem 2rem 1.25rem;
+	}
+
+	.sf-summary-metric-row {
+		grid-template-columns: 1fr;
+		gap: 1rem;
+	}
+}
+
+
+
+/* --- High-Utility Mobile Drawer & Hamburger Styling Matrix --- */
+
+/* Hamburger Line Transform Into Close 'X' States */
+.sf-hamburger-button.open span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.sf-hamburger-button.open span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+.sf-hamburger-button.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Dimmed backdrop background context layer for mobile view scopes */
+.sf-mobile-drawer-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(33, 28, 43, 0.2);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 95;
+    animation: sfFadeIn 0.25s ease-out;
+}
+
+/* Enforce fluid mobile positioning over standard desktop sidebar grid templates */
+@media (max-width: 768px) {
+    .sf-mobile-top-bar {
+        display: flex !important; /* Forces layout tracking rules from your base theme */
+    }
+
+    .sf-left-sidebar {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 280px;
+        z-index: 100;
+        background: #ffffff !important;
+        box-shadow: 24px 0 50px rgba(74, 20, 140, 0.1);
+        
+        /* Default closed layout off-screen view position state */
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    /* Glides out smoothly from left bounds when variable state evaluates to open */
+    .sf-left-sidebar.mobile-open {
+        transform: translateX(0) !important;
+    }
+
+    /* Offsets main content box container down to clear space underneath fixed top mobile bar */
+    .sf-right-content-pane {
+        padding-top: calc(70px + 1.5rem) !important;
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+    }
+}
+
+
+
+
+
+
+
+
+/* =========================================================
+   DASHBOARD SKELETONS
+========================================================= */
+
+.sf-skeleton-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.sf-skeleton-title,
+.sf-skeleton-text,
+.sf-skeleton-value,
+.sf-skeleton-label,
+.sf-skeleton-chart-label,
+.sf-skeleton-chart-bar,
+.sf-skeleton-image,
+.sf-skeleton-list-content,
+.sf-skeleton-pill {
+    position: relative;
+    overflow: hidden;
+    background: #eceff3;
+    border-radius: 12px;
+}
+
+.sf-skeleton-title {
+    height: 30px;
+    width: 50%;
+    margin-bottom: 1rem;
+}
+
+.sf-skeleton-text {
+    height: 14px;
+    width: 100%;
+    margin-bottom: 0.75rem;
+}
+
+.sf-skeleton-text.short {
+    width: 65%;
+}
+
+.sf-skeleton-value {
+    height: 42px;
+    width: 100%;
+    margin-bottom: 0.75rem;
+}
+
+.sf-skeleton-label {
+    height: 12px;
+    width: 70%;
+    margin: 0 auto;
+}
+
+.sf-skeleton-chart-row {
+    margin-top: 1rem;
+}
+
+.sf-skeleton-chart-label {
+    height: 14px;
+    width: 35%;
+    margin-bottom: 0.5rem;
+}
+
+.sf-skeleton-chart-bar {
+    height: 12px;
+    width: 100%;
+    border-radius: 999px;
+}
+
+.sf-skeleton-recipe-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.sf-skeleton-recipe-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.sf-skeleton-image {
+    width: 100%;
+    height: 180px;
+    border-radius: 16px;
+}
+
+.sf-skeleton-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.sf-skeleton-list-content {
+    flex: 1;
+    height: 44px;
+}
+
+.sf-skeleton-pill {
+    width: 100px;
+    height: 32px;
+    border-radius: 999px;
+}
+
+.sf-skeleton-title::after,
+.sf-skeleton-text::after,
+.sf-skeleton-value::after,
+.sf-skeleton-label::after,
+.sf-skeleton-chart-label::after,
+.sf-skeleton-chart-bar::after,
+.sf-skeleton-image::after,
+.sf-skeleton-list-content::after,
+.sf-skeleton-pill::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,0.8),
+            transparent);
+    animation: sf-skeleton-shimmer 1.25s infinite;
+}
+
+@keyframes sf-skeleton-shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+
+/* --- Interactive Action Modal Element Framework --- */
+/* --- Defensive Layout Action Modal Framework Fix --- */
+</file>
+
+<file path="src/SmartFoods.Web/Components/Pages/Dashboard/Dashboard.razor">
+@* Components/Pages/Dashboard/Dashboard.razor *@
+@page "/dashboard"
+@layout DashboardLayout
+@rendermode InteractiveServer
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Identity
+@using SmartFoods.Web.Models.DTOs.Dashboard
+@using SmartFoods.Web.Models.Identity
+@using SmartFoods.Web.Services.Dashboard
+
+@using SmartFoods.Web.Components.Pages.Dashboard.Skeletons
+
+@attribute [Authorize]
+
+@inject UserManager<ApplicationUser> UserManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IDashboardService DashboardService
+@inject DashboardStateHub StateHub
+@implements IDisposable
+
+<PageTitle>Dashboard - SmartFoods</PageTitle>
+
+<div class="sf-dashboard-grid-layout">
+
+    <div class="sf-dashboard-column-stack">
+
+        @if (_dashboardData is null)
+        {
+            <WelcomeSkeleton />
+            <SummarySkeleton />
+            <ChartSkeleton />
+            <RecipeSkeleton />
+        }
+        else
+        {
+            <WelcomePanel Model="_dashboardData.Welcome" />
+
+            <PantrySummaryPanel Model="_dashboardData.PantrySummary" />
+
+            <CategoryChartPanel Model="_dashboardData.CategoryChart" />
+
+            <SmartSuggestionsPanel Model="_dashboardData.SmartSuggestions" />
+        }
+
+    </div>
+
+    <div class="sf-dashboard-column-stack">
+
+        <QuickAddPanel UserId="@CurrentUserId"
+                       OnItemAdded="HandleItemAdded" />
+
+        @if (_dashboardData is null)
+        {
+            <AttentionSkeleton />
+            <ActivitySkeleton />
+        }
+        else
+        {
+            <AttentionRequiredPanel
+                Model="_dashboardData.AttentionRequired"
+                UserId="@CurrentUserId"
+                OnActionCompleted="HandleItemAdded" />
+
+            <RecentActivityPanel Model="_dashboardData.RecentActivity" />
+        }
+
+    </div>
+
+</div>
+
+@code {
+    private Guid CurrentUserId;
+    private DashboardOverviewDto? _dashboardData;
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = await UserManager.GetUserAsync(authState.User);
+
+        if (user is not null)
+        {
+            CurrentUserId = user.Id;
+            
+            // Initial asynchronous load
+            await RefreshGlobalDashboardDataAsync();
+        }
+
+        // REGISTER THE GLOBAL REAL-TIME HUD LISTENER HERE
+        StateHub.OnDashboardChanged += HandleStateHubBroadcast;
+    }
+
+    private async Task HandleItemAdded()
+    {
+        await RefreshGlobalDashboardDataAsync();
+    }
+
+    private async void HandleStateHubBroadcast()
+    {
+        try
+        {
+            // When ANY panel raises a change signal, re-fetch everything centrally
+            await RefreshGlobalDashboardDataAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Global Orchestrator Broadcast Fault]: {ex.Message}");
+        }
+    }
+
+    private async Task RefreshGlobalDashboardDataAsync()
+    {
+        _dashboardData = await DashboardService.GetDashboardOverviewAsync(CurrentUserId);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public void Dispose()
+    {
+        // Explicit teardown prevents memory leaks on navigation tracking lines
+        StateHub.OnDashboardChanged -= HandleStateHubBroadcast;
+    }
+}
+</file>
+
+</files>

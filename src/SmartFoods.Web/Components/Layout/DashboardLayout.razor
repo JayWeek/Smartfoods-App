@@ -1,107 +1,55 @@
-@* Components/Layout/DashboardLayout.razor *@
+@* src/SmartFoods.Web/Components/Layout/DashboardLayout.razor *@
 @inherits LayoutComponentBase
 @inject NavigationManager Navigation
 
 <div class="sf-layout-wrapper" style="height: 100vh; max-height: 100vh; overflow: hidden; position: relative;">
+    
+    <input type="checkbox" id="sf-mobile-nav-toggle" class="sf-nav-checkbox-trigger" style="display: none;" />
 
-<!-- Mobile Header Top-Bar Utilities -->
-<header class="sf-mobile-top-bar">
-    <NavLink href="/dashboard"
-             class="sf-sidebar-logo"
-             style="margin-bottom: 0;">
-        <div class="sf-logo-icon">SF</div>
-        <div class="sf-logo-text">
-            SmartFoods
-            <span>Pantry Tracker</span>
-        </div>
-    </NavLink>
-
-    <button class="sf-hamburger-button @(IsMobileNavOpen ? "open" : "")"
-            @onclick="ToggleMobileNav"
-            aria-label="Toggle Navigation Menu">
-        <span></span>
-        <span></span>
-        <span></span>
-    </button>
-</header>
-
-<!-- Left Sidebar Engine (Frozen Solid) -->
-<aside class="sf-left-sidebar @(IsMobileNavOpen ? "mobile-open" : "")">
-
-    <NavLink href="/dashboard"
-             class="sf-sidebar-logo"
-             @onclick="CloseMobileNav">
-        <div class="sf-logo-icon">SF</div>
-        <div class="sf-logo-text">
-            SmartFoods
-            <span>Pantry Tracker</span>
-        </div>
-    </NavLink>
-
-    <nav class="sf-navigation-stack">
-
-        <NavLink href="/dashboard"
-                 Match="NavLinkMatch.All"
-                 class="sf-nav-item"
-                 ActiveClass="active"
-                 @onclick="CloseMobileNav">
-
-            @if (Navigation.Uri.EndsWith("/dashboard", StringComparison.OrdinalIgnoreCase))
-            {
-                <div class="sf-nav-dot"></div>
-            }
-
-            <span>Overview Dashboard</span>
-
+    <!-- Mobile Header Top-Bar Utilities -->
+    <header class="sf-mobile-top-bar">
+        <NavLink href="/dashboard" class="sf-sidebar-logo" style="margin-bottom: 0;">
+            <div class="sf-logo-icon">SF</div>
+            <div class="sf-logo-text">SmartFoods<span>Pantry Tracker</span></div>
         </NavLink>
+        
+        <label for="sf-mobile-nav-toggle" class="sf-hamburger-button" aria-label="Toggle Navigation Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </label>
+    </header>
 
-        <NavLink href="/dashboard/notifications"
-                 class="sf-nav-item"
-                 ActiveClass="active"
-                 @onclick="CloseMobileNav">
+    <!-- Dimmed mobile drawer backdrop shadow layer -->
+    <label for="sf-mobile-nav-toggle" class="sf-mobile-drawer-backdrop"></label>
 
-            @if (Navigation.Uri.Contains("/dashboard/notifications", StringComparison.OrdinalIgnoreCase))
-            {
-                <div class="sf-nav-dot"></div>
-            }
+    <!-- Left/Right Responsive Sidebar Engine -->
+    <aside class="sf-left-sidebar">
+        @* HIDDEN ON MOBILE: Remove the duplicate logo stack tracking layout frame *@
+        <div class="sf-sidebar-logo-container-desktop">
+            <NavLink href="/dashboard" class="sf-sidebar-logo">
+                <div class="sf-logo-icon">SF</div>
+                <div class="sf-logo-text">SmartFoods<span>Pantry Tracker</span></div>
+            </NavLink>
+        </div>
 
-            <span>Notification Logs</span>
+        <nav class="sf-navigation-stack">
+            <NavLink href="/dashboard" Match="NavLinkMatch.All" class="sf-nav-item" ActiveClass="active">
+                <span>Overview Dashboard</span>
+            </NavLink>
+            <NavLink href="/dashboard/notifications" class="sf-nav-item" ActiveClass="active">
+                <span>Notification Logs</span>
+            </NavLink>
+        </nav>
+        <div class="sf-sidebar-footer-group">
+            <a href="/logout" class="sf-nav-item" style="color: #c62828;">
+                <span>Sign Out Account</span>
+            </a>
+        </div>
+    </aside>
 
-        </NavLink>
-
-    </nav>
-
-    <div class="sf-sidebar-footer-group">
-        <a href="/logout"
-           class="sf-nav-item"
-           style="color: #c62828;">
-            <span>Sign Out Account</span>
-        </a>
-    </div>
-
-</aside>
-
-<!-- Right Content Area (The ONLY layout element that will scroll) -->
-<main class="sf-right-content-pane"
-      style="height: 100vh; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 5rem;">
-
-    @Body
-
-</main>
-
+    <!-- Right Content Area -->
+    <main class="sf-right-content-pane" style="height: 100vh; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: 5rem;">
+        @Body
+    </main>
 </div>
-
-@code {
-private bool IsMobileNavOpen;
-
-private void ToggleMobileNav()
-{
-    IsMobileNavOpen = !IsMobileNavOpen;
-}
-
-private void CloseMobileNav()
-{
-    IsMobileNavOpen = false;
-}
-
-}

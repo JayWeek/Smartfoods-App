@@ -866,3 +866,103 @@ body {
 
 /* --- Interactive Action Modal Element Framework --- */
 /* --- Defensive Layout Action Modal Framework Fix --- */
+
+
+/* --- Sibling Mobile Drawer Orchestration --- */
+
+/* 1. Turn the 3 hamburger lines into an 'X' icon when checked */
+.sf-nav-checkbox-trigger:checked ~ .sf-mobile-top-bar .sf-hamburger-button span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+.sf-nav-checkbox-trigger:checked ~ .sf-mobile-top-bar .sf-hamburger-button span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-10px);
+}
+.sf-nav-checkbox-trigger:checked ~ .sf-mobile-top-bar .sf-hamburger-button span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* 2. Slide the sidebar out onto the screen instantly */
+.sf-nav-checkbox-trigger:checked ~ .sf-left-sidebar {
+    transform: translateX(0) !important;
+}
+
+/* 3. Display the dark backdrop behind the menu drawer */
+.sf-mobile-drawer-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(3px);
+    z-index: 95;
+    cursor: pointer;
+}
+.sf-nav-checkbox-trigger:checked ~ .sf-mobile-drawer-backdrop {
+    display: block !important;
+}
+
+
+/* --- Desktop vs Mobile Logo Visibility Rules --- */
+.sf-sidebar-logo-container-desktop {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    /* 1. Hide the duplicate sidebar logo entirely on mobile views */
+    .sf-sidebar-logo-container-desktop {
+        display: none !important;
+    }
+
+    /* 2. Reposition the sidebar to act as a right-hand sliding drawer drawer drawer panel */
+    .sf-left-sidebar {
+        position: fixed;
+        top: 60px; /* Sits cleanly right under your mobile top bar */
+        right: 0;
+        left: auto !important; /* Overrides default left alignments */
+        width: 280px; /* Clean, standard drawer size layout */
+        height: calc(100vh - 60px);
+        transform: translateX(100%) !important; /* Starts fully hidden off-screen to the right */
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; /* Fluid, organic slide movement */
+        z-index: 100;
+        box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+        background: #ffffff;
+    }
+
+    /* 3. When checked, slide the sidebar leftward into active view */
+    .sf-nav-checkbox-trigger:checked ~ .sf-left-sidebar {
+        transform: translateX(0) !important;
+    }
+
+    /* 4. Animate your custom hamburger button cross 'X' configuration lines */
+    .sf-nav-checkbox-trigger:checked ~ .sf-mobile-top-bar .sf-hamburger-button span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    .sf-nav-checkbox-trigger:checked ~ .sf-mobile-top-bar .sf-hamburger-button span:nth-child(2) {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+    .sf-nav-checkbox-trigger:checked ~ .sf-mobile-top-bar .sf-hamburger-button span:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    /* 5. Smooth backdrop mask transition fading rules */
+    .sf-mobile-drawer-backdrop {
+        display: none;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        width: 100vw;
+        height: calc(100vh - 60px);
+        background: rgba(33, 28, 43, 0.4);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        z-index: 95;
+        cursor: pointer;
+    }
+    .sf-nav-checkbox-trigger:checked ~ .sf-mobile-drawer-backdrop {
+        display: block !important;
+    }
+}
