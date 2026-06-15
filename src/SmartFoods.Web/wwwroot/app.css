@@ -864,9 +864,6 @@ body {
 }
 
 
-/* --- Interactive Action Modal Element Framework --- */
-/* --- Defensive Layout Action Modal Framework Fix --- */
-
 
 /* --- Sibling Mobile Drawer Orchestration --- */
 
@@ -966,3 +963,190 @@ body {
         display: block !important;
     }
 }
+
+/* ==========================================================================
+   SMART FOOD PANTRY - PREMIUM MOBILE LAYOUT & PANEL OPTIMIZATIONS
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    /* 1. Global Dashboard Grid & Column Clamping */
+    .sf-dashboard-grid-layout {
+        gap: 1rem !important; /* Shaves half the empty space between grid blocks */
+    }
+
+    .sf-dashboard-column-stack {
+        gap: 1rem !important; /* Tightens stacked panel blocks vertically */
+    }
+
+    .sf-right-content-pane {
+        padding: 5.5rem 0.75rem 1.5rem 0.75rem !important; /* Maximizes horizontal screen space */
+    }
+
+    /* 2. Global Premium Card Shrimping */
+    .sf-premium-card {
+        padding: 1rem !important; /* Drops from a bloated 1.75rem to clean high-density space */
+        border-radius: 12px !important;
+    }
+
+    .sf-premium-card:hover {
+        transform: none !important; /* Prevents awkward layout shifting on mobile tap states */
+    }
+
+    /* Typography Scale Down */
+    .sf-card-header-title {
+        font-size: 1rem !important; /* High-density scale */
+        margin-bottom: 0.2rem !important;
+    }
+
+    .sf-card-header-subtitle {
+        font-size: 0.78rem !important;
+        margin-bottom: 0.85rem !important; /* Pulls content closer to the header */
+    }
+
+    /* 3. Welcome Panel Hero Unit (WelcomePanel.razor) */
+    .sf-welcome-hero-banner h1 {
+        font-size: 1.35rem !important; /* Scales down from giant 2.2rem display title */
+        margin-bottom: 0.4rem !important;
+        letter-spacing: -0.01em !important;
+    }
+
+    .sf-welcome-hero-banner p {
+        font-size: 0.85rem !important;
+        line-height: 1.4 !important;
+    }
+
+    /* 4. Pantry Summary Metrics Panel (PantrySummaryPanel.razor) */
+    /* FIX: Prevents them from stacking into giant screen-hogging vertical blocks */
+    .sf-summary-metric-row {
+        grid-template-columns: repeat(3, 1fr) !important; /* Overrides the 1fr rule to keep cards horizontal */
+        gap: 0.5rem !important; /* Tightly pack metrics side-by-side */
+    }
+
+    .sf-summary-metric-tile {
+        padding: 0.6rem 0.4rem !important; /* Drastic padding reduction */
+        border-radius: 10px !important;
+    }
+
+    .sf-summary-metric-tile span {
+        font-size: 0.6rem !important; /* Ultra-compact tracking label */
+        margin-bottom: 0.25rem !important;
+        letter-spacing: 0.02em !important;
+    }
+
+    .sf-summary-metric-tile strong {
+        font-size: 1.25rem !important; /* Downscales metric count from giant 2.2rem to clean title size */
+    }
+
+    /* 5. Attention Required List Panel (AttentionRequiredPanel.razor) */
+    /* Resolves squeezed/cluttered row tracking inside your razor structure */
+    .sf-list-group-wrapper {
+        gap: 0.5rem !important;
+    }
+
+    .sf-list-entry-item {
+        padding: 0.6rem 0.75rem !important; /* Balanced internal breathing room */
+        border-radius: 10px !important;
+        gap: 0.5rem !important;
+    }
+
+    .sf-list-entry-title-text {
+        font-size: 0.85rem !important; /* Prevents long string text from folding awkwardly */
+        line-height: 1.2 !important;
+    }
+
+    .sf-list-entry-meta-text {
+        font-size: 0.72rem !important;
+        margin-top: 0.1rem !important;
+    }
+
+    .sf-pill-badge {
+        padding: 0.2rem 0.5rem !important; /* Keeps notifications inline without wrapping text lines */
+        font-size: 0.68rem !important;
+        white-space: nowrap !important;
+    }
+
+    /* 6. Quick Add Form Items Layout Panel (QuickAddPanel.razor) */
+    .sf-premium-form-layout {
+        gap: 0.75rem !important;
+    }
+
+    .sf-form-double-column {
+        grid-template-columns: 1fr 1fr !important; /* Keeps them inline but drops interior spacing */
+        gap: 0.6rem !important;
+    }
+
+    .sf-form-field-block {
+        gap: 0.25rem !important;
+    }
+
+    .sf-form-field-block label {
+        font-size: 0.75rem !important;
+    }
+
+    .sf-form-input-element {
+        padding: 0.5rem 0.75rem !important; /* Streamlined input heights */
+        font-size: 0.88rem !important; /* Smooth touch-typing target layout */
+        border-radius: 8px !important;
+    }
+
+    .sf-action-submit-button {
+        padding: 0.65rem !important;
+        font-size: 0.88rem !important;
+        border-radius: 8px !important;
+    }
+
+    /* 7. Category Distribution Progress Graph (CategoryChartPanel.razor) */
+    .sf-category-chart-row-container {
+        gap: 0.75rem !important;
+    }
+
+    .sf-chart-row-header {
+        font-size: 0.78rem !important;
+    }
+
+    .sf-chart-bar-rail {
+        height: 6px !important; /* Thins down analytical graphics bars to look sharper */
+    }
+
+    /* 8. Smart Suggestions Recipe Cards Grid (SmartSuggestionsPanel.razor) */
+    .sf-meals-recipe-grid {
+        grid-template-columns: repeat(2, 1fr) !important; /* Force items to arrange cleanly into a 2-column layout */
+        gap: 0.75rem !important;
+    }
+
+    .sf-meal-recipe-card {
+        border-radius: 10px !important;
+    }
+
+    .sf-meal-recipe-card img {
+        height: 75px !important; /* Scales down image banner presence */
+    }
+
+    .sf-meal-recipe-details {
+        padding: 0.65rem !important;
+        gap: 0.35rem !important;
+    }
+
+    .sf-meal-recipe-details h4 {
+        font-size: 0.8rem !important;
+        line-height: 1.2 !important;
+    }
+
+    .sf-meal-recipe-details p {
+        font-size: 0.7rem !important;
+    }
+
+    .sf-recipe-link-anchor {
+        padding: 0.45rem !important;
+        font-size: 0.72rem !important;
+        border-radius: 6px !important;
+    }
+    
+    .sf-empty-state-notice {
+        padding: 1rem !important;
+        font-size: 0.78rem !important;
+    }
+}
+
+
+
