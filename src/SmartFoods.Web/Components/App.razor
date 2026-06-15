@@ -1,24 +1,34 @@
 @* Components/App.razor *@
-
 <!DOCTYPE html>
-
 <html lang="en" style="height: 100vh; max-height: 100vh; overflow: hidden;">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <base href="/" />
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2226%22 fill=%22%234a148c%22/><text x=%2250%22 y=%2255%22 font-family=%22system-ui, -apple-system, sans-serif%22 font-size=%2246%22 font-weight=%22900%22 fill=%22%23ffffff%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22>SF</text></svg>" />
+
+    <PageTitle>Smart Food Pantry — Premium High-Density Kitchen Analytics</PageTitle>
+
+    <meta name="description" content="Monitor pantry items, mitigate grocery expiration timelines, and eliminate household food waste using an ultra-dense premium glassmorphic dashboard layout." />
+    <meta name="keywords" content="smart food pantry, kitchen inventory tracker, grocery manager, food waste optimizer" />
+    <meta name="author" content="Smart Food Pantry Ecosystem" />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Smart Food Pantry — Premium High-Density Kitchen Analytics" />
+    <meta property="og:description" content="Eliminate household food waste and track your groceries dynamically using an interactive dashboard ecosystem." />
+    <meta property="og:site_name" content="Smart Food Pantry" />
+
+    <meta name="theme-color" content="#4a148c" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
     <link rel="stylesheet" href="app.css" />
     <HeadOutlet />
 </head>
-
 <body style="height: 100vh; max-height: 100vh; overflow: hidden; margin: 0; padding: 0;">
-
-<Routes />
-
-<script src="_framework/blazor.web.js"></script>
-
-
+    <Routes />
+    <script src="_framework/blazor.web.js"></script>
 </body>
-
 </html>
