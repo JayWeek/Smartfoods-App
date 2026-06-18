@@ -49,19 +49,44 @@
     [Parameter] public Guid UserId { get; set; }
     private List<NotificationLog>? Logs;
     private bool IsLoading = true;
+    private Guid _previousUserId;
 
-    protected override async Task OnParametersSetAsync()
+    protected override void OnParametersSet()
     {
-        IsLoading = true;
-        using var dbContext = await DbContextFactory.CreateDbContextAsync();
+        // Only trigger query execution if UserId is bound and has transitioned to a new value
+        if (UserId != Guid.Empty && UserId != _previousUserId)
+        {
+            _previousUserId = UserId;
+            IsLoading = true;
 
-        Logs = await dbContext.NotificationLogs
-            .AsNoTracking()
-            .Where(n => n.UserId == UserId)
-            .OrderByDescending(n => n.NotificationDate)
-            .Take(10)
-            .ToListAsync();
+            // OPTIMIZATION: Non-blocking execution loop. 
+            // Running this background task unawaited allows the UI thread to instantly render 
+            // the panel and its native streaming loading message without navigation lag.
+            _ = LoadNotificationLogsBackgroundAsync();
+        }
+    }
 
-        IsLoading = false;
+    private async Task LoadNotificationLogsBackgroundAsync()
+    {
+        try
+        {
+            await using var dbContext = await DbContextFactory.CreateDbContextAsync();
+
+            Logs = await dbContext.NotificationLogs
+                .AsNoTracking()
+                .Where(n => n.UserId == UserId)
+                .OrderByDescending(n => n.NotificationDate)
+                .Take(10)
+                .ToListAsync();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Notifications Panel Background Flight Failure]: {ex.Message}");
+        }
+        finally
+        {
+            IsLoading = false;
+            await InvokeAsync(StateHasChanged);
+        }
     }
 }
