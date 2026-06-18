@@ -1,0 +1,1147 @@
+:root {
+	--sf-bg-gradient: linear-gradient(135deg, #ffffff 0%, #fcfbfe 45%, #f5efff 100%);
+	--sf-purple-primary: #7c4dff;
+	--sf-purple-light: #f3e5f5;
+	--sf-purple-dark: #4a148c;
+	--sf-accent-gradient: linear-gradient(135deg, #7c4dff, #b388ff);
+	--sf-text-main: #211c2b;
+	--sf-text-muted: #6e657b;
+	--sf-card-bg: rgba(255, 255, 255, 0.85);
+	--sf-card-border: rgba(124, 77, 255, 0.12);
+	--sf-shadow-premium: 0 16px 40px rgba(74, 20, 140, 0.06);
+	--sf-shadow-hover: 0 24px 50px rgba(124, 77, 255, 0.14);
+	--sf-border-radius: 16px;
+	--sf-transition-smooth: all 0.35s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	font-family: 'Inter', system-ui, -apple-system, sans-serif;
+	color: var(--sf-text-main);
+	background: var(--sf-bg-gradient);
+	letter-spacing: -0.01em;
+}
+
+/* --- Split-Screen Base Layout Structure --- */
+.sf-layout-wrapper {
+	display: flex;
+	min-height: 100vh;
+	width: 100vw;
+	overflow-x: hidden;
+}
+
+/* Left Sidebar Engine */
+.sf-left-sidebar {
+	width: 280px;
+	background: rgba(255, 255, 255, 0.75);
+	border-right: 1px solid var(--sf-card-border);
+	backdrop-filter: blur(20px);
+	-webkit-backdrop-filter: blur(20px);
+	display: flex;
+	flex-direction: column;
+	padding: 2rem 1.5rem;
+	position: sticky;
+	top: 0;
+	height: 100vh;
+	z-index: 100;
+	transition: var(--sf-transition-smooth);
+}
+
+/* Right Content Area */
+.sf-right-content-pane {
+	flex: 1;
+	min-width: 0;
+	padding: 2.5rem;
+	overflow-y: auto;
+}
+
+/* Sidebar Elements Navigation Stack */
+.sf-sidebar-logo {
+	display: flex;
+	align-items: center;
+	gap: 0.85rem;
+	text-decoration: none;
+	margin-bottom: 3.5rem;
+	animation: sf-fade-down 0.5s ease both;
+}
+
+.sf-logo-icon {
+	width: 44px;
+	height: 44px;
+	background: var(--sf-accent-gradient);
+	border-radius: 12px;
+	display: grid;
+	place-items: center;
+	color: white;
+	font-weight: 800;
+	font-size: 1.25rem;
+	box-shadow: 0 8px 20px rgba(124, 77, 255, 0.3);
+}
+
+.sf-logo-text {
+	font-weight: 800;
+	font-size: 1.2rem;
+	color: var(--sf-purple-dark);
+	line-height: 1.1;
+}
+
+.sf-logo-text span {
+	display: block;
+	font-size: 0.75rem;
+	color: var(--sf-text-muted);
+	font-weight: 500;
+}
+
+.sf-navigation-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 0.65rem;
+	flex: 1;
+}
+
+.sf-nav-item {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	padding: 0.9rem 1.2rem;
+	border-radius: 12px;
+	color: var(--sf-text-muted);
+	text-decoration: none;
+	font-weight: 600;
+	font-size: 0.95rem;
+	border: 1px solid transparent;
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-nav-item:hover {
+	color: var(--sf-purple-primary);
+	background: rgba(124, 77, 255, 0.05);
+	transform: translateX(4px);
+}
+
+.sf-nav-item.active {
+	color: var(--sf-purple-dark);
+	background: var(--sf-purple-light);
+	border-edge: 1px solid rgba(124, 77, 255, 0.15);
+}
+
+.sf-nav-dot {
+	width: 8px;
+	height: 8px;
+	border-radius: 50%;
+	background: var(--sf-purple-primary);
+	box-shadow: 0 0 0 4px rgba(124, 77, 255, 0.15);
+}
+
+.sf-sidebar-footer-group {
+	margin-top: auto;
+	border-top: 1px solid var(--sf-card-border);
+	padding-top: 1.5rem;
+}
+
+/* Mobile Header Top-Bar Utilities */
+.sf-mobile-top-bar {
+	display: none;
+	width: 100%;
+	height: 70px;
+	background: rgba(255, 255, 255, 0.85);
+	backdrop-filter: blur(10px);
+	border-bottom: 1px solid var(--sf-card-border);
+	padding: 0 1.5rem;
+	align-items: center;
+	justify-content: space-between;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 110;
+}
+
+.sf-hamburger-button {
+	background: none;
+	border: none;
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 8px;
+	z-index: 120;
+}
+
+.sf-hamburger-button span {
+	display: block;
+	width: 24px;
+	height: 2.5px;
+	background: var(--sf-purple-dark);
+	border-radius: 2px;
+	transition: var(--sf-transition-smooth);
+}
+
+/* Hamburger toggle active animation shapes */
+.sf-hamburger-button.open span:nth-child(1) {
+	transform: translateY(8.5px) rotate(45deg);
+}
+
+.sf-hamburger-button.open span:nth-child(2) {
+	opacity: 0;
+}
+
+.sf-hamburger-button.open span:nth-child(3) {
+	transform: translateY(-8.5px) rotate(-45deg);
+}
+
+/* --- Premium Grid Systems & Content Dashboard Areas --- */
+.sf-dashboard-grid-layout {
+	display: grid;
+	grid-template-columns: 1.3fr 1fr;
+	gap: 2rem;
+	align-items: start;
+	animation: sf-fade-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.sf-dashboard-column-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+}
+
+/* Premium Glassmorphic Cards Styling Layouts */
+.sf-premium-card {
+	background: var(--sf-card-bg);
+	border: 1px solid var(--sf-card-border);
+	border-radius: var(--sf-border-radius);
+	box-shadow: var(--sf-shadow-premium);
+	backdrop-filter: blur(16px);
+	-webkit-backdrop-filter: blur(16px);
+	padding: 1.75rem;
+	position: relative;
+	overflow: hidden;
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-premium-card:hover {
+	transform: translateY(-4px);
+	box-shadow: var(--sf-shadow-hover);
+	border-color: rgba(124, 77, 255, 0.25);
+}
+
+.sf-premium-card::after {
+	content: "";
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 4px;
+	background: var(--sf-accent-gradient);
+	opacity: 0.15;
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-premium-card:hover::after {
+	opacity: 1;
+}
+
+/* Typography Titles Standards */
+.sf-card-header-title {
+	margin: 0 0 0.35rem 0;
+	font-size: 1.15rem;
+	font-weight: 750;
+	color: var(--sf-purple-dark);
+}
+
+.sf-card-header-subtitle {
+	margin: 0 0 1.5rem 0;
+	font-size: 0.88rem;
+	color: var(--sf-text-muted);
+	line-height: 1.4;
+}
+
+/* Premium Welcome Panel Hero Unit Banner */
+.sf-welcome-hero-banner {
+	background: linear-gradient(135deg, #4a148c 0%, #7c4dff 100%);
+	color: white;
+	border: none;
+}
+
+.sf-welcome-hero-banner::after {
+	display: none;
+}
+
+.sf-welcome-hero-banner h1 {
+	margin: 0 0 0.75rem 0;
+	font-size: 2.2rem;
+	font-weight: 800;
+	letter-spacing: -0.02em;
+	animation: sf-scale-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+.sf-welcome-hero-banner p {
+	margin: 0;
+	font-size: 1.05rem;
+	color: rgba(255, 255, 255, 0.88);
+	line-height: 1.5;
+}
+
+/* Summary Panels Metrics Flex Row Styles */
+.sf-summary-metric-row {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 1.25rem;
+}
+
+.sf-summary-metric-tile {
+	background: rgba(255, 255, 255, 0.6);
+	border: 1px solid rgba(124, 77, 255, 0.08);
+	border-radius: 14px;
+	padding: 1.25rem;
+	text-align: center;
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-summary-metric-tile:hover {
+	background: #ffffff;
+	border-color: rgba(124, 77, 255, 0.2);
+	transform: scale(1.02);
+}
+
+.sf-summary-metric-tile span {
+	font-size: 0.72rem;
+	font-weight: 750;
+	color: var(--sf-text-muted);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	display: block;
+	margin-bottom: 0.5rem;
+}
+
+.sf-summary-metric-tile strong {
+	font-size: 2.2rem;
+	font-weight: 850;
+	color: var(--sf-purple-dark);
+	display: block;
+	line-height: 1;
+	animation: sf-number-bump 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* Form Controls & Styling Elements */
+.sf-premium-form-layout {
+	display: flex;
+	flex-direction: column;
+	gap: 1.1rem;
+}
+
+.sf-form-double-column {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 1rem;
+}
+
+.sf-form-field-block {
+	display: flex;
+	flex-direction: column;
+	gap: 0.45rem;
+}
+
+.sf-form-field-block label {
+	font-size: 0.82rem;
+	font-weight: 700;
+	color: var(--sf-purple-dark);
+}
+
+.sf-form-input-element {
+	width: 100%;
+	padding: 0.8rem 1rem;
+	border: 1px solid rgba(124, 77, 255, 0.2);
+	border-radius: 10px;
+	background: white;
+	color: var(--sf-text-main);
+	font-size: 0.92rem;
+	outline: none;
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-form-input-element:focus {
+	border-color: var(--sf-purple-primary);
+	box-shadow: 0 0 0 4px rgba(124, 77, 255, 0.12);
+}
+
+.sf-action-submit-button {
+	width: 100%;
+	padding: 0.9rem;
+	border: none;
+	border-radius: 10px;
+	background: var(--sf-accent-gradient);
+	color: white;
+	font-weight: 750;
+	font-size: 0.95rem;
+	cursor: pointer;
+	box-shadow: 0 6px 16px rgba(124, 77, 255, 0.2);
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-action-submit-button:hover:not(:disabled) {
+	box-shadow: 0 10px 24px rgba(124, 77, 255, 0.35);
+	transform: translateY(-1px);
+}
+
+.sf-action-submit-button:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+/* Premium Lists and Feed Item Cards Styles */
+.sf-list-group-wrapper {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+}
+
+.sf-list-entry-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.9rem 1.1rem;
+	background: rgba(255, 255, 255, 0.5);
+	border: 1px solid rgba(124, 77, 255, 0.06);
+	border-radius: 12px;
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-list-entry-item:hover {
+	background: white;
+	border-color: rgba(124, 77, 255, 0.2);
+}
+
+.sf-list-entry-title-text {
+	font-weight: 650;
+	font-size: 0.95rem;
+	color: var(--sf-text-main);
+}
+
+.sf-list-entry-meta-text {
+	font-size: 0.78rem;
+	color: var(--sf-text-muted);
+	margin-top: 0.2rem;
+}
+
+.sf-pill-badge {
+	padding: 0.35rem 0.75rem;
+	border-radius: 20px;
+	font-size: 0.75rem;
+	font-weight: 750;
+	background: var(--sf-purple-light);
+	color: var(--sf-purple-dark);
+}
+
+.sf-pill-badge.danger-theme {
+	background: #ffebee;
+	color: #c62828;
+}
+
+/* Category Charts Distributions Visualization Bar Elements */
+.sf-category-chart-row-container {
+	display: flex;
+	flex-direction: column;
+	gap: 1.1rem;
+}
+
+.sf-chart-row-header {
+	display: flex;
+	justify-content: space-between;
+	font-size: 0.88rem;
+	font-weight: 600;
+}
+
+.sf-chart-bar-rail {
+	width: 100%;
+	height: 10px;
+	background: var(--sf-purple-light);
+	border-radius: 6px;
+	overflow: hidden;
+}
+
+.sf-chart-bar-fill {
+	height: 100%;
+	background: var(--sf-accent-gradient);
+	border-radius: 6px;
+	transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Smart Meal Ideas Dynamic Cards Grids layout */
+.sf-meals-recipe-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	gap: 1.25rem;
+}
+
+.sf-meal-recipe-card {
+	background: white;
+	border: 1px solid var(--sf-card-border);
+	border-radius: 12px;
+	overflow: hidden;
+	display: flex;
+	flex-direction: column;
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-meal-recipe-card:hover {
+	transform: scale(1.03) translateY(-2px);
+	box-shadow: var(--sf-shadow-premium);
+}
+
+.sf-meal-recipe-card img {
+	width: 100%;
+	height: 110px;
+	object-fit: cover;
+}
+
+.sf-meal-recipe-details {
+	padding: 1rem;
+	display: flex;
+	flex-direction: column;
+	flex: 1;
+	gap: 0.5rem;
+}
+
+.sf-meal-recipe-details h4 {
+	margin: 0;
+	font-size: 0.95rem;
+	color: var(--sf-purple-dark);
+	line-height: 1.3;
+}
+
+.sf-meal-recipe-details p {
+	margin: 0;
+	font-size: 0.78rem;
+	color: #c62828;
+	font-weight: 600;
+}
+
+.sf-recipe-link-anchor {
+	margin-top: auto;
+	display: block;
+	width: 100%;
+	text-align: center;
+	padding: 0.55rem;
+	background: var(--sf-purple-light);
+	color: var(--sf-purple-dark);
+	text-decoration: none;
+	font-weight: 750;
+	font-size: 0.8rem;
+	border-radius: 8px;
+	transition: var(--sf-transition-smooth);
+}
+
+.sf-recipe-link-anchor:hover {
+	background: var(--sf-purple-primary);
+	color: white;
+}
+
+.sf-empty-state-notice {
+	border: 2px dashed rgba(124, 77, 255, 0.2);
+	border-radius: 12px;
+	padding: 1.5rem;
+	text-align: center;
+	color: var(--sf-text-muted);
+	font-size: 0.88rem;
+}
+
+.sf-alert-banner {
+	padding: 0.8rem 1rem;
+	border-radius: 10px;
+	font-size: 0.88rem;
+	font-weight: 600;
+	margin-bottom: 1rem;
+}
+
+.sf-alert-banner.success-mode {
+	background: #e8f5e9;
+	color: #2e7d32;
+}
+
+.sf-alert-banner.error-mode {
+	background: #ffebee;
+	color: #c62828;
+}
+
+/* --- CSS Visual Presentation System Animations --- */
+@keyframes sf-fade-up {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes sf-fade-down {
+	from {
+		opacity: 0;
+		transform: translateY(-15px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes sf-scale-in {
+	from {
+		opacity: 0;
+		transform: scale(0.95);
+	}
+
+	to {
+		opacity: 1;
+		transform: scale(1);
+	}
+}
+
+@keyframes sf-number-bump {
+	0% {
+		transform: scale(0.8);
+		opacity: 0;
+	}
+
+	50% {
+		transform: scale(1.1);
+	}
+
+	100% {
+		transform: scale(1);
+		opacity: 1;
+	}
+}
+
+/* --- Responsive Tablet and Mobile Breakpoint Queries --- */
+@media (max-width: 1024px) {
+	.sf-dashboard-grid-layout {
+		grid-template-columns: 1fr;
+		gap: 1.75rem;
+	}
+}
+
+@media (max-width: 768px) {
+	.sf-mobile-top-bar {
+		display: flex;
+	}
+
+	.sf-left-sidebar {
+		position: fixed;
+		top: 70px;
+		left: -100%;
+		width: 280px;
+		height: calc(100vh - 70px);
+		z-index: 105;
+		box-shadow: 15px 0 30px rgba(0, 0, 0, 0.05);
+	}
+
+	.sf-left-sidebar.mobile-open {
+		left: 0;
+	}
+
+	.sf-right-content-pane {
+		padding: 6.5rem 1.25rem 2rem 1.25rem;
+	}
+
+	.sf-summary-metric-row {
+		grid-template-columns: 1fr;
+		gap: 1rem;
+	}
+}
+
+
+
+/* --- High-Utility Mobile Drawer & Hamburger Styling Matrix --- */
+
+/* Hamburger Line Transform Into Close 'X' States */
+.sf-hamburger-button.open span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+
+.sf-hamburger-button.open span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+.sf-hamburger-button.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* Dimmed backdrop background context layer for mobile view scopes */
+.sf-mobile-drawer-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(33, 28, 43, 0.2);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 95;
+    animation: sfFadeIn 0.25s ease-out;
+}
+
+/* Enforce fluid mobile positioning over standard desktop sidebar grid templates */
+@media (max-width: 768px) {
+    .sf-mobile-top-bar {
+        display: flex !important; /* Forces layout tracking rules from your base theme */
+    }
+
+    .sf-left-sidebar {
+        position: fixed !important;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        width: 280px;
+        z-index: 100;
+        background: #ffffff !important;
+        box-shadow: 24px 0 50px rgba(74, 20, 140, 0.1);
+        
+        /* Default closed layout off-screen view position state */
+        transform: translateX(-100%);
+        transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+
+    /* Glides out smoothly from left bounds when variable state evaluates to open */
+    .sf-left-sidebar.mobile-open {
+        transform: translateX(0) !important;
+    }
+
+    /* Offsets main content box container down to clear space underneath fixed top mobile bar */
+    .sf-right-content-pane {
+        padding-top: calc(70px + 1.5rem) !important;
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
+    }
+}
+
+
+
+/* =========================================================
+   DASHBOARD SKELETONS
+========================================================= */
+
+.sf-skeleton-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.sf-skeleton-title,
+.sf-skeleton-text,
+.sf-skeleton-value,
+.sf-skeleton-label,
+.sf-skeleton-chart-label,
+.sf-skeleton-chart-bar,
+.sf-skeleton-image,
+.sf-skeleton-list-content,
+.sf-skeleton-pill {
+    position: relative;
+    overflow: hidden;
+    background: #eceff3;
+    border-radius: 12px;
+}
+
+.sf-skeleton-title {
+    height: 30px;
+    width: 50%;
+    margin-bottom: 1rem;
+}
+
+.sf-skeleton-text {
+    height: 14px;
+    width: 100%;
+    margin-bottom: 0.75rem;
+}
+
+.sf-skeleton-text.short {
+    width: 65%;
+}
+
+.sf-skeleton-value {
+    height: 42px;
+    width: 100%;
+    margin-bottom: 0.75rem;
+}
+
+.sf-skeleton-label {
+    height: 12px;
+    width: 70%;
+    margin: 0 auto;
+}
+
+.sf-skeleton-chart-row {
+    margin-top: 1rem;
+}
+
+.sf-skeleton-chart-label {
+    height: 14px;
+    width: 35%;
+    margin-bottom: 0.5rem;
+}
+
+.sf-skeleton-chart-bar {
+    height: 12px;
+    width: 100%;
+    border-radius: 999px;
+}
+
+.sf-skeleton-recipe-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+.sf-skeleton-recipe-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.sf-skeleton-image {
+    width: 100%;
+    height: 180px;
+    border-radius: 16px;
+}
+
+.sf-skeleton-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.sf-skeleton-list-content {
+    flex: 1;
+    height: 44px;
+}
+
+.sf-skeleton-pill {
+    width: 100px;
+    height: 32px;
+    border-radius: 999px;
+}
+
+.sf-skeleton-title::after,
+.sf-skeleton-text::after,
+.sf-skeleton-value::after,
+.sf-skeleton-label::after,
+.sf-skeleton-chart-label::after,
+.sf-skeleton-chart-bar::after,
+.sf-skeleton-image::after,
+.sf-skeleton-list-content::after,
+.sf-skeleton-pill::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background:
+        linear-gradient(
+            90deg,
+            transparent,
+            rgba(255,255,255,0.8),
+            transparent);
+    animation: sf-skeleton-shimmer 1.25s infinite;
+}
+
+@keyframes sf-skeleton-shimmer {
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+
+
+/* --- Sibling Mobile Drawer Orchestration --- */
+
+/* 1. Turn the 3 hamburger lines into an 'X' icon when checked */
+.sf-nav-checkbox-trigger:checked ~ .sf-mobile-top-bar .sf-hamburger-button span:nth-child(1) {
+    transform: rotate(45deg) translate(6px, 6px);
+}
+.sf-nav-checkbox-trigger:checked ~ .sf-mobile-top-bar .sf-hamburger-button span:nth-child(2) {
+    opacity: 0;
+    transform: translateX(-10px);
+}
+.sf-nav-checkbox-trigger:checked ~ .sf-mobile-top-bar .sf-hamburger-button span:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -6px);
+}
+
+/* 2. Slide the sidebar out onto the screen instantly */
+.sf-nav-checkbox-trigger:checked ~ .sf-left-sidebar {
+    transform: translateX(0) !important;
+}
+
+/* 3. Display the dark backdrop behind the menu drawer */
+.sf-mobile-drawer-backdrop {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(3px);
+    z-index: 95;
+    cursor: pointer;
+}
+.sf-nav-checkbox-trigger:checked ~ .sf-mobile-drawer-backdrop {
+    display: block !important;
+}
+
+
+/* --- Desktop vs Mobile Logo Visibility Rules --- */
+.sf-sidebar-logo-container-desktop {
+    display: block;
+}
+
+@media (max-width: 768px) {
+    /* 1. Hide the duplicate sidebar logo entirely on mobile views */
+    .sf-sidebar-logo-container-desktop {
+        display: none !important;
+    }
+
+    /* 2. Reposition the sidebar to act as a right-hand sliding drawer drawer drawer panel */
+    .sf-left-sidebar {
+        position: fixed;
+        top: 60px; /* Sits cleanly right under your mobile top bar */
+        right: 0;
+        left: auto !important; /* Overrides default left alignments */
+        width: 280px; /* Clean, standard drawer size layout */
+        height: calc(100vh - 60px);
+        transform: translateX(100%) !important; /* Starts fully hidden off-screen to the right */
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important; /* Fluid, organic slide movement */
+        z-index: 100;
+        box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+        background: #ffffff;
+    }
+
+    /* 3. When checked, slide the sidebar leftward into active view */
+    .sf-nav-checkbox-trigger:checked ~ .sf-left-sidebar {
+        transform: translateX(0) !important;
+    }
+
+    /* 4. Animate your custom hamburger button cross 'X' configuration lines */
+    .sf-nav-checkbox-trigger:checked ~ .sf-mobile-top-bar .sf-hamburger-button span:nth-child(1) {
+        transform: rotate(45deg) translate(5px, 5px);
+    }
+    .sf-nav-checkbox-trigger:checked ~ .sf-mobile-top-bar .sf-hamburger-button span:nth-child(2) {
+        opacity: 0;
+        transform: translateX(10px);
+    }
+    .sf-nav-checkbox-trigger:checked ~ .sf-mobile-top-bar .sf-hamburger-button span:nth-child(3) {
+        transform: rotate(-45deg) translate(6px, -6px);
+    }
+
+    /* 5. Smooth backdrop mask transition fading rules */
+    .sf-mobile-drawer-backdrop {
+        display: none;
+        position: fixed;
+        top: 60px;
+        left: 0;
+        width: 100vw;
+        height: calc(100vh - 60px);
+        background: rgba(33, 28, 43, 0.4);
+        backdrop-filter: blur(3px);
+        -webkit-backdrop-filter: blur(3px);
+        z-index: 95;
+        cursor: pointer;
+    }
+    .sf-nav-checkbox-trigger:checked ~ .sf-mobile-drawer-backdrop {
+        display: block !important;
+    }
+}
+
+/* ==========================================================================
+   SMART FOOD PANTRY - PREMIUM MOBILE LAYOUT & PANEL OPTIMIZATIONS
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    /* 1. Global Dashboard Grid & Column Clamping */
+    .sf-dashboard-grid-layout {
+        gap: 1rem !important; /* Shaves half the empty space between grid blocks */
+    }
+
+    .sf-dashboard-column-stack {
+        gap: 1rem !important; /* Tightens stacked panel blocks vertically */
+    }
+
+    .sf-right-content-pane {
+        padding: 5.5rem 0.75rem 1.5rem 0.75rem !important; /* Maximizes horizontal screen space */
+    }
+
+    /* 2. Global Premium Card Shrimping */
+    .sf-premium-card {
+        padding: 1rem !important; /* Drops from a bloated 1.75rem to clean high-density space */
+        border-radius: 12px !important;
+    }
+
+    .sf-premium-card:hover {
+        transform: none !important; /* Prevents awkward layout shifting on mobile tap states */
+    }
+
+    /* Typography Scale Down */
+    .sf-card-header-title {
+        font-size: 1rem !important; /* High-density scale */
+        margin-bottom: 0.2rem !important;
+    }
+
+    .sf-card-header-subtitle {
+        font-size: 0.78rem !important;
+        margin-bottom: 0.85rem !important; /* Pulls content closer to the header */
+    }
+
+    /* 3. Welcome Panel Hero Unit (WelcomePanel.razor) */
+    .sf-welcome-hero-banner h1 {
+        font-size: 1.35rem !important; /* Scales down from giant 2.2rem display title */
+        margin-bottom: 0.4rem !important;
+        letter-spacing: -0.01em !important;
+    }
+
+    .sf-welcome-hero-banner p {
+        font-size: 0.85rem !important;
+        line-height: 1.4 !important;
+    }
+
+    /* 4. Pantry Summary Metrics Panel (PantrySummaryPanel.razor) */
+    /* FIX: Prevents them from stacking into giant screen-hogging vertical blocks */
+    .sf-summary-metric-row {
+        grid-template-columns: repeat(3, 1fr) !important; /* Overrides the 1fr rule to keep cards horizontal */
+        gap: 0.5rem !important; /* Tightly pack metrics side-by-side */
+    }
+
+    .sf-summary-metric-tile {
+        padding: 0.6rem 0.4rem !important; /* Drastic padding reduction */
+        border-radius: 10px !important;
+    }
+
+    .sf-summary-metric-tile span {
+        font-size: 0.6rem !important; /* Ultra-compact tracking label */
+        margin-bottom: 0.25rem !important;
+        letter-spacing: 0.02em !important;
+    }
+
+    .sf-summary-metric-tile strong {
+        font-size: 1.25rem !important; /* Downscales metric count from giant 2.2rem to clean title size */
+    }
+
+    /* 5. Attention Required List Panel (AttentionRequiredPanel.razor) */
+    /* Resolves squeezed/cluttered row tracking inside your razor structure */
+    .sf-list-group-wrapper {
+        gap: 0.5rem !important;
+    }
+
+    .sf-list-entry-item {
+        padding: 0.6rem 0.75rem !important; /* Balanced internal breathing room */
+        border-radius: 10px !important;
+        gap: 0.5rem !important;
+    }
+
+    .sf-list-entry-title-text {
+        font-size: 0.85rem !important; /* Prevents long string text from folding awkwardly */
+        line-height: 1.2 !important;
+    }
+
+    .sf-list-entry-meta-text {
+        font-size: 0.72rem !important;
+        margin-top: 0.1rem !important;
+    }
+
+    .sf-pill-badge {
+        padding: 0.2rem 0.5rem !important; /* Keeps notifications inline without wrapping text lines */
+        font-size: 0.68rem !important;
+        white-space: nowrap !important;
+    }
+
+    /* 6. Quick Add Form Items Layout Panel (QuickAddPanel.razor) */
+    .sf-premium-form-layout {
+        gap: 0.75rem !important;
+    }
+
+    .sf-form-double-column {
+        grid-template-columns: 1fr 1fr !important; /* Keeps them inline but drops interior spacing */
+        gap: 0.6rem !important;
+    }
+
+    .sf-form-field-block {
+        gap: 0.25rem !important;
+    }
+
+    .sf-form-field-block label {
+        font-size: 0.75rem !important;
+    }
+
+    .sf-form-input-element {
+        padding: 0.5rem 0.75rem !important; /* Streamlined input heights */
+        font-size: 0.88rem !important; /* Smooth touch-typing target layout */
+        border-radius: 8px !important;
+    }
+
+    .sf-action-submit-button {
+        padding: 0.65rem !important;
+        font-size: 0.88rem !important;
+        border-radius: 8px !important;
+    }
+
+    /* 7. Category Distribution Progress Graph (CategoryChartPanel.razor) */
+    .sf-category-chart-row-container {
+        gap: 0.75rem !important;
+    }
+
+    .sf-chart-row-header {
+        font-size: 0.78rem !important;
+    }
+
+    .sf-chart-bar-rail {
+        height: 6px !important; /* Thins down analytical graphics bars to look sharper */
+    }
+
+    /* 8. Smart Suggestions Recipe Cards Grid (SmartSuggestionsPanel.razor) */
+    .sf-meals-recipe-grid {
+        grid-template-columns: repeat(2, 1fr) !important; /* Force items to arrange cleanly into a 2-column layout */
+        gap: 0.75rem !important;
+    }
+
+    .sf-meal-recipe-card {
+        border-radius: 10px !important;
+    }
+
+    .sf-meal-recipe-card img {
+        height: 75px !important; /* Scales down image banner presence */
+    }
+
+    .sf-meal-recipe-details {
+        padding: 0.65rem !important;
+        gap: 0.35rem !important;
+    }
+
+    .sf-meal-recipe-details h4 {
+        font-size: 0.8rem !important;
+        line-height: 1.2 !important;
+    }
+
+    .sf-meal-recipe-details p {
+        font-size: 0.7rem !important;
+    }
+
+    .sf-recipe-link-anchor {
+        padding: 0.45rem !important;
+        font-size: 0.72rem !important;
+        border-radius: 6px !important;
+    }
+    
+    .sf-empty-state-notice {
+        padding: 1rem !important;
+        font-size: 0.78rem !important;
+    }
+}
+
+
+
