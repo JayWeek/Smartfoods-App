@@ -35,6 +35,9 @@ builder.Services.AddCascadingAuthenticationState();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 
+//Memory cache register
+builder.Services.AddMemoryCache();
+
 // Add DbContext
 builder.Services.AddDbContextFactory<ApplicationDbContext>(options =>
 {

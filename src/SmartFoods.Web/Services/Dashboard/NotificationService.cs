@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Caching.Memory;
 using SmartFoods.Web.Data;
 using SmartFoods.Web.Models.Pantry;
 
@@ -8,31 +9,44 @@ public class NotificationService : INotificationService, IDisposable
 {
     private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
     private readonly DashboardStateHub _stateHub;
+    private readonly IMemoryCache _memoryCache;
 
-    // Circuit-scoped private cache storage primitives
-    private List<NotificationLog>? _cachedNotifications;
-    private Guid? _cachedUserId;
+    private Guid? _currentCircuitUserId;
 
     public NotificationService(
         IDbContextFactory<ApplicationDbContext> dbContextFactory,
-        DashboardStateHub stateHub)
+        DashboardStateHub stateHub,
+        IMemoryCache memoryCache)
     {
         _dbContextFactory = dbContextFactory;
         _stateHub = stateHub;
+        _memoryCache = memoryCache;
 
-        // Wire up the state hub event listener to clear cache instantly on changes
-        _stateHub.OnDashboardChanged += ClearCache;
+        _stateHub.OnDashboardChanged += HandleDashboardStateChanged;
+    }
+
+    private string GetCacheKey(Guid userId) => $"NotificationLogs_{userId}";
+
+    private void HandleDashboardStateChanged()
+    {
+        if (_currentCircuitUserId.HasValue)
+        {
+            ClearCache(_currentCircuitUserId.Value);
+        }
     }
 
     public async Task<List<NotificationLog>> GetLatestNotificationsAsync(Guid userId, int count = 10)
     {
-        // FAST PATH: Return memory store instantly if it belongs to this active user session
-        if (_cachedNotifications != null && _cachedUserId == userId)
+        _currentCircuitUserId = userId;
+        string cacheKey = GetCacheKey(userId);
+
+        // FAST PATH: Retrieve instantly from application memory allocation bounds
+        if (_memoryCache.TryGetValue(cacheKey, out List<NotificationLog>? cachedLogs) && cachedLogs != null)
         {
-            return _cachedNotifications;
+            return cachedLogs;
         }
 
-        // SLOW PATH: Query database context and update session cache bounds
+        // SLOW PATH: Hit database context layers directly
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
         var logs = await dbContext.NotificationLogs
             .AsNoTracking()
@@ -41,21 +55,30 @@ public class NotificationService : INotificationService, IDisposable
             .Take(count)
             .ToListAsync();
 
-        _cachedUserId = userId;
-        _cachedNotifications = logs;
+        var cacheOptions = new MemoryCacheEntryOptions()
+            .SetSlidingExpiration(TimeSpan.FromMinutes(15))
+            .SetAbsoluteExpiration(TimeSpan.FromHours(2));
+
+        _memoryCache.Set(cacheKey, logs, cacheOptions);
 
         return logs;
     }
 
     public void ClearCache()
     {
-        _cachedNotifications = null;
-        _cachedUserId = null;
+        if (_currentCircuitUserId.HasValue)
+        {
+            ClearCache(_currentCircuitUserId.Value);
+        }
+    }
+
+    private void ClearCache(Guid userId)
+    {
+        _memoryCache.Remove(GetCacheKey(userId));
     }
 
     public void Dispose()
     {
-        // Unsubscribe securely to eliminate any potential circuit memory footprint leaks
-        _stateHub.OnDashboardChanged -= ClearCache;
+        _stateHub.OnDashboardChanged -= HandleDashboardStateChanged;
     }
 }
