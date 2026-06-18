@@ -74,6 +74,8 @@ builder.Services.AddScoped<IRecipeIntegrationService, SpoonacularIntegrationServ
 
 builder.Services.AddScoped<DashboardStateHub>();
 
+// Register the notification abstraction layers as Scoped services
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 
 

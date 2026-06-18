@@ -2,8 +2,9 @@
 @using SmartFoods.Web.Data
 @using Microsoft.EntityFrameworkCore
 @using SmartFoods.Web.Models.Pantry
+@using SmartFoods.Web.Services.Dashboard
 
-@inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+@inject INotificationService NotificationService
 
 <div class="sf-premium-card">
     <h3 class="sf-card-header-title">Historical Reminder Trace Logs</h3>
@@ -53,15 +54,12 @@
 
     protected override void OnParametersSet()
     {
-        // Only trigger query execution if UserId is bound and has transitioned to a new value
         if (UserId != Guid.Empty && UserId != _previousUserId)
         {
             _previousUserId = UserId;
             IsLoading = true;
 
-            // OPTIMIZATION: Non-blocking execution loop. 
-            // Running this background task unawaited allows the UI thread to instantly render 
-            // the panel and its native streaming loading message without navigation lag.
+            // Running this background task unawaited allows the UI thread to instantly render
             _ = LoadNotificationLogsBackgroundAsync();
         }
     }
@@ -70,14 +68,8 @@
     {
         try
         {
-            await using var dbContext = await DbContextFactory.CreateDbContextAsync();
-
-            Logs = await dbContext.NotificationLogs
-                .AsNoTracking()
-                .Where(n => n.UserId == UserId)
-                .OrderByDescending(n => n.NotificationDate)
-                .Take(10)
-                .ToListAsync();
+            // Leverages the cached Scoped implementation layer instead of making cold DB calls
+            Logs = await NotificationService.GetLatestNotificationsAsync(UserId, 10);
         }
         catch (Exception ex)
         {

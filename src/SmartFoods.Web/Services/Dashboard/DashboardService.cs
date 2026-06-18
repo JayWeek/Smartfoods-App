@@ -6,311 +6,44 @@ using SmartFoods.Web.Services.Interfaces;
 
 namespace SmartFoods.Web.Services.Dashboard;
 
-public class DashboardService : IDashboardService
+public class DashboardService : IDashboardService, IDisposable
 {
     private readonly IDbContextFactory<ApplicationDbContext> _dbContextFactory;
     private readonly IRecipeIntegrationService _recipeIntegrationService;
+    private readonly DashboardStateHub _stateHub;
+
+    // Circuit-scoped private memory state variables
+    private DashboardOverviewDto? _cachedOverview;
+    private Guid? _cachedUserId;
 
     public DashboardService(
         IDbContextFactory<ApplicationDbContext> dbContextFactory,
-        IRecipeIntegrationService recipeIntegrationService)
+        IRecipeIntegrationService recipeIntegrationService,
+        DashboardStateHub stateHub)
     {
         _dbContextFactory = dbContextFactory;
         _recipeIntegrationService = recipeIntegrationService;
+        _stateHub = stateHub;
+
+        // Automatically invalidate local cache whenever a change broadcast is intercepted
+        _stateHub.OnDashboardChanged += ClearCache;
     }
 
-    public async Task<WelcomePanelDto> GetWelcomePanelAsync(Guid userId)
+    private void ClearCache()
     {
-        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
-        var user = await dbContext.Users
-            .AsNoTracking()
-            .Include(u => u.Pantry)
-            .ThenInclude(p => p!.FoodItems)
-            .FirstOrDefaultAsync(u => u.Id == userId);
-            
-        if (user is null)
-        {
-            throw new Exception("User not found.");
-        }
-        
-        var pantry = user.Pantry;
-        var foodItems = pantry?.FoodItems ?? Enumerable.Empty<Models.Pantry.FoodItem>();
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
-        var sevenDaysFromNow = today.AddDays(7);
-        
-        return new WelcomePanelDto
-        {
-            UserName = user.Name,
-            TotalFoodItems = foodItems.Count(),
-            TotalCategories = foodItems
-                .Where(f => !string.IsNullOrWhiteSpace(f.Category))
-                .Select(f => f.Category)
-                .Distinct()
-                .Count(),
-            ItemsNeedingAttention = foodItems.Count(f =>
-                f.ExpiryDate >= today &&
-                f.ExpiryDate <= sevenDaysFromNow)
-        };
+        _cachedOverview = null;
+        _cachedUserId = null;
     }
 
-        public async Task AddFoodItemAsync(Guid userId, CreateFoodItemDto model)
+    public async Task<DashboardOverviewDto> GetDashboardOverviewAsync(Guid userId)
     {
-        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
-        var pantry = await dbContext.Pantries.FirstOrDefaultAsync(p => p.UserId == userId);
-        
-        if (pantry is null)
+        // FAST PATH: Return memory representation without hitting DB context layers
+        if (_cachedOverview != null && _cachedUserId == userId)
         {
-            pantry = new Pantry
-            {
-                Name = "Main Pantry",
-                UserId = userId
-            };
-            dbContext.Pantries.Add(pantry);
-            await dbContext.SaveChangesAsync();
+            return _cachedOverview;
         }
-        
-        var foodItem = new Models.Pantry.FoodItem
-        {
-            Name = model.Name,
-            Quantity = model.Quantity,
-            Unit = model.Unit,
-            Category = model.Category,
-            ExpiryDate = model.ExpiryDate,
-            PantryId = pantry.Id
-        };
-        
-        dbContext.FoodItems.Add(foodItem);
-        await dbContext.SaveChangesAsync();
-    }
 
-    public async Task<PantrySummaryDto> GetPantrySummaryAsync(Guid userId)
-    {
-        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
-        var user = await dbContext.Users
-            .AsNoTracking()
-            .Include(u => u.Pantry)
-            .ThenInclude(p => p!.FoodItems)
-            .FirstOrDefaultAsync(u => u.Id == userId);
-            
-        if (user is null)
-        {
-            throw new Exception("User not found.");
-        }
-        
-        var foodItems = user.Pantry?.FoodItems ?? Enumerable.Empty<Models.Pantry.FoodItem>();
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
-        var sevenDaysFromNow = today.AddDays(7);
-        
-        return new PantrySummaryDto
-        {
-            TotalFoodItems = foodItems.Count(),
-            TotalCategories = foodItems
-                .Where(f => !string.IsNullOrWhiteSpace(f.Category))
-                .Select(f => f.Category)
-                .Distinct()
-                .Count(),
-            ExpiringSoonCount = foodItems.Count(f => 
-                f.ExpiryDate >= today && 
-                f.ExpiryDate <= sevenDaysFromNow)
-        };
-    }
-
-    public async Task<AttentionRequiredDto> GetAttentionRequiredAsync(Guid userId)
-    {
-        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
-        var user = await dbContext.Users
-            .AsNoTracking()
-            .Include(u => u.Pantry)
-            .ThenInclude(p => p!.FoodItems)
-            .FirstOrDefaultAsync(u => u.Id == userId);
-            
-        if (user is null)
-        {
-            throw new Exception("User not found.");
-        }
-        
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
-        var sevenDaysFromNow = today.AddDays(7);
-        var foodItems = user.Pantry?.FoodItems ?? Enumerable.Empty<Models.Pantry.FoodItem>();
-        
-        var urgentItems = foodItems
-            .Where(f => f.ExpiryDate >= today && f.ExpiryDate <= sevenDaysFromNow)
-            .OrderBy(f => f.ExpiryDate)
-            .Select(f => new AttentionRequiredItemDto
-            {
-                FoodItemId = f.Id, // Populating the unique ID mapping reference
-                Name = f.Name,
-                Quantity = f.Quantity,
-                Unit = f.Unit,
-                DaysRemaining = f.ExpiryDate.DayNumber - today.DayNumber
-            })
-            .ToList();
-            
-        return new AttentionRequiredDto
-        {
-            UrgentItems = urgentItems
-        };
-    }
-
-    public async Task<CategoryChartDto> GetCategoryChartAsync(Guid userId)
-    {
-        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
-        var user = await dbContext.Users
-            .AsNoTracking()
-            .Include(u => u.Pantry)
-            .ThenInclude(p => p!.FoodItems)
-            .FirstOrDefaultAsync(u => u.Id == userId);
-            
-        if (user is null)
-        {
-            throw new Exception("User not found.");
-        }
-        
-        var foodItems = user.Pantry?.FoodItems ?? Enumerable.Empty<Models.Pantry.FoodItem>();
-        var totalItems = foodItems.Count();
-        
-        if (totalItems == 0)
-        {
-            return new CategoryChartDto();
-        }
-        
-        var groupedCategories = foodItems
-            .Where(f => !string.IsNullOrWhiteSpace(f.Category))
-            .GroupBy(f => f.Category)
-            .Select(g => new CategoryPercentageDto
-            {
-                CategoryName = g.Key,
-                ItemCount = g.Count(),
-                Percentage = Math.Round(((decimal)g.Count() / totalItems) * 100, 1)
-            })
-            .OrderByDescending(c => c.ItemCount)
-            .ToList();
-            
-        return new CategoryChartDto
-        {
-            Categories = groupedCategories
-        };
-    }
-
-    public async Task<RecentActivityDto> GetRecentActivityAsync(Guid userId)
-    {
-        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
-        var user = await dbContext.Users
-            .AsNoTracking()
-            .Include(u => u.Pantry)
-            .ThenInclude(p => p!.FoodItems)
-            .FirstOrDefaultAsync(u => u.Id == userId);
-            
-        if (user is null)
-        {
-            throw new Exception("User not found.");
-        }
-        
-        var foodItems = user.Pantry?.FoodItems ?? Enumerable.Empty<Models.Pantry.FoodItem>();
-        
-        var recentItems = foodItems
-            .OrderByDescending(f => f.CreatedAt)
-            .Take(5)
-            .Select(f => new RecentActivityItemDto
-            {
-                Name = f.Name,
-                Quantity = f.Quantity,
-                Unit = f.Unit,
-                AddedAt = f.CreatedAt
-            })
-            .ToList();
-            
-        return new RecentActivityDto
-        {
-            RecentItems = recentItems
-        };
-    }
-
-        public async Task<SmartSuggestionsDto> GetSmartSuggestionsAsync(Guid userId)
-    {
-        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
-        var user = await dbContext.Users
-            .AsNoTracking()
-            .Include(u => u.Pantry)
-            .ThenInclude(p => p!.FoodItems)
-            .FirstOrDefaultAsync(u => u.Id == userId);
-            
-        if (user is null) throw new Exception("User not found.");
-        var today = DateOnly.FromDateTime(DateTime.UtcNow);
-        
-        var testingHorizon = today.AddDays(30);
-        var expiringItems = (user.Pantry?.FoodItems ?? Enumerable.Empty<FoodItem>())
-            .Where(f => f.ExpiryDate >= today && f.ExpiryDate <= testingHorizon)
-            .OrderBy(f => f.ExpiryDate)
-            .Select(f => f.Name.Trim().ToLowerInvariant())
-            .Distinct()
-            .Take(3)
-            .ToList();
-            
-        var result = new SmartSuggestionsDto();
-        if (!expiringItems.Any()) return result; 
-        
-        foreach (var ingredient in expiringItems)
-        {
-            var localCount = await dbContext.RecipeIngredients.CountAsync(i => i.Name == ingredient);
-            if (localCount < 3)
-            {
-                try
-                {
-                    var fetchedRecipes = await _recipeIntegrationService.FetchAndMapRecipesAsync(ingredient);
-                    
-                    foreach (var apiRecipe in fetchedRecipes)
-                    {
-                        var existingRecipe = await dbContext.Recipes
-                            .Include(r => r.Ingredients)
-                            .FirstOrDefaultAsync(r => r.ExternalApiId == apiRecipe.ExternalApiId);
-                            
-                        if (existingRecipe is null)
-                        {
-                            dbContext.Recipes.Add(apiRecipe);
-                        }
-                        else if (!existingRecipe.Ingredients.Any(i => i.Name == ingredient))
-                        {
-                            existingRecipe.Ingredients.Add(new RecipeIngredient
-                            {
-                                Name = ingredient,
-                                OriginalText = ingredient,
-                                Amount = 0,
-                                Unit = string.Empty
-                            });
-                        }
-                    }
-                    await dbContext.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"[SmartFoods Harvest Error] Failed mapping ingredient '{ingredient}': {ex.Message}");
-                }
-            }
-            
-            var localRecipeMatch = await dbContext.RecipeIngredients
-                .AsNoTracking()
-                .Include(i => i.Recipe)
-                .Where(i => i.Name == ingredient)
-                .Select(i => i.Recipe)
-                .FirstOrDefaultAsync();
-                
-            if (localRecipeMatch != null)
-            {
-                result.Suggestions.Add(new SuggestedRecipeDto
-                {
-                    Title = localRecipeMatch.Title,
-                    ImageUrl = localRecipeMatch.ImageUrl,
-                    SourceUrl = localRecipeMatch.SourceUrl,
-                    TargetIngredient = ingredient
-                });
-            }
-        }
-        return result;
-    }
-
-        public async Task<DashboardOverviewDto> GetDashboardOverviewAsync(Guid userId)
-    {
+        // SLOW PATH: Perform unified dashboard aggregation processing query flights
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
         var user = await dbContext.Users
             .AsNoTracking()
@@ -394,10 +127,47 @@ public class DashboardService : IDashboardService
         };
         
         result.SmartSuggestions = await GetSmartSuggestionsAsync(userId);
-        return result;
+
+        // Assign current state definitions into memory cache records
+        _cachedUserId = userId;
+        _cachedOverview = result;
+
+        return _cachedOverview;
     }
 
-    // RESOLVES CS0535 INTERFACE ENFORCEMENT COMPLIANCE
+    public async Task AddFoodItemAsync(Guid userId, CreateFoodItemDto model)
+    {
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var pantry = await dbContext.Pantries.FirstOrDefaultAsync(p => p.UserId == userId);
+        
+        if (pantry is null)
+        {
+            pantry = new Pantry
+            {
+                Name = "Main Pantry",
+                UserId = userId
+            };
+            dbContext.Pantries.Add(pantry);
+            await dbContext.SaveChangesAsync();
+        }
+        
+        var foodItem = new Models.Pantry.FoodItem
+        {
+            Name = model.Name,
+            Quantity = model.Quantity,
+            Unit = model.Unit,
+            Category = model.Category,
+            ExpiryDate = model.ExpiryDate,
+            PantryId = pantry.Id
+        };
+        
+        dbContext.FoodItems.Add(foodItem);
+        await dbContext.SaveChangesAsync();
+
+        // Proactively evict data cache before components re-request layout updates
+        ClearCache();
+    }
+
     public async Task ResolveFoodItemAsync(Guid userId, ResolveFoodItemDto model)
     {
         await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
@@ -413,7 +183,7 @@ public class DashboardService : IDashboardService
 
         await using var transaction = await dbContext.Database.BeginTransactionAsync();
         try
-         {
+        {
             var logEntry = new PantryInventoryLog
             {
                 UserId = userId,
@@ -431,11 +201,264 @@ public class DashboardService : IDashboardService
 
             await dbContext.SaveChangesAsync();
             await transaction.CommitAsync();
+
+            // Proactively evict data cache before components re-request layout updates
+            ClearCache();
         }
         catch
         {
             await transaction.RollbackAsync();
             throw;
+        }
+    }
+
+    public async Task<WelcomePanelDto> GetWelcomePanelAsync(Guid userId)
+    {
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var user = await dbContext.Users
+            .AsNoTracking()
+            .Include(u => u.Pantry)
+            .ThenInclude(p => p!.FoodItems)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+            
+        if (user is null) throw new Exception("User not found.");
+        
+        var pantry = user.Pantry;
+        var foodItems = pantry?.FoodItems ?? Enumerable.Empty<Models.Pantry.FoodItem>();
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var sevenDaysFromNow = today.AddDays(7);
+        
+        return new WelcomePanelDto
+        {
+            UserName = user.Name,
+            TotalFoodItems = foodItems.Count(),
+            TotalCategories = foodItems
+                .Where(f => !string.IsNullOrWhiteSpace(f.Category))
+                .Select(f => f.Category)
+                .Distinct()
+                .Count(),
+            ItemsNeedingAttention = foodItems.Count(f =>
+                f.ExpiryDate >= today &&
+                f.ExpiryDate <= sevenDaysFromNow)
+        };
+    }
+
+    public async Task<PantrySummaryDto> GetPantrySummaryAsync(Guid userId)
+    {
+        await using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var user = await dbContext.Users
+            .AsNoTracking()
+            .Include(u => u.Pantry)
+            .ThenInclude(p => p!.FoodItems)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+            
+        if (user is null) throw new Exception("User not found.");
+        
+        var foodItems = user.Pantry?.FoodItems ?? Enumerable.Empty<Models.Pantry.FoodItem>();
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var sevenDaysFromNow = today.AddDays(7);
+        
+        return new PantrySummaryDto
+        {
+            TotalFoodItems = foodItems.Count(),
+            TotalCategories = foodItems
+                .Where(f => !string.IsNullOrWhiteSpace(f.Category))
+                .Select(f => f.Category)
+                .Distinct()
+                .Count(),
+            ExpiringSoonCount = foodItems.Count(f => 
+                f.ExpiryDate >= today && 
+                f.ExpiryDate <= sevenDaysFromNow)
+        };
+    }
+
+    public async Task<AttentionRequiredDto> GetAttentionRequiredAsync(Guid userId)
+    {
+        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var user = await dbContext.Users
+            .AsNoTracking()
+            .Include(u => u.Pantry)
+            .ThenInclude(p => p!.FoodItems)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+            
+        if (user is null) throw new Exception("User not found.");
+        
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        var sevenDaysFromNow = today.AddDays(7);
+        var foodItems = user.Pantry?.FoodItems ?? Enumerable.Empty<Models.Pantry.FoodItem>();
+        
+        var urgentItems = foodItems
+            .Where(f => f.ExpiryDate >= today && f.ExpiryDate <= sevenDaysFromNow)
+            .OrderBy(f => f.ExpiryDate)
+            .Select(f => new AttentionRequiredItemDto
+            {
+                FoodItemId = f.Id,
+                Name = f.Name,
+                Quantity = f.Quantity,
+                Unit = f.Unit,
+                DaysRemaining = f.ExpiryDate.DayNumber - today.DayNumber
+            })
+            .ToList();
+            
+        return new AttentionRequiredDto
+        {
+            UrgentItems = urgentItems
+        };
+    }
+
+    public async Task<CategoryChartDto> GetCategoryChartAsync(Guid userId)
+    {
+        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var user = await dbContext.Users
+            .AsNoTracking()
+            .Include(u => u.Pantry)
+            .ThenInclude(p => p!.FoodItems)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+            
+        if (user is null) throw new Exception("User not found.");
+        
+        var foodItems = user.Pantry?.FoodItems ?? Enumerable.Empty<Models.Pantry.FoodItem>();
+        var totalItems = foodItems.Count();
+        
+        if (totalItems == 0) return new CategoryChartDto();
+        
+        var groupedCategories = foodItems
+            .Where(f => !string.IsNullOrWhiteSpace(f.Category))
+            .GroupBy(f => f.Category)
+            .Select(g => new CategoryPercentageDto
+            {
+                CategoryName = g.Key,
+                ItemCount = g.Count(),
+                Percentage = Math.Round(((decimal)g.Count() / totalItems) * 100, 1)
+            })
+            .OrderByDescending(c => c.ItemCount)
+            .ToList();
+            
+        return new CategoryChartDto
+        {
+            Categories = groupedCategories
+        };
+    }
+
+    public async Task<RecentActivityDto> GetRecentActivityAsync(Guid userId)
+    {
+        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var user = await dbContext.Users
+            .AsNoTracking()
+            .Include(u => u.Pantry)
+            .ThenInclude(p => p!.FoodItems)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+            
+        if (user is null) throw new Exception("User not found.");
+        
+        var foodItems = user.Pantry?.FoodItems ?? Enumerable.Empty<Models.Pantry.FoodItem>();
+        var recentItems = foodItems
+            .OrderByDescending(f => f.CreatedAt)
+            .Take(5)
+            .Select(f => new RecentActivityItemDto
+            {
+                Name = f.Name,
+                Quantity = f.Quantity,
+                Unit = f.Unit,
+                AddedAt = f.CreatedAt
+            })
+            .ToList();
+            
+        return new RecentActivityDto
+        {
+            RecentItems = recentItems
+        };
+    }
+
+    public async Task<SmartSuggestionsDto> GetSmartSuggestionsAsync(Guid userId)
+    {
+        using var dbContext = await _dbContextFactory.CreateDbContextAsync();
+        var user = await dbContext.Users
+            .AsNoTracking()
+            .Include(u => u.Pantry)
+            .ThenInclude(p => p!.FoodItems)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+            
+        if (user is null) throw new Exception("User not found.");
+        var today = DateOnly.FromDateTime(DateTime.UtcNow);
+        
+        var testingHorizon = today.AddDays(30);
+        var expiringItems = (user.Pantry?.FoodItems ?? Enumerable.Empty<FoodItem>())
+            .Where(f => f.ExpiryDate >= today && f.ExpiryDate <= testingHorizon)
+            .OrderBy(f => f.ExpiryDate)
+            .Select(f => f.Name.Trim().ToLowerInvariant())
+            .Distinct()
+            .Take(3)
+            .ToList();
+            
+        var result = new SmartSuggestionsDto();
+        if (!expiringItems.Any()) return result; 
+        
+        foreach (var ingredient in expiringItems)
+        {
+            var localCount = await dbContext.RecipeIngredients.CountAsync(i => i.Name == ingredient);
+            if (localCount < 3)
+            {
+                try
+                {
+                    var fetchedRecipes = await _recipeIntegrationService.FetchAndMapRecipesAsync(ingredient);
+                    
+                    foreach (var apiRecipe in fetchedRecipes)
+                    {
+                        var existingRecipe = await dbContext.Recipes
+                            .Include(r => r.Ingredients)
+                            .FirstOrDefaultAsync(r => r.ExternalApiId == apiRecipe.ExternalApiId);
+                            
+                        if (existingRecipe is null)
+                        {
+                            dbContext.Recipes.Add(apiRecipe);
+                        }
+                        else if (!existingRecipe.Ingredients.Any(i => i.Name == ingredient))
+                        {
+                            existingRecipe.Ingredients.Add(new RecipeIngredient
+                            {
+                                Name = ingredient,
+                                OriginalText = ingredient,
+                                Amount = 0,
+                                Unit = string.Empty
+                            });
+                        }
+                    }
+                    await dbContext.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[SmartFoods Harvest Error] Failed mapping ingredient '{ingredient}': {ex.Message}");
+                }
+            }
+            
+            var localRecipeMatch = await dbContext.RecipeIngredients
+                .AsNoTracking()
+                .Include(i => i.Recipe)
+                .Where(i => i.Name == ingredient)
+                .Select(i => i.Recipe)
+                .FirstOrDefaultAsync();
+                
+            if (localRecipeMatch != null)
+            {
+                result.Suggestions.Add(new SuggestedRecipeDto
+                {
+                    Title = localRecipeMatch.Title,
+                    ImageUrl = localRecipeMatch.ImageUrl,
+                    SourceUrl = localRecipeMatch.SourceUrl,
+                    TargetIngredient = ingredient
+                });
+            }
+        }
+        return result;
+    }
+
+    public void Dispose()
+    {
+        // Unsubscribe securely to clear references and preserve clean GC execution routines
+        if (_stateHub != null)
+        {
+            _stateHub.OnDashboardChanged -= ClearCache;
         }
     }
 }
