@@ -30,3 +30,5 @@ src/SmartFoods.Web.Tests/
 **/bin/
 **/obj/
 **/.vs/
+.gitignore
+.repomixignore
