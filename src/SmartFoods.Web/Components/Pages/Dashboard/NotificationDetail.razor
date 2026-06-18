@@ -1,72 +1,140 @@
 @* Components/Pages/Dashboard/NotificationDetail.razor *@
+
 @page "/notifications/{Id:guid}"
+
 @layout DashboardLayout
 
 
 @using SmartFoods.Web.Data
+
 @using Microsoft.EntityFrameworkCore
+
 @using SmartFoods.Web.Models.Pantry
+
 @using Microsoft.AspNetCore.Authorization
 
+
 @attribute [Authorize]
+
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
+
+
 
 <PageTitle>SmartFoods - Alert</PageTitle>
 
+
+
 <div style="margin-bottom: 1.5rem;">
+
     <a href="/dashboard/notifications" class="sf-recipe-link-anchor" style="display: inline-block; width: auto; padding: 0.5rem 1rem;">
+
         ← Back to Notifications Feed
+
     </a>
+
 </div>
 
+
+
 @if (IsLoading)
+
 {
+
     <div class="sf-empty-state-notice">Decrypting secure communication packet...</div>
+
 }
+
 else if (LogItem is null)
+
 {
+
     <div class="sf-premium-card" style="border-color: rgba(198, 40, 40, 0.15);">
+
         <div class="sf-alert-banner error-mode">⚠ Record Archive Error</div>
+
         <p style="margin: 0; color: var(--sf-text-muted);">The requested unique reference trace could not be identified inside the database ledger tables.</p>
+
     </div>
+
 }
+
 else
+
 {
+
     <div class="sf-premium-card" style="max-width: 720px; padding: 2.5rem; animation: sf-fade-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;">
-        
+
+       
+
         <!-- Header Trace Section -->
+
         <div style="border-bottom: 1px solid var(--sf-card-border); padding-bottom: 1.25rem; margin-bottom: 2rem;">
+
             <div style="font-size: 0.78rem; font-weight: 750; color: var(--sf-purple-primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">
+
                 System Delivery Logs
+
             </div>
+
             <h1 style="margin: 0 0 0.5rem 0; font-size: 1.5rem; font-weight: 850; color: var(--sf-purple-dark); line-height: 1.25;">
+
                 @LogItem.Title
+
             </h1>
+
             <span style="font-size: 0.82rem; color: var(--sf-text-muted); font-weight: 500;">
+
                 Archived trace sequence: @LogItem.SentAt.ToLocalTime().ToString("f")
+
             </span>
+
         </div>
+
+
 
         <!-- Rendered Container Block -->
+
         <div style="background: transparent; padding: 0; border: none;">
+
             @((MarkupString)LogItem.MessageBody)
+
         </div>
-        
+
+       
+
     </div>
+
 }
+
+
 
 @code {
+
     [Parameter] public Guid Id { get; set; }
+
     private NotificationLog? LogItem;
+
     private bool IsLoading = true;
 
+
+
     protected override async Task OnInitializedAsync()
+
     {
+
         using var dbContext = await DbContextFactory.CreateDbContextAsync();
+
         LogItem = await dbContext.NotificationLogs
+
             .AsNoTracking()
+
             .FirstOrDefaultAsync(n => n.Id == Id);
 
+
+
         IsLoading = false;
+
     }
-}
+
+} 
+

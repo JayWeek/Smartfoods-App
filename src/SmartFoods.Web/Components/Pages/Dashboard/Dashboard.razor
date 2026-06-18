@@ -76,19 +76,49 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = await UserManager.GetUserAsync(authState.User);
-
-        if (user is not null)
-        {
-            CurrentUserId = user.Id;
-            
-            // Initial asynchronous load
-            await RefreshGlobalDashboardDataAsync();
-        }
-
-        // REGISTER THE GLOBAL REAL-TIME HUD LISTENER HERE
+        // Register the real-time hub listener
         StateHub.OnDashboardChanged += HandleStateHubBroadcast;
+
+        // OPTIMIZATION 1: Extract User ID directly from Claims Principal token (Zero DB latency)
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userIdClaim = authState.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (Guid.TryParse(userIdClaim, out var parsedGuid))
+        {
+            CurrentUserId = parsedGuid;
+
+            // OPTIMIZATION 2: Non-blocking execution loop.
+            // Kicking this task off without an 'await' keyword forces OnInitializedAsync 
+            // to return immediately. The skeletons will paint on screen instantly.
+            _ = LoadDashboardDataBackgroundAsync();
+        }
+        else
+        {
+            // Fallback safe measure if claim schema varies
+            var user = await UserManager.GetUserAsync(authState.User);
+            if (user is not null)
+            {
+                CurrentUserId = user.Id;
+                _ = LoadDashboardDataBackgroundAsync();
+            }
+        }
+    }
+
+    private async Task LoadDashboardDataBackgroundAsync()
+    {
+        try
+        {
+            _dashboardData = await DashboardService.GetDashboardOverviewAsync(CurrentUserId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Dashboard Background Data Flight Failure]: {ex.Message}");
+        }
+        finally
+        {
+            // Forces Blazor to swap the skeletons out for the premium panels seamlessly
+            await InvokeAsync(StateHasChanged);
+        }
     }
 
     private async Task HandleItemAdded()
@@ -100,7 +130,6 @@
     {
         try
         {
-            // When ANY panel raises a change signal, re-fetch everything centrally
             await RefreshGlobalDashboardDataAsync();
         }
         catch (Exception ex)
@@ -117,7 +146,6 @@
 
     public void Dispose()
     {
-        // Explicit teardown prevents memory leaks on navigation tracking lines
         StateHub.OnDashboardChanged -= HandleStateHubBroadcast;
     }
 }

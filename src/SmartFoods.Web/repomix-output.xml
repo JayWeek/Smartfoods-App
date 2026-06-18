@@ -1,3 +1,44 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
 <directory_structure>
 _Imports.razor
 Components/_Imports.razor
@@ -92,28 +133,38 @@ This section contains the contents of the repository's files.
 
 <file path="Components/App.razor">
 @* Components/App.razor *@
-
 <!DOCTYPE html>
-
 <html lang="en" style="height: 100vh; max-height: 100vh; overflow: hidden;">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <base href="/" />
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2226%22 fill=%22%234a148c%22/><text x=%2250%22 y=%2255%22 font-family=%22system-ui, -apple-system, sans-serif%22 font-size=%2246%22 font-weight=%22900%22 fill=%22%23ffffff%22 text-anchor=%22middle%22 dominant-baseline=%22middle%22>SF</text></svg>" />
+
+    <PageTitle>Smart Food Pantry — Premium High-Density Kitchen Analytics</PageTitle>
+
+    <meta name="description" content="Monitor pantry items, mitigate grocery expiration timelines, and eliminate household food waste using an ultra-dense premium glassmorphic dashboard layout." />
+    <meta name="keywords" content="smart food pantry, kitchen inventory tracker, grocery manager, food waste optimizer" />
+    <meta name="author" content="Smart Food Pantry Ecosystem" />
+    <meta name="robots" content="index, follow" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Smart Food Pantry — Premium High-Density Kitchen Analytics" />
+    <meta property="og:description" content="Eliminate household food waste and track your groceries dynamically using an interactive dashboard ecosystem." />
+    <meta property="og:site_name" content="Smart Food Pantry" />
+
+    <meta name="theme-color" content="#4a148c" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
     <link rel="stylesheet" href="app.css" />
     <HeadOutlet />
 </head>
-
 <body style="height: 100vh; max-height: 100vh; overflow: hidden; margin: 0; padding: 0;">
-
-<Routes />
-
-<script src="_framework/blazor.web.js"></script>
-
-
+    <Routes />
+    <script src="_framework/blazor.web.js"></script>
 </body>
-
 </html>
 </file>
 
@@ -800,7 +851,7 @@ This section contains the contents of the repository's files.
 @inject DashboardStateHub StateHub
 @implements IDisposable
 
-<PageTitle>Dashboard - SmartFoods</PageTitle>
+<PageTitle>SmartFoods - Dashboard</PageTitle>
 
 <div class="sf-dashboard-grid-layout">
 
@@ -856,19 +907,49 @@ This section contains the contents of the repository's files.
 
     protected override async Task OnInitializedAsync()
     {
-        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
-        var user = await UserManager.GetUserAsync(authState.User);
-
-        if (user is not null)
-        {
-            CurrentUserId = user.Id;
-            
-            // Initial asynchronous load
-            await RefreshGlobalDashboardDataAsync();
-        }
-
-        // REGISTER THE GLOBAL REAL-TIME HUD LISTENER HERE
+        // Register the real-time hub listener
         StateHub.OnDashboardChanged += HandleStateHubBroadcast;
+
+        // OPTIMIZATION 1: Extract User ID directly from Claims Principal token (Zero DB latency)
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var userIdClaim = authState.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+
+        if (Guid.TryParse(userIdClaim, out var parsedGuid))
+        {
+            CurrentUserId = parsedGuid;
+
+            // OPTIMIZATION 2: Non-blocking execution loop.
+            // Kicking this task off without an 'await' keyword forces OnInitializedAsync 
+            // to return immediately. The skeletons will paint on screen instantly.
+            _ = LoadDashboardDataBackgroundAsync();
+        }
+        else
+        {
+            // Fallback safe measure if claim schema varies
+            var user = await UserManager.GetUserAsync(authState.User);
+            if (user is not null)
+            {
+                CurrentUserId = user.Id;
+                _ = LoadDashboardDataBackgroundAsync();
+            }
+        }
+    }
+
+    private async Task LoadDashboardDataBackgroundAsync()
+    {
+        try
+        {
+            _dashboardData = await DashboardService.GetDashboardOverviewAsync(CurrentUserId);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"[Dashboard Background Data Flight Failure]: {ex.Message}");
+        }
+        finally
+        {
+            // Forces Blazor to swap the skeletons out for the premium panels seamlessly
+            await InvokeAsync(StateHasChanged);
+        }
     }
 
     private async Task HandleItemAdded()
@@ -880,7 +961,6 @@ This section contains the contents of the repository's files.
     {
         try
         {
-            // When ANY panel raises a change signal, re-fetch everything centrally
             await RefreshGlobalDashboardDataAsync();
         }
         catch (Exception ex)
@@ -897,7 +977,6 @@ This section contains the contents of the repository's files.
 
     public void Dispose()
     {
-        // Explicit teardown prevents memory leaks on navigation tracking lines
         StateHub.OnDashboardChanged -= HandleStateHubBroadcast;
     }
 }
@@ -913,76 +992,143 @@ This section contains the contents of the repository's files.
 
 <file path="Components/Pages/Dashboard/NotificationDetail.razor">
 @* Components/Pages/Dashboard/NotificationDetail.razor *@
+
 @page "/notifications/{Id:guid}"
+
 @layout DashboardLayout
 
 
 @using SmartFoods.Web.Data
+
 @using Microsoft.EntityFrameworkCore
+
 @using SmartFoods.Web.Models.Pantry
+
 @using Microsoft.AspNetCore.Authorization
 
+
 @attribute [Authorize]
+
 @inject IDbContextFactory<ApplicationDbContext> DbContextFactory
 
-<PageTitle>System Alert Trace Payload - SmartFoods</PageTitle>
+
+
+<PageTitle>SmartFoods - Alert</PageTitle>
+
+
 
 <div style="margin-bottom: 1.5rem;">
+
     <a href="/dashboard/notifications" class="sf-recipe-link-anchor" style="display: inline-block; width: auto; padding: 0.5rem 1rem;">
+
         ← Back to Notifications Feed
+
     </a>
+
 </div>
 
+
+
 @if (IsLoading)
+
 {
+
     <div class="sf-empty-state-notice">Decrypting secure communication packet...</div>
+
 }
+
 else if (LogItem is null)
+
 {
+
     <div class="sf-premium-card" style="border-color: rgba(198, 40, 40, 0.15);">
+
         <div class="sf-alert-banner error-mode">⚠ Record Archive Error</div>
+
         <p style="margin: 0; color: var(--sf-text-muted);">The requested unique reference trace could not be identified inside the database ledger tables.</p>
+
     </div>
+
 }
+
 else
+
 {
+
     <div class="sf-premium-card" style="max-width: 720px; padding: 2.5rem; animation: sf-fade-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;">
-        
+
+       
+
         <!-- Header Trace Section -->
+
         <div style="border-bottom: 1px solid var(--sf-card-border); padding-bottom: 1.25rem; margin-bottom: 2rem;">
+
             <div style="font-size: 0.78rem; font-weight: 750; color: var(--sf-purple-primary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.4rem;">
+
                 System Delivery Logs
+
             </div>
+
             <h1 style="margin: 0 0 0.5rem 0; font-size: 1.5rem; font-weight: 850; color: var(--sf-purple-dark); line-height: 1.25;">
+
                 @LogItem.Title
+
             </h1>
+
             <span style="font-size: 0.82rem; color: var(--sf-text-muted); font-weight: 500;">
+
                 Archived trace sequence: @LogItem.SentAt.ToLocalTime().ToString("f")
+
             </span>
+
         </div>
+
+
 
         <!-- Rendered Container Block -->
+
         <div style="background: transparent; padding: 0; border: none;">
+
             @((MarkupString)LogItem.MessageBody)
+
         </div>
-        
+
+       
+
     </div>
+
 }
 
+
+
 @code {
+
     [Parameter] public Guid Id { get; set; }
+
     private NotificationLog? LogItem;
+
     private bool IsLoading = true;
 
+
+
     protected override async Task OnInitializedAsync()
+
     {
+
         using var dbContext = await DbContextFactory.CreateDbContextAsync();
+
         LogItem = await dbContext.NotificationLogs
+
             .AsNoTracking()
+
             .FirstOrDefaultAsync(n => n.Id == Id);
 
+
+
         IsLoading = false;
+
     }
+
 }
 </file>
 
@@ -1002,7 +1148,7 @@ else
 @inject UserManager<ApplicationUser> UserManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<PageTitle>Alerts Archive Feed - SmartFoods</PageTitle>
+<PageTitle>SmartFoods - Alerts</PageTitle>
 
 @if (IsLoading)
 {
@@ -3960,11 +4106,6 @@ body {
 
 
 
-
-
-
-
-
 /* =========================================================
    DASHBOARD SKELETONS
 ========================================================= */
@@ -4098,9 +4239,6 @@ body {
 }
 
 
-/* --- Interactive Action Modal Element Framework --- */
-/* --- Defensive Layout Action Modal Framework Fix --- */
-
 
 /* --- Sibling Mobile Drawer Orchestration --- */
 
@@ -4198,6 +4336,190 @@ body {
     }
     .sf-nav-checkbox-trigger:checked ~ .sf-mobile-drawer-backdrop {
         display: block !important;
+    }
+}
+
+/* ==========================================================================
+   SMART FOOD PANTRY - PREMIUM MOBILE LAYOUT & PANEL OPTIMIZATIONS
+   ========================================================================== */
+
+@media (max-width: 768px) {
+    /* 1. Global Dashboard Grid & Column Clamping */
+    .sf-dashboard-grid-layout {
+        gap: 1rem !important; /* Shaves half the empty space between grid blocks */
+    }
+
+    .sf-dashboard-column-stack {
+        gap: 1rem !important; /* Tightens stacked panel blocks vertically */
+    }
+
+    .sf-right-content-pane {
+        padding: 5.5rem 0.75rem 1.5rem 0.75rem !important; /* Maximizes horizontal screen space */
+    }
+
+    /* 2. Global Premium Card Shrimping */
+    .sf-premium-card {
+        padding: 1rem !important; /* Drops from a bloated 1.75rem to clean high-density space */
+        border-radius: 12px !important;
+    }
+
+    .sf-premium-card:hover {
+        transform: none !important; /* Prevents awkward layout shifting on mobile tap states */
+    }
+
+    /* Typography Scale Down */
+    .sf-card-header-title {
+        font-size: 1rem !important; /* High-density scale */
+        margin-bottom: 0.2rem !important;
+    }
+
+    .sf-card-header-subtitle {
+        font-size: 0.78rem !important;
+        margin-bottom: 0.85rem !important; /* Pulls content closer to the header */
+    }
+
+    /* 3. Welcome Panel Hero Unit (WelcomePanel.razor) */
+    .sf-welcome-hero-banner h1 {
+        font-size: 1.35rem !important; /* Scales down from giant 2.2rem display title */
+        margin-bottom: 0.4rem !important;
+        letter-spacing: -0.01em !important;
+    }
+
+    .sf-welcome-hero-banner p {
+        font-size: 0.85rem !important;
+        line-height: 1.4 !important;
+    }
+
+    /* 4. Pantry Summary Metrics Panel (PantrySummaryPanel.razor) */
+    /* FIX: Prevents them from stacking into giant screen-hogging vertical blocks */
+    .sf-summary-metric-row {
+        grid-template-columns: repeat(3, 1fr) !important; /* Overrides the 1fr rule to keep cards horizontal */
+        gap: 0.5rem !important; /* Tightly pack metrics side-by-side */
+    }
+
+    .sf-summary-metric-tile {
+        padding: 0.6rem 0.4rem !important; /* Drastic padding reduction */
+        border-radius: 10px !important;
+    }
+
+    .sf-summary-metric-tile span {
+        font-size: 0.6rem !important; /* Ultra-compact tracking label */
+        margin-bottom: 0.25rem !important;
+        letter-spacing: 0.02em !important;
+    }
+
+    .sf-summary-metric-tile strong {
+        font-size: 1.25rem !important; /* Downscales metric count from giant 2.2rem to clean title size */
+    }
+
+    /* 5. Attention Required List Panel (AttentionRequiredPanel.razor) */
+    /* Resolves squeezed/cluttered row tracking inside your razor structure */
+    .sf-list-group-wrapper {
+        gap: 0.5rem !important;
+    }
+
+    .sf-list-entry-item {
+        padding: 0.6rem 0.75rem !important; /* Balanced internal breathing room */
+        border-radius: 10px !important;
+        gap: 0.5rem !important;
+    }
+
+    .sf-list-entry-title-text {
+        font-size: 0.85rem !important; /* Prevents long string text from folding awkwardly */
+        line-height: 1.2 !important;
+    }
+
+    .sf-list-entry-meta-text {
+        font-size: 0.72rem !important;
+        margin-top: 0.1rem !important;
+    }
+
+    .sf-pill-badge {
+        padding: 0.2rem 0.5rem !important; /* Keeps notifications inline without wrapping text lines */
+        font-size: 0.68rem !important;
+        white-space: nowrap !important;
+    }
+
+    /* 6. Quick Add Form Items Layout Panel (QuickAddPanel.razor) */
+    .sf-premium-form-layout {
+        gap: 0.75rem !important;
+    }
+
+    .sf-form-double-column {
+        grid-template-columns: 1fr 1fr !important; /* Keeps them inline but drops interior spacing */
+        gap: 0.6rem !important;
+    }
+
+    .sf-form-field-block {
+        gap: 0.25rem !important;
+    }
+
+    .sf-form-field-block label {
+        font-size: 0.75rem !important;
+    }
+
+    .sf-form-input-element {
+        padding: 0.5rem 0.75rem !important; /* Streamlined input heights */
+        font-size: 0.88rem !important; /* Smooth touch-typing target layout */
+        border-radius: 8px !important;
+    }
+
+    .sf-action-submit-button {
+        padding: 0.65rem !important;
+        font-size: 0.88rem !important;
+        border-radius: 8px !important;
+    }
+
+    /* 7. Category Distribution Progress Graph (CategoryChartPanel.razor) */
+    .sf-category-chart-row-container {
+        gap: 0.75rem !important;
+    }
+
+    .sf-chart-row-header {
+        font-size: 0.78rem !important;
+    }
+
+    .sf-chart-bar-rail {
+        height: 6px !important; /* Thins down analytical graphics bars to look sharper */
+    }
+
+    /* 8. Smart Suggestions Recipe Cards Grid (SmartSuggestionsPanel.razor) */
+    .sf-meals-recipe-grid {
+        grid-template-columns: repeat(2, 1fr) !important; /* Force items to arrange cleanly into a 2-column layout */
+        gap: 0.75rem !important;
+    }
+
+    .sf-meal-recipe-card {
+        border-radius: 10px !important;
+    }
+
+    .sf-meal-recipe-card img {
+        height: 75px !important; /* Scales down image banner presence */
+    }
+
+    .sf-meal-recipe-details {
+        padding: 0.65rem !important;
+        gap: 0.35rem !important;
+    }
+
+    .sf-meal-recipe-details h4 {
+        font-size: 0.8rem !important;
+        line-height: 1.2 !important;
+    }
+
+    .sf-meal-recipe-details p {
+        font-size: 0.7rem !important;
+    }
+
+    .sf-recipe-link-anchor {
+        padding: 0.45rem !important;
+        font-size: 0.72rem !important;
+        border-radius: 6px !important;
+    }
+    
+    .sf-empty-state-notice {
+        padding: 1rem !important;
+        font-size: 0.78rem !important;
     }
 }
 </file>
