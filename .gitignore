@@ -2,6 +2,9 @@
 src/SmartFoods.Web/appsettings.json
 src/SmartFoods.Web/appsettings.Development.json
 
+# Published build output should never be committed
+artifacts/
+
 # .NET build and tool-generated artifacts
 [Bb]in/
 [Oo]bj/
